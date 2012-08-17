@@ -89,6 +89,10 @@ $(document).ready( function() {
 
         var that = this;
 
+        this.bounds = function() {
+            return that.circle.getBBox();
+        }
+
         this.circle.click(function() {
             that.onClick();
         });
@@ -100,16 +104,22 @@ $(document).ready( function() {
         this.onClick = function() {
             if (activeNode == null) {
                 activeNode = that;
-                console.log("setting activeNode to that");
+                loadDepartmentEmployees(that.text.attrs.text);
             }
             else if (activeNode == that) {
-                console.log("activeNode is already that");
-                return; //no need
+                //jump back one level
+                $(xmlData).find("department").each(function() {
+                    if ($(this).attr("name") == that.text.attrs.text) {
+                        loadPhase(parseInt($(this).parent().parent().attr("order")));
+                    }
+                });
             }
             else if (activeNode != that) {
-                console.log("moving active node");
                 activeNode.animateTo(activeNode.oldX, activeNode.oldY);
                 activeNode = that;
+
+                //load the description of this and all people inside it
+                loadDepartmentEmployees(that.text.attrs.text);
             }
 
             console.log("Clicked node " + that.text.attrs.text);
@@ -126,11 +136,6 @@ $(document).ready( function() {
             currentImage = undefined;
             currentImageOldX = undefined;
             currentImageOldY = undefined;
-
-            console.log(nodeObjects);
-            for(var nodeObject in nodeObjects['level1']) {
-                console.log("nodeObject: " + nodeObject);
-            }
         }
 
         this.remove = function() {
@@ -197,7 +202,7 @@ $(document).ready( function() {
 	}
 		// Load data
 	function loadPhase(phaseID) {
-
+        console.log("loading phase with ID: " + phaseID);
 		var phase = $(xmlData).find("phase:nth-child(" + phaseID + ")");
 
 		/** Load description box */
@@ -215,6 +220,30 @@ $(document).ready( function() {
 
 		createLevel('level1', nodes, 3);
 	} // End load Data and nodes
+
+    function loadDepartmentEmployees(department) {
+        console.log("loading phase employees");
+        var employees = null;
+
+        $(xmlData).find("department").each(function() {
+           if ($(this).attr("name") == department) {
+               console.log("matched " + department);
+                employees = $(this).find("employee");
+           }
+        });
+
+        console.log("count of nodeObjects: " + nodeObjects['level1'].length);
+
+        for (var i = 0; i < nodeObjects['level1'].length; i++) {
+            if (nodeObjects['level1'][i] == activeNode) {
+                continue;
+            }
+
+            nodeObjects['level1'][i].remove();
+        }
+
+        createLevel('level1', employees, 3);
+    }
 
 	function loadNextLevel() {
 
@@ -249,7 +278,7 @@ $(document).ready( function() {
 		var centerX = parseInt($('body').css('width'))  / 2;
 		var centerY = parseInt($('body').css('height')) / 2;
 
-		var nodeLevelXPosition = centerX +  (column - 2) * (currentImage.attrs.width/2 + 50 + paddingBetweenLevels);
+		var nodeLevelXPosition = centerX +  (column - 2) * ( 50 + paddingBetweenLevels);
 		var nodeLevelCenter = centerY - nodeHeight / 2;
 
 
