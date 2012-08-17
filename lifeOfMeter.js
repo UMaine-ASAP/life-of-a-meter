@@ -13,18 +13,33 @@ var imagesMoving = 0;
 
 var nodeObjects = [];
 
-
 var xmlData;
-function createNodeObject(circle, text, line) {
+
+function nodeObject(circle, text, line, x, y) {
     this.circle = circle;
     this.text = text;
     this.line = line;
+    this.x = x;
+    this.y = y;
+
+    this.centerX = $('body').css('width') / 2;
+    this.centerY = $('body').css('height') / 2;
 
     var that = this;
 
     this.circle.click(function() {
-        console.log("clicked circle " + that.text.attrs.text);
+        that.onClick();
     });
+
+    this.text.click(function() {
+        that.onClick();
+    });
+
+    this.onClick = function() {
+        console.log("Clicked node " + that.text.attrs.text);
+        that.circle.animate({cx: that.centerX, cy: that.centerY}, 250);
+        that.text.animate({cx: that.centerX, cy: that.centerY}, 250);
+    }
 
     this.remove = function() {
         this.circle.remove();
@@ -199,7 +214,7 @@ $(document).ready( function() {
 		var nodeLevelCenter = centerY - nodeHeight / 2;
 
 
-		var nodeProcessedCount = nodeObjects[level].length/3;
+		var nodeProcessedCount = nodeObjects[level].length;
 		var yDiff = parseInt( (nodeProcessedCount+1) /2) * (nodeHeight*2 + padding);
 		if( nodeProcessedCount%2 == 0) {
 			yDiff *= -1;
@@ -242,7 +257,7 @@ $(document).ready( function() {
 		text.animate({x: destX, y: destY}, duration, 'easeOut');
 
 		/** Add objects to model **/
-        nodeObjects['level1'].push(new createNodeObject(circle, text, line));
+        nodeObjects['level1'].push(new nodeObject(circle, text, line, destX, destY));
 	}
 
 }); // End document.ready
