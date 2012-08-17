@@ -5,7 +5,7 @@
  *
  * Tim Westbaker 8-16-2012
  */
-$(document).ready( function() {
+
 
 	/*************/
 	/* Globals
@@ -15,8 +15,14 @@ $(document).ready( function() {
 	var nodeObjects = []; // Stores references to nodes in visualization
 
 	var xmlData; // xml data storing data
-
+	var paper;
 	var currentPhase; // Phase currently selected. Undefined otherwise
+	var transparencyMask;
+
+
+
+$(document).ready(function(){
+
 
 	// Store phase information
 
@@ -38,16 +44,31 @@ $(document).ready( function() {
 	/*************/
 	/* Raphael Setup
 	/*************/
-
-	var paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen
+		paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen
 
 	// Create transparency layer
-	var transparencyMask = paper.rect(0,0, "100%", "100%");
+	transparencyMask = paper.rect(0,0, "100%", "100%");
 	transparencyMask.attr({'fill': 'EFEFEF', 'opacity': '0'});
 	transparencyMask.hide();
 
+
+
+
 	transparencyMask.click( function() {
-		hideTransparency();
+
+		// hide transparency mask
+		transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
+		transparencyMask.hide();
+
+		//destroy nodes
+		for( node in nodeObjects['level1']) {
+			nodeObjects['level1'][node].remove();
+		}
+
+		// Reset box
+		$('description-header').html("Life of a Meter");
+		$('description-content').html("Click on a phase to learn more"); 
+
 
 		// Move old image back
 		if( currentPhase != undefined) {
@@ -67,27 +88,11 @@ $(document).ready( function() {
 	phases.push( new Phase(3, "images/Truck.JPG", 800, 100, 250, 200) );
 
 
-
-
+}); // End document.ready
 
 	function displayTransparency() {
 		transparencyMask.show();
 		transparencyMask.animate({'opacity': 0.3}, 500, 'linear');
-	}
-
-	function hideTransparency() {
-		transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
-		transparencyMask.hide();
-
-		//destroy nodes
-		for( node in nodeObjects['level1']) {
-			nodeObjects['level1'][node].remove();
-		}
-
-		// Reset box
-		$('description-header').html("Life of a Meter");
-		$('description-content').html("Click on a phase to learn more"); 
-
 	}
 
 
@@ -160,6 +165,4 @@ $(document).ready( function() {
     }
 
 
-
-}); // End document.ready
 
