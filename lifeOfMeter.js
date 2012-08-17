@@ -15,39 +15,6 @@ var nodeObjects = [];
 
 var xmlData;
 
-function nodeObject(circle, text, line, x, y) {
-    this.circle = circle;
-    this.text = text;
-    this.line = line;
-    this.x = x;
-    this.y = y;
-
-    this.centerX = $('body').css('width') / 2;
-    this.centerY = $('body').css('height') / 2;
-
-    var that = this;
-
-    this.circle.click(function() {
-        that.onClick();
-    });
-
-    this.text.click(function() {
-        that.onClick();
-    });
-
-    this.onClick = function() {
-        console.log("Clicked node " + that.text.attrs.text);
-        that.circle.animate({cx: that.centerX, cy: that.centerY}, 250);
-        that.text.animate({cx: that.centerX, cy: that.centerY}, 250);
-    }
-
-    this.remove = function() {
-        this.circle.remove();
-        this.text.remove();
-        this.line.remove();
-    }
-}
-
 $(document).ready( function() {
 	
 	/*************/
@@ -68,7 +35,9 @@ $(document).ready( function() {
 
 	      	// });
     	}
-   });	
+   });
+    //the "active" node -- the one in the center of the screen
+    var activeNode = null;
 
 	/*************/
 	/* Raphael Setup
@@ -105,6 +74,76 @@ $(document).ready( function() {
 		currentImageOldY = undefined;
 
 	});
+
+    function nodeObject(circle, text, line, x, y) {
+        this.circle = circle;
+        this.text = text;
+        this.line = line;
+        this.x = x;
+        this.y = y;
+        this.oldX = x;
+        this.oldY = y;
+
+        this.centerX = parseInt($('body').css('width')) / 2;
+        this.centerY = parseInt($('body').css('height')) / 2;
+
+        var that = this;
+
+        this.circle.click(function() {
+            that.onClick();
+        });
+
+        this.text.click(function() {
+            that.onClick();
+        });
+
+        this.onClick = function() {
+            if (activeNode == null) {
+                activeNode = that;
+                console.log("setting activeNode to that");
+            }
+            else if (activeNode == that) {
+                console.log("activeNode is already that");
+                return; //no need
+            }
+            else if (activeNode != that) {
+                console.log("moving active node");
+                activeNode.animateTo(activeNode.oldX, activeNode.oldY);
+                activeNode = that;
+            }
+
+            console.log("Clicked node " + that.text.attrs.text);
+            that.text.animate({x: that.centerX, y: that.centerY}, 250);
+            that.circle.animate({cx: that.centerX, cy: that.centerY}, 250);
+
+            if( currentImage != undefined) {
+                imagesMoving++;
+                img.attrs.z = 1;
+                currentImage.animate({x: currentImageOldX, y: currentImageOldY}, 500, 'easeOut', function() { imagesMoving--;} );
+            }
+
+            // Don't move same image again, instead move back
+            currentImage = undefined;
+            currentImageOldX = undefined;
+            currentImageOldY = undefined;
+
+            console.log(nodeObjects);
+            for(var nodeObject in nodeObjects['level1']) {
+                console.log("nodeObject: " + nodeObject);
+            }
+        }
+
+        this.remove = function() {
+            this.circle.remove();
+            this.text.remove();
+            this.line.remove();
+        }
+
+        this.animateTo = function(x, y) {
+            that.circle.animate({cx: x, cy: y}, 250);
+            that.text.animate({x: x, y: y}, 250);
+        }
+    }
 
 	img.click(  function() { loadData(1, this); } );
 	img2.click( function() { loadData(2, this); } );
@@ -239,8 +278,9 @@ $(document).ready( function() {
 		circle.onAnimation(function () {
 			paper.getById(this.attrs.line_id).attr({path: "M" + centerX + " " + centerY + "L" + this.attrs.cx + " " + this.attrs.cy });
 		});
+
 		circle.attrs.line_id = line.id;
-		circle.attrs.text_id = text.id;			
+		circle.attrs.text_id = text.id;
 		circle.attr({'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5});
 		circle.insertBefore(text);
 
