@@ -9,14 +9,14 @@
 			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 		</description>
 		<departments>
-			<department name='Legal (Purchase contracts)'>
+			<department name='Legal'>
 				<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 					tempor incididunt ut labore et dolore magna aliqua.</description>
 				<employees>
 					<employee name='Tom Lehrer' position=''/>
 				</employees>
 			</department>
-			<department name='HR (Hiring and Management of Employees)'>
+			<department name='HR'>
 				<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 					tempor incididunt ut labore et dolore magna aliqua.</description>
 				<employees>
@@ -37,7 +37,7 @@
 					<employee name='Tom Lehrer' position=''/>
 				</employees>
 			</department>
-			<department name='Communications (public education)'>
+			<department name='Communications'>
 				<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 					tempor incididunt ut labore et dolore magna aliqua.</description>
 				<employees>

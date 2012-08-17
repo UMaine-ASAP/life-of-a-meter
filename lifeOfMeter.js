@@ -13,7 +13,25 @@ var imagesMoving = 0;
 
 var nodeObjects = [];
 
+
 var xmlData;
+function createNodeObject(circle, text, line) {
+    this.circle = circle;
+    this.text = text;
+    this.line = line;
+
+    var that = this;
+
+    this.circle.click(function() {
+        console.log("clicked circle " + that.text.attrs.text);
+    });
+
+    this.remove = function() {
+        this.circle.remove();
+        this.text.remove();
+        this.line.remove();
+    }
+}
 
 $(document).ready( function() {
 	
@@ -141,10 +159,6 @@ $(document).ready( function() {
 		/** Load nodes */
 		var nodes = phase.find('department');
 
-
-
-
-
 		createLevel('level1', nodes, 3);
 	} // End load Data and nodes
 
@@ -176,6 +190,7 @@ $(document).ready( function() {
 		var nodeWidth = 100;
 		var padding = 20;
 		var paddingBetweenLevels = 100;
+
 
 		var centerX = parseInt($('body').css('width'))  / 2;
 		var centerY = parseInt($('body').css('height')) / 2;
@@ -214,15 +229,20 @@ $(document).ready( function() {
 		circle.attr({'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5});
 		circle.insertBefore(text);
 
+
+       // circle.click(function() {
+         //  console.log("clicked circle " + text.attrs.text);
+          // circle.animate({cx: centerX, cy: centerY}, 100, 'easeOut');
+
+        //});
+
 		// Animate Circle and text
 		var duration = 250;
 		circle.animate({cx: destX, cy: destY}, duration, 'easeOut');
 		text.animate({x: destX, y: destY}, duration, 'easeOut');
 
 		/** Add objects to model **/
-		nodeObjects['level1'].push( line );
-		nodeObjects['level1'].push( circle );
-		nodeObjects['level1'].push( text );
+        nodeObjects['level1'].push(new createNodeObject(circle, text, line));
 	}
 
 }); // End document.ready
