@@ -5,18 +5,69 @@
  *
  * Tim Westbaker 8-16-2012
  */
-
-var currentImageOldX;
-var currentImageOldY;
-var currentImage;
-var imagesMoving = 0;
-
-var nodeObjects = [];
-
-var xmlData;
-
 $(document).ready( function() {
-	
+
+	/*************/
+	/* Globals
+	/*************/
+    var activeNode = null; // the "active" node -- the one in the center of the screen
+
+	var nodeObjects = []; // Stores references to nodes in visualization
+
+	var xmlData; // xml data storing data
+
+	var currentPhase; // Phase currently selected. Undefined otherwise
+
+	// Store phase information
+	function Phase(id, src, x, y, width, height) {
+		var parentPhase = this; // store reference for use in image function calls
+
+		this.id = id;
+		this.image = paper.image(src, x, y, width, height);
+		this.originalX = x;
+		this.originalY = y;
+		this.width = this.image.attrs.width;
+		this.height = this.image.attrs.height;
+
+		this.moveCenter = function() {
+			var image = this.image;
+
+			var destx = parseInt($('body').css('width'))  / 2 - image.attrs.width/2;
+			var desty = parseInt($('body').css('height')) / 2 - image.attrs.height/2;
+
+			image.animate({x: destx, y: desty}, 500, 'easeOut', function() {
+				// Load phase data after animation is complete
+				loadPhase(parentPhase.id);
+			});
+
+			// Order objects
+			transparencyMask.toFront();
+			this.image.toFront();
+
+			// Display transparency
+			displayTransparency();
+		};
+
+		this.moveBack = function() {
+            this.image.animate({x: this.originalX, y: this.originalY}, 500, 'easeOut');
+		};
+
+		// set image properties
+		this.image.attrs.position = "absolute";
+
+		this.image.click( function() {
+			// Make sure there isn't something already in the center
+			if( currentPhase ) return;
+
+			// Set currentPhase to the clicked one
+			currentPhase = parentPhase;
+
+			// Animate image to center of page
+			parentPhase.moveCenter();
+		});
+
+	};
+
 	/*************/
 	/* Read remote xml
 	/*************/
@@ -28,32 +79,15 @@ $(document).ready( function() {
     	success: function(xml){ 
     		console.log("loaded xml file");
     		xmlData = xml;
-      		// $(xml).find("user").each(function(){
-	       //  	var name = $(this).find("name").text();
-    	   //  	var email = $(this).find("email").text();
-        // 		var phone_number = $(this).find("mobile").text();
-
-	      	// });
     	}
-   });
-    //the "active" node -- the one in the center of the screen
-    var activeNode = null;
+	});
+
 
 	/*************/
 	/* Raphael Setup
 	/*************/
 
-	// Start raphael full screen
-	var paper = Raphael("container", "100%", "100%");
-
-	// Load main images
-	var img  = paper.image("images/Truck.JPG", 10, 100, 250, 200);
-	var img2 = paper.image("images/Truck.JPG", 400, 10, 250, 200);
-	var img3 = paper.image("images/Truck.JPG", 800, 100, 250, 200);
-
-	img.attrs.position = "absolute";
-	img2.attrs.position = "absolute";
-	img3.attrs.position = "absolute";
+	var paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen
 
 	// Create transparency layer
 	var transparencyMask = paper.rect(0,0, "100%", "100%");
@@ -62,18 +96,24 @@ $(document).ready( function() {
 
 	transparencyMask.click( function() {
 		hideTransparency();
+
 		// Move old image back
-		if( currentImage != undefined) {
-			imagesMoving++;
-			img.attrs.z = 1;
-			currentImage.animate({x: currentImageOldX, y: currentImageOldY}, 500, 'easeOut', function() { imagesMoving--;} );
+		if( currentPhase != undefined) {
+			currentPhase.moveBack();
 		}
-		// Don't move same image again, instead move back
-		currentImage = undefined;
-		currentImageOldX = undefined;
-		currentImageOldY = undefined;
+		currentPhase = undefined;
 
 	});
+	/*************/
+	/* Create default images
+	/*************/
+
+	var phases = [];
+
+	phases.push( new Phase(1, "images/Truck.JPG", 10, 10, 250, 200) );
+	phases.push( new Phase(2, "images/Truck.JPG", 400, 10, 250, 200) );
+	phases.push( new Phase(3, "images/Truck.JPG", 800, 100, 250, 200) );
+
 
     function nodeObject(circle, text, line, x, y) {
         this.circle = circle;
@@ -126,16 +166,18 @@ $(document).ready( function() {
             that.text.animate({x: that.centerX, y: that.centerY}, 250);
             that.circle.animate({cx: that.centerX, cy: that.centerY}, 250);
 
-            if( currentImage != undefined) {
-                imagesMoving++;
-                img.attrs.z = 1;
-                currentImage.animate({x: currentImageOldX, y: currentImageOldY}, 500, 'easeOut', function() { imagesMoving--;} );
+            if( currentPhase != undefined) {
+		currentPhase.moveBack();
             }
 
             // Don't move same image again, instead move back
-            currentImage = undefined;
-            currentImageOldX = undefined;
-            currentImageOldY = undefined;
+
+            currentPhase = undefined;
+
+            console.log(nodeObjects);
+            for(var nodeObject in nodeObjects['level1']) {
+                console.log("nodeObject: " + nodeObject);
+            }
         }
 
         this.remove = function() {
@@ -150,9 +192,6 @@ $(document).ready( function() {
         }
     }
 
-	img.click(  function() { loadData(1, this); } );
-	img2.click( function() { loadData(2, this); } );
-	img3.click( function() { loadData(3, this); } );
 
 	function displayTransparency() {
 		transparencyMask.show();
@@ -175,23 +214,18 @@ $(document).ready( function() {
 	}
 
 
-	function loadData(phaseID, img) {
-		if( imagesMoving != 0 || currentImage ) return;
+	function loadData(phaseID, phase) {
+		if( currentPhase) return;
 
 		// Store current values
-		currentImageOldX = img.attrs.x;
-		currentImageOldY = img.attrs.y;
-		currentImage = img;
+		currentPhase = phase;
 
 		//animate current image to center of page
 		var destx = parseInt($('body').css('width'))  / 2 - img.attrs.width/2;
 		var desty = parseInt($('body').css('height')) / 2 - img.attrs.height/2;
 
-		imagesMoving++;
-		img.attrs.z = 2;
 		img.animate({x: destx, y: desty}, 500, 'easeOut', function() {
 			loadPhase(phaseID);
-			imagesMoving--;
 		});
 		displayTransparency();
 
@@ -200,10 +234,12 @@ $(document).ready( function() {
 		img.toFront();
 
 	}
-		// Load data
+
+	// Load data
 	function loadPhase(phaseID) {
         console.log("loading phase with ID: " + phaseID);
-		var phase = $(xmlData).find("phase:nth-child(" + phaseID + ")");
+
+		var phase = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + phaseID + ")");
 
 		/** Load description box */
 		var phaseDescription = phase.children('description').text();
@@ -217,6 +253,7 @@ $(document).ready( function() {
 
 		/** Load nodes */
 		var nodes = phase.find('department');
+		console.log(nodes);
 
 		createLevel('level1', nodes, 3);
 	} // End load Data and nodes
@@ -278,7 +315,9 @@ $(document).ready( function() {
 		var centerX = parseInt($('body').css('width'))  / 2;
 		var centerY = parseInt($('body').css('height')) / 2;
 
-		var nodeLevelXPosition = centerX +  (column - 2) * ( 50 + paddingBetweenLevels);
+
+		var nodeLevelXPosition = centerX +  (column - 2) * (currentPhase.image.attrs.width/2 + 50 + paddingBetweenLevels);
+
 		var nodeLevelCenter = centerY - nodeHeight / 2;
 
 
@@ -295,7 +334,7 @@ $(document).ready( function() {
 		/** Create line **/
 		var line = paper.path("M" + centerX + " " + centerY + "L" + centerX + " " + centerY);
 		line.attr({'stroke': '#DAEDE2', 'stroke-width': 2 });
-		line.insertBefore(currentImage);
+		line.insertBefore(currentPhase.image);
 
 		/** Load text **/
 		var text = paper.text(centerX, centerY, nodeName);
@@ -314,22 +353,15 @@ $(document).ready( function() {
 		circle.insertBefore(text);
 
 
-       // circle.click(function() {
-         //  console.log("clicked circle " + text.attrs.text);
-          // circle.animate({cx: centerX, cy: centerY}, 100, 'easeOut');
-
-        //});
-
 		// Animate Circle and text
 		var duration = 250;
 		circle.animate({cx: destX, cy: destY}, duration, 'easeOut');
 		text.animate({x: destX, y: destY}, duration, 'easeOut');
+
 
 		/** Add objects to model **/
         nodeObjects['level1'].push(new nodeObject(circle, text, line, destX, destY));
 	}
 
 }); // End document.ready
-
-
 
