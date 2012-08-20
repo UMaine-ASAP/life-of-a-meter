@@ -1,9 +1,9 @@
-var nodeSystem;
+var nodeSystem = {};
 
 (function() {
 	var defaultCircleAttrs = {'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5};
 
-	createNode = function(x, y, size, text) {
+	function node(x, y, size, text) {
 		this.x = x; //the center X position of the node
 		this.y = y; //the center Y position of the node
 		this.size = size; //the diameter of the node
@@ -31,7 +31,6 @@ var nodeSystem;
 		//draw the text (after the circle, so that it appears on top of it)
 		this.text = this.canvas.text(this.x, this.y, this.contents);
 
-
 		var that = this;
 
 		//function that animates the node from one position to another
@@ -44,13 +43,23 @@ var nodeSystem;
 	nodeSystem = {
 		setCanvas: function(canvas) {
 			this._mainCanvas = canvas;
-		}
+		},
 
 		createNode: function(x, y, size, text) {
-			createNode(x, y, size, text);			
+			var newNode = new node(x, y, size, text);
+			console.log(newNode);
+			return newNode;
+		},
+
+		connectNodes: function(firstNode, secondNode) {
+			var pathstring = "M " + firstNode.x + " " + firstNode.y + " L" + secondNode.x + " " + secondNode.y;
+			var line = paper.path(pathstring);
+
+			console.log("debug: pathstring " + pathstring);
+			line.insertBefore(firstNode.circle);
 		}
 	}
-});
+})();
 
 function loadNextLevel() {
 
@@ -74,61 +83,61 @@ function createLevel(level, nodes, column) {
 	});		
 }
 
-function createNode(level, nodeName, column) {
-	// Defaults
-	var nodeHeight = 50;
-	var nodeWidth = 100;
-	var padding = 20;
-	var paddingBetweenLevels = 100;
+// function createNode(level, nodeName, column) {
+// 	// Defaults
+// 	var nodeHeight = 50;
+// 	var nodeWidth = 100;
+// 	var padding = 20;
+// 	var paddingBetweenLevels = 100;
 
 
-	var centerX = parseInt($('body').css('width'))  / 2;
-	var centerY = parseInt($('body').css('height')) / 2;
+// 	var centerX = parseInt($('body').css('width'))  / 2;
+// 	var centerY = parseInt($('body').css('height')) / 2;
 
 
-	var nodeLevelXPosition = centerX +  (column - 2) * (currentPhase.image.attrs.width/2 + 50 + paddingBetweenLevels);
+// 	var nodeLevelXPosition = centerX +  (column - 2) * (currentPhase.image.attrs.width/2 + 50 + paddingBetweenLevels);
 
-	var nodeLevelCenter = centerY - nodeHeight / 2;
-
-
-	var nodeProcessedCount = nodeObjects[level].length;
-	var yDiff = parseInt( (nodeProcessedCount+1) /2) * (nodeHeight*2 + padding);
-	if( nodeProcessedCount%2 == 0) {
-		yDiff *= -1;
-	}
-
-	/** Set position **/
-	var destX = nodeLevelXPosition;
-	var destY = nodeLevelCenter + yDiff;
-
-	/** Create line **/
-	var line = paper.path("M" + centerX + " " + centerY + "L" + centerX + " " + centerY);
-	line.attr({'stroke': '#DAEDE2', 'stroke-width': 2 });
-	line.insertBefore(currentPhase.image);
-
-	/** Load text **/
-	var text = paper.text(centerX, centerY, nodeName);
-
-	/** Load Circle **/
-	var circle = paper.ellipse(centerX, centerY, 50, 50);
-
-	// Move line with circle
-	circle.onAnimation(function () {
-		paper.getById(this.attrs.line_id).attr({path: "M" + centerX + " " + centerY + "L" + this.attrs.cx + " " + this.attrs.cy });
-	});
-
-	circle.attrs.line_id = line.id;
-	circle.attrs.text_id = text.id;
-	circle.attr({'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5});
-	circle.insertBefore(text);
+// 	var nodeLevelCenter = centerY - nodeHeight / 2;
 
 
-	// Animate Circle and text
-	var duration = 250;
-	circle.animate({cx: destX, cy: destY}, duration, 'easeOut');
-	text.animate({x: destX, y: destY}, duration, 'easeOut');
+// 	var nodeProcessedCount = nodeObjects[level].length;
+// 	var yDiff = parseInt( (nodeProcessedCount+1) /2) * (nodeHeight*2 + padding);
+// 	if( nodeProcessedCount%2 == 0) {
+// 		yDiff *= -1;
+// 	}
+
+// 	/** Set position **/
+// 	var destX = nodeLevelXPosition;
+// 	var destY = nodeLevelCenter + yDiff;
+
+// 	/** Create line **/
+// 	var line = paper.path("M" + centerX + " " + centerY + "L" + centerX + " " + centerY);
+// 	line.attr({'stroke': '#DAEDE2', 'stroke-width': 2 });
+// 	line.insertBefore(currentPhase.image);
+
+// 	/** Load text **/
+// 	var text = paper.text(centerX, centerY, nodeName);
+
+// 	/** Load Circle **/
+// 	var circle = paper.ellipse(centerX, centerY, 50, 50);
+
+// 	// Move line with circle
+// 	circle.onAnimation(function () {
+// 		paper.getById(this.attrs.line_id).attr({path: "M" + centerX + " " + centerY + "L" + this.attrs.cx + " " + this.attrs.cy });
+// 	});
+
+// 	circle.attrs.line_id = line.id;
+// 	circle.attrs.text_id = text.id;
+// 	circle.attr({'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5});
+// 	circle.insertBefore(text);
 
 
-	/** Add objects to model **/
-       nodeObjects['level1'].push(new nodeObject(circle, text, line, destX, destY));
-}
+// 	// Animate Circle and text
+// 	var duration = 250;
+// 	circle.animate({cx: destX, cy: destY}, duration, 'easeOut');
+// 	text.animate({x: destX, y: destY}, duration, 'easeOut');
+
+
+// 	/** Add objects to model **/
+//        nodeObjects['level1'].push(new nodeObject(circle, text, line, destX, destY));
+// }
