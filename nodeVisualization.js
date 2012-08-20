@@ -35,8 +35,11 @@ var nodeSystem = {};
 		//function that animates the node from one position to another
 		this.animateTo = function(cx, cy) {
 			var nodesToConnect = [];
+			var indexesToRemove = [];
+			var targetIndexesToRemove = [];
 
 			for (var i = 0; i < this.connectingLines.length; i++) {
+				console.log("node " + this.contents + " fixing line with node " + this.connectingLines[i][0].contents);
 				var x = this.connectingLines[i];
 
 				var connectedNode = x[0];
@@ -44,10 +47,20 @@ var nodeSystem = {};
 
 				//fade out the line
 				connectedPath.animate({opacity: 0}, this.defaultAnimationDuration, 'easeOut');
-				nodesToConnect.push(connectedNode);
 
-				this.connectingLines.splice(this.connectingLines.indexOf(x), 1); //remove that connection from connectingLines
-				connectedNode.connectingLines.splice(nodeSystem.getIndexOfNode(this, connectedNode.connectingLines), 1); //remove it from the other node's connectingLines as well
+				nodesToConnect.push(connectedNode);
+				
+				indexesToRemove.push(this.connectingLines.indexOf(x));
+				
+				targetIndexesToRemove.push([connectedNode, nodeSystem.getIndexOfNode(this, connectedNode.connectingLines)]);
+			}
+
+			for (var i in indexesToRemove) {
+				this.connectingLines.splice(i, 1); //remove that connection from connectingLines
+			}
+
+			for (var i = 0; i < targetIndexesToRemove.length; i++) {
+				targetIndexesToRemove[i][0].connectingLines.splice(targetIndexesToRemove[i][1], 1);
 			}
 
 			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
@@ -75,7 +88,7 @@ var nodeSystem = {};
 		connectNodes: function(firstNode, secondNode) {
 			var pathstring = "M " + firstNode.x + " " + firstNode.y + " L" + secondNode.x + " " + secondNode.y;
 			var line = paper.path(pathstring);
-			
+
 			firstNode.connectingLines.push([secondNode, line]);
 			secondNode.connectingLines.push([firstNode, line]);
 			line.toBack();

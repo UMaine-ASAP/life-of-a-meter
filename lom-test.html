@@ -17,8 +17,10 @@
 
 			var firstNode = nodeSystem.createNode(250, 250, 50, "foo");
 			var secondNode = nodeSystem.createNode(100, 500, 50, "bar");
-			nodeSystem.connectNodes(firstNode, secondNode);
+			var thirdNode = nodeSystem.createNode(400, 400, 50, "baz");
 
+			nodeSystem.connectNodes(firstNode, secondNode);
+			nodeSystem.connectNodes(thirdNode, secondNode);
 			firstNode.animateTo(300, 450);
 			secondNode.animateTo(200, 100);
 		});
