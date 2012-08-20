@@ -11,18 +11,29 @@
 	<link rel=StyleSheet  href='lifeOfMeter.css' type='text/css'>
 	<script src='nodeVisualization.js'></script>
 	<script>
+	var firstNode;
+	containerClick = function(e) {
+		if (e.target.nodeName == "svg") {
+			firstNode.animateTo(e.pageX - 150, e.pageY);
+		}
+	}
+
 		$(document).ready(function() {
+			$("#container").click(containerClick);
 			paper = Raphael(container, "100%", "100%");
 			nodeSystem.setCanvas(paper);
 
-			var firstNode = nodeSystem.createNode(250, 250, 50, "foo");
+			firstNode = nodeSystem.createNode(250, 250, 50, "foo");
 			var secondNode = nodeSystem.createNode(100, 500, 50, "bar");
 			var thirdNode = nodeSystem.createNode(400, 400, 50, "baz");
 
 			nodeSystem.connectNodes(firstNode, secondNode);
 			nodeSystem.connectNodes(thirdNode, secondNode);
-			firstNode.animateTo(300, 450);
-			secondNode.animateTo(200, 100);
+			nodeSystem.connectNodes(firstNode, thirdNode);
+			//firstNode.animateTo(300, 450);
+			//secondNode.animateTo(200, 100);
+			//thirdNode.animateTo(450, 120);
+			//secondNode.animateTo(125, 250);
 		});
 	</script>
 

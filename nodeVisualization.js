@@ -39,29 +39,38 @@ var nodeSystem = {};
 			var targetIndexesToRemove = [];
 
 			for (var i = 0; i < this.connectingLines.length; i++) {
-				console.log("node " + this.contents + " fixing line with node " + this.connectingLines[i][0].contents);
 				var x = this.connectingLines[i];
 
 				var connectedNode = x[0];
 				var connectedPath = x[1];
 
 				//fade out the line
-				connectedPath.animate({opacity: 0}, this.defaultAnimationDuration, 'easeOut');
+				connectedPath.remove();
 
 				nodesToConnect.push(connectedNode);
-				
 				indexesToRemove.push(this.connectingLines.indexOf(x));
-				
 				targetIndexesToRemove.push([connectedNode, nodeSystem.getIndexOfNode(this, connectedNode.connectingLines)]);
 			}
 
-			for (var i in indexesToRemove) {
-				this.connectingLines.splice(i, 1); //remove that connection from connectingLines
+			var newConnections = [];
+			for (var i = 0; i < this.connectingLines.length; i++) {
+				if (indexesToRemove.indexOf(i) != -1) {
+					continue;
+				}
+
+				newConnections.push(this.connectingLines[i]);
 			}
 
-			for (var i = 0; i < targetIndexesToRemove.length; i++) {
-				targetIndexesToRemove[i][0].connectingLines.splice(targetIndexesToRemove[i][1], 1);
+			var targetNewConnections = [];
+			for (var i = 0; i < connectedNode.connectingLines.length; i++) {
+				if (targetIndexesToRemove.indexOf(i) != -1) {
+					continue;
+				}
+				targetNewConnections.push(connectedNode.connectingLines[i]);
 			}
+
+			this.connectingLines = newConnections;
+			connectedNode.connectingLines = targetNewConnections;
 
 			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
 			this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
