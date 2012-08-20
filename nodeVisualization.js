@@ -95,8 +95,21 @@ var nodeSystem = {};
 		},
 
 		connectNodes: function(firstNode, secondNode) {
+			for (var i = 0; i < firstNode.connectingLines.length; i++) {
+				if (firstNode.connectingLines[i][0] == secondNode) {
+					return;
+				}
+			}
+
+			for (var i = 0; i < secondNode.connectingLines.length; i++) {
+				if (secondNode.connectingLines[i][0] == firstNode) {
+					return;
+				}
+			}
+
 			var pathstring = "M " + firstNode.x + " " + firstNode.y + " L" + secondNode.x + " " + secondNode.y;
 			var line = paper.path(pathstring);
+
 
 			firstNode.connectingLines.push([secondNode, line]);
 			secondNode.connectingLines.push([firstNode, line]);
