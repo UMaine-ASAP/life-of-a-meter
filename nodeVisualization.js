@@ -9,6 +9,7 @@ var nodeSystem = {};
 		this.size = size; //the diameter of the node
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
 		this.defaultAnimationDuration = 250; //default animation duration in ms
+		this.connectingLines = [];
 
 		//check to make sure that the nodeSystem has been initialized before making a node
 		if (nodeSystem._mainCanvas != undefined || nodeSystem._mainCanvas != null) {
@@ -31,12 +32,33 @@ var nodeSystem = {};
 		//draw the text (after the circle, so that it appears on top of it)
 		this.text = this.canvas.text(this.x, this.y, this.contents);
 
-		var that = this;
-
 		//function that animates the node from one position to another
 		this.animateTo = function(cx, cy) {
+			var nodesToConnect = [];
+
+			for (var i = 0; i < this.connectingLines.length; i++) {
+				var x = this.connectingLines[i];
+
+				var connectedNode = x[0];
+				var connectedPath = x[1];
+
+				//fade out the line
+				connectedPath.animate({opacity: 0}, this.defaultAnimationDuration, 'easeOut');
+				nodesToConnect.push(connectedNode);
+
+				this.connectingLines.splice(this.connectingLines.indexOf(x), 1); //remove that connection from connectingLines
+				connectedNode.connectingLines.splice(nodeSystem.getIndexOfNode(this, connectedNode.connectingLines), 1); //remove it from the other node's connectingLines as well
+			}
+
 			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
 			this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
+			
+			this.x = cx;
+			this.y = cy;
+
+			for (var i = 0; i < nodesToConnect.length; i++) {
+				nodeSystem.connectNodes(this, nodesToConnect[i]);
+			}
 		}
 	}
 
@@ -47,16 +69,26 @@ var nodeSystem = {};
 
 		createNode: function(x, y, size, text) {
 			var newNode = new node(x, y, size, text);
-			console.log(newNode);
 			return newNode;
 		},
 
 		connectNodes: function(firstNode, secondNode) {
 			var pathstring = "M " + firstNode.x + " " + firstNode.y + " L" + secondNode.x + " " + secondNode.y;
 			var line = paper.path(pathstring);
+			
+			firstNode.connectingLines.push([secondNode, line]);
+			secondNode.connectingLines.push([firstNode, line]);
+			line.toBack();
+		},
 
-			console.log("debug: pathstring " + pathstring);
-			line.insertBefore(firstNode.circle);
+		getIndexOfNode: function(node, nodePathArray) {
+			for (var i = 0; i < nodePathArray.length; i++) {
+				if (nodePathArray[i][0] == node) {
+					return i;
+				}
+			}
+
+			return -1;
 		}
 	}
 })();
