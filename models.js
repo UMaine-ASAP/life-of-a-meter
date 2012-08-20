@@ -1,6 +1,4 @@
-function Phase(id, src, x, y, width, height) {
-	var parentPhase = this; // store reference for use in image function calls
-
+function Phase(id, src, x, y, width, height, moveToCenterCallback, moveToOriginCallback) {
 	this.id = id;
 	this.image = paper.image(src, x, y, width, height);
 	this.originalX = x;
@@ -8,44 +6,53 @@ function Phase(id, src, x, y, width, height) {
 	this.width = this.image.attrs.width;
 	this.height = this.image.attrs.height;
 
-	this.moveCenter = function() {
+    var myself = this; // store reference for use in image function calls
+
+	this.moveToCenter = function() {
 		var image = this.image;
 
 		var destx = parseInt($('body').css('width'))  / 2 - image.attrs.width/2;
 		var desty = parseInt($('body').css('height')) / 2 - image.attrs.height/2;
 
 		image.animate({x: destx, y: desty}, 500, 'easeOut', function() {
-			// Load phase data after animation is complete
-			loadPhase(parentPhase.id);
+            if( myself.moveToCenterCallback != undefined) {
+                myself.moveToCenterCallback(myself);
+            }
 		});
-
-		// Order objects
-		transparencyMask.toFront();
-		this.image.toFront();
-
-		// Display transparency
-		displayTransparency();
 	};
 
-	this.moveBack = function() {
-           this.image.animate({x: this.originalX, y: this.originalY}, 500, 'easeOut');
+    this.moveToCenterCallback = moveToCenterCallback;
+
+    this.toFront = function() {
+        this.image.toFront();
+    };
+
+	this.moveToOrigin = function() {
+           this.image.animate({x: this.originalX, y: this.originalY}, 500, 'easeOut', function() {
+            if( myself.moveToOriginCallback != undefined) {
+                myself.moveToOriginCallback(myself);
+            }
+           });
 	};
+
+    this.moveToOriginCallback = moveToOriginCallback;
+
+    this.onClick = function() {
+        // Make sure there isn't something already in the center
+        if( currentPhase ) return;
+
+        // Set currentPhase to the clicked one
+        currentPhase = myself;
+
+        // Animate image to center of page
+        myself.moveToCenter();
+    };
 
 	// set image properties
 	this.image.attrs.position = "absolute";
+	this.image.click( myself.onClick );
 
-	this.image.click( function() {
-		// Make sure there isn't something already in the center
-		if( currentPhase ) return;
-
-		// Set currentPhase to the clicked one
-		currentPhase = parentPhase;
-
-		// Animate image to center of page
-		parentPhase.moveCenter();
-	});
-
-};
+}; // End model Phase
 
 
 
@@ -84,7 +91,7 @@ function nodeObject(circle, text, line, x, y) {
             //jump back one level
             $(xmlData).find("department").each(function() {
                 if ($(this).attr("name") == that.text.attrs.text) {
-                    loadPhase(parseInt($(this).parent().parent().attr("order")));
+                    openPhase(currentPhase);//parseInt($(this).parent().parent().attr("order")));
                 }
             });
         }
@@ -99,14 +106,6 @@ function nodeObject(circle, text, line, x, y) {
         console.log("Clicked node " + that.text.attrs.text);
         that.text.animate({x: that.centerX, y: that.centerY}, 250);
         that.circle.animate({cx: that.centerX, cy: that.centerY}, 250);
-
-        if( currentPhase != undefined) {
-		currentPhase.moveBack();
-        }
-
-        // Don't move same image again, instead move back
-
-        currentPhase = undefined;
 
         console.log(nodeObjects);
         for(var nodeObject in nodeObjects['level1']) {

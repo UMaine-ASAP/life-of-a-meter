@@ -7,29 +7,24 @@
  */
 
 
-	/*************/
-	/* Globals
-	/*************/
-    var activeNode = null; // the "active" node -- the one in the center of the screen
+/*************/
+/* Globals
+/*************/
+var activeNode = null; 	// the "active" node -- the one in the center of the screen
 
-	var nodeObjects = []; // Stores references to nodes in visualization
+var nodeObjects = []; 	// Stores references to nodes in visualization
 
-	var xmlData; // xml data storing data
-	var paper;
-	var currentPhase; // Phase currently selected. Undefined otherwise
-	var transparencyMask;
-
+var xmlData; 			// xml data storing data
+var paper; 				// Raphael.js object
+var currentPhase; 		// Phase currently selected. Undefined otherwise.
+var transparencyMask;	// Raphael transparency object used to hide the rest of the screen when an object has been selected
 
 
 $(document).ready(function(){
-
-
-	// Store phase information
-
+	
 	/*************/
 	/* Read remote xml
 	/*************/
-
 	$.ajax({
     	type: "GET",
     	url: "data.xml",
@@ -37,132 +32,168 @@ $(document).ready(function(){
     	success: function(xml){ 
     		console.log("loaded xml file");
     		xmlData = xml;
+
+    		loadDefaultDescriptionBox();
     	}
 	});
 
+	/*************/
+	/* Initialization
+	/*************/
 
-	/*************/
-	/* Raphael Setup
-	/*************/
-		paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen
+	//Raphael Setup
+	paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen - requires waiting for document.ready
 
 	// Create transparency layer
 	transparencyMask = paper.rect(0,0, "100%", "100%");
+
 	transparencyMask.attr({'fill': 'EFEFEF', 'opacity': '0'});
 	transparencyMask.hide();
+	transparencyMask.click( closePhase );
 
-
-
-
-	transparencyMask.click( function() {
-
-		// hide transparency mask
-		transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
-		transparencyMask.hide();
-
-		//destroy nodes
-		for( node in nodeObjects['level1']) {
-			nodeObjects['level1'][node].remove();
-		}
-
-		// Reset box
-		$('description-header').html("Life of a Meter");
-		$('description-content').html("Click on a phase to learn more"); 
-
-
-		// Move old image back
-		if( currentPhase != undefined) {
-			currentPhase.moveBack();
-		}
-		currentPhase = undefined;
-
-	});
-	/*************/
-	/* Create default images
-	/*************/
-
+	// Create default images at starting locations
 	var phases = [];
 
-	phases.push( new Phase(1, "images/Truck.JPG", 10, 10, 250, 200) );
-	phases.push( new Phase(2, "images/Truck.JPG", 400, 10, 250, 200) );
-	phases.push( new Phase(3, "images/Truck.JPG", 800, 100, 250, 200) );
+	phases.push( new Phase(1, "images/Truck.JPG",  10,  10, 250, 200, openPhase) );
+	phases.push( new Phase(2, "images/Truck.JPG", 400,  10, 250, 200, openPhase) );
+	phases.push( new Phase(3, "images/Truck.JPG", 800, 100, 250, 200, openPhase) );
 
 
-}); // End document.ready
+}); // End $(document).ready
 
-	function displayTransparency() {
-		transparencyMask.show();
-		transparencyMask.animate({'opacity': 0.3}, 500, 'linear');
+
+/**
+ * Load Default Description Box
+ *
+ * Replaces the description box with the initial description data
+ *
+ * @return void
+ */
+function loadDefaultDescriptionBox() {
+	var instructions = $(xmlData).children('lifeOfMeter').children('instructions');
+
+	var header 		= instructions.attr('name');
+	var description = instructions.children('description').text();
+
+	setDescriptionBox(header, description);
+}
+
+/**
+ * Set Description Box
+ *
+ * Changes the description box title and description to the values set
+ *
+ * @param 	string 	title 			Display title
+ * @param 	string	description 	Display description
+ *
+ * @return 	void
+ */
+function setDescriptionBox(title, description) {
+	$('#description-title').html( title );
+	$('#description-content').html( description );
+
+}
+
+/**
+ * Close Phase
+ *
+ * Removes currently displayed phase and returns app to its start state
+ *
+ * @return void
+ */
+function closePhase() {
+
+	console.log("closing phase");
+
+	// hide transparency mask
+	transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
+	transparencyMask.hide();
+
+	//destroy nodes
+	for( node in nodeObjects['level1']) {
+		nodeObjects['level1'][node].remove();
 	}
 
+	// Reset box
+	loadDefaultDescriptionBox();
 
-	function loadData(phaseID, phase) {
-		if( currentPhase) return;
-
-		// Store current values
-		currentPhase = phase;
-
-		//animate current image to center of page
-		var destx = parseInt($('body').css('width'))  / 2 - img.attrs.width/2;
-		var desty = parseInt($('body').css('height')) / 2 - img.attrs.height/2;
-
-		img.animate({x: destx, y: desty}, 500, 'easeOut', function() {
-			loadPhase(phaseID);
-		});
-		displayTransparency();
-
-		// Order objects
-		transparencyMask.toFront();
-		img.toFront();
-
+	// Move old image back
+	if( currentPhase != undefined) {
+		currentPhase.moveToOrigin();
 	}
-
-	// Load data
-	function loadPhase(phaseID) {
-        console.log("loading phase with ID: " + phaseID);
-
-		var phase = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + phaseID + ")");
-
-		/** Load description box */
-		var phaseDescription = phase.children('description').text();
-		var phaseName = phase.attr('name');
-
-		$('#description-header').html(phaseName);
-		$('#description-content').html(phaseDescription);
+	currentPhase = undefined;
+}
 
 
-		// Position next level of nodes to right
-
-		/** Load nodes */
-		var nodes = phase.find('department');
-		console.log(nodes);
-
-		createLevel('level1', nodes, 3);
-	} // End load Data and nodes
-
-    function loadDepartmentEmployees(department) {
-        console.log("loading phase employees");
-        var employees = null;
-
-        $(xmlData).find("department").each(function() {
-           if ($(this).attr("name") == department) {
-               console.log("matched " + department);
-                employees = $(this).find("employee");
-           }
-        });
-
-        console.log("count of nodeObjects: " + nodeObjects['level1'].length);
-
-        for (var i = 0; i < nodeObjects['level1'].length; i++) {
-            if (nodeObjects['level1'][i] == activeNode) {
-                continue;
-            }
-
-            nodeObjects['level1'][i].remove();
-        }
-
-        createLevel('level1', employees, 3);
-    }
+/**
+ * Open Phase
+ *
+ * Loads and displays newly selected phase
+ *
+ * @param 	object 		phase 		The phase object to load
+ *
+ * @return 	void
+ */
+function openPhase(phase) {
+	var phaseID = phase.id;		
+    console.log("loading phase with ID: " + phaseID);
 
 
+	// Order objects
+	transparencyMask.toFront();
+	currentPhase.toFront();
+
+	// Display transparency
+	transparencyMask.show();
+	transparencyMask.animate({'opacity': 0.3}, 500, 'linear');
+
+	/** Load description box */
+	var phase = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + phaseID + ")");
+
+	var phaseDescription = phase.children('description').text();
+	var phaseName = phase.attr('name');
+
+	setDescriptionBox(phaseName, phaseDescription);
+
+	/** Load nodes */
+	var nodes = phase.find('department');
+
+	createLevel('level1', nodes, 3); // Position next level of nodes to right
+
+} // End load Data and nodes
+
+
+
+/**
+ * Load Department Employees
+ *
+ * Loads and displays nodes underneath a particular department
+ *
+ * @param 	string 		department 		The department to find and display
+ *
+ * @return 	void
+ */
+function loadDepartmentEmployees(department) {
+   console.log("loading phase employees");
+   var employees = null;
+
+   $(xmlData).find("department").each(function() {
+      if ($(this).attr("name") == department) {
+          console.log("matched " + department);
+           employees = $(this).find("employee");
+      }
+   });
+
+   console.log("count of nodeObjects: " + nodeObjects['level1'].length);
+
+   for (var i = 0; i < nodeObjects['level1'].length; i++) {
+       if (nodeObjects['level1'][i] == activeNode) {
+           continue;
+       }
+
+       nodeObjects['level1'][i].remove();
+   }
+
+   createLevel('level1', employees, 3);
+}
 
