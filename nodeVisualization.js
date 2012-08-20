@@ -1,3 +1,57 @@
+var nodeSystem;
+
+(function() {
+	var defaultCircleAttrs = {'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5};
+
+	createNode = function(x, y, size, text) {
+		this.x = x; //the center X position of the node
+		this.y = y; //the center Y position of the node
+		this.size = size; //the diameter of the node
+		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
+		this.defaultAnimationDuration = 250; //default animation duration in ms
+
+		//check to make sure that the nodeSystem has been initialized before making a node
+		if (nodeSystem._mainCanvas != undefined || nodeSystem._mainCanvas != null) {
+			this.canvas = nodeSystem._mainCanvas;
+		}
+		else {
+			//and if it isn't, create and throw an error
+			throw {
+				name: "Invalid state",
+				message: "Cannot create node while mainCanvas is not set"
+			}
+		}
+
+		//start by drawing the circle, then the text (so that the text appears on top of the circle)
+		this.circle = this.canvas.ellipse(this.x, this.y, this.size, this.size);
+
+		//set the circle's attributes to the default
+		this.circle.attr(defaultCircleAttrs);
+
+		//draw the text (after the circle, so that it appears on top of it)
+		this.text = this.canvas.text(this.x, this.y, this.contents);
+
+
+		var that = this;
+
+		//function that animates the node from one position to another
+		this.animateTo = function(cx, cy) {
+			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
+			this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
+		}
+	}
+
+	nodeSystem = {
+		setCanvas: function(canvas) {
+			this._mainCanvas = canvas;
+		}
+
+		createNode: function(x, y, size, text) {
+			createNode(x, y, size, text);			
+		}
+	}
+});
+
 function loadNextLevel() {
 
 }
