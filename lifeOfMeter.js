@@ -20,6 +20,27 @@ var currentPhase; 		// Phase currently selected. Undefined otherwise.
 var transparencyMask;	// Raphael transparency object used to hide the rest of the screen when an object has been selected
 
 
+var phaseNodeGroup;
+var departmentNodeGroup;
+var jobpositionNodeGroup;
+
+/*************/
+/* Helper Functions
+/*************/
+function getScreenDimensions() {
+	var width  = parseInt( $('body').css('width') );
+	var height = parseInt( $('body').css('height') );
+
+	return {'width': width, 'height': height};
+}
+
+// Array Remove - By John Resig (MIT Licensed)
+Array.prototype.remove = function(from, to) {
+  var rest = this.slice((to || from) + 1 || this.length);
+  this.length = from < 0 ? this.length + from : from;
+  return this.push.apply(this, rest);
+};
+
 $(document).ready(function(){
 	
 	/*************/
