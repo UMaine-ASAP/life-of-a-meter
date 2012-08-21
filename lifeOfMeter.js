@@ -52,12 +52,90 @@ $(document).ready(function(){
 	transparencyMask.click( closePhase );
 
 	// Create default images at starting locations
+	paper.image("images/overview.png", 0, 0, 1024, 798);
+
 	var phases = [];
 
-	phases.push( new Phase(1, "images/Truck.JPG",  10,  10, 250, 200, openPhase) );
-	phases.push( new Phase(2, "images/Truck.JPG", 400,  10, 250, 200, openPhase) );
-	phases.push( new Phase(3, "images/Truck.JPG", 800, 100, 250, 200, openPhase) );
+	var xOffset = -211;
+	var yOffset = -170;
 
+	 var phaseData = [
+		{
+		 src: 'nDesignSpecs.png',
+		 x: 223,
+		 y: 295,
+		 width: 230,
+		 height: 200
+		},
+		{
+		 src: 'nPurchaseApproval.png',
+		 x: 451,
+		 y: 296,
+		 width: 231,
+		 height: 191
+		},
+		{
+		 src: 'nPurchaseOrder.png',
+		 x: 638,
+		 y: 299,
+		 width: 96,
+		 height: 181
+		},
+		{
+		 src: 'nReceiveMeters.png',
+		 x: 733,
+		 y: 311,
+		 width: 228,
+		 height: 163
+		},
+		{
+		 src: 'nDelivery.png',
+		 x: 641,
+		 y: 556,
+		 width: 242,
+		 height: 134
+		},
+		{
+		 src: 'nMeterInstall.png',
+		 x: 232,
+		 y: 538,
+		 width: 349,
+		 height: 217
+		},
+		{
+		 src: 'nAMITrouble.png',
+		 x: 260,
+		 y: 768,
+		 width: 240,
+		 height: 182
+		},
+		{
+		 src: 'nMaintenance.png',
+		 x: 534,
+		 y: 809,
+		 width: 101,
+		 height: 124
+		},
+		{
+		 src: 'nTesting.png',
+		 x: 796,
+		 y: 792,
+		 width: 82,
+		 height: 120
+		},
+		{
+		 src: 'nRetire.png',
+		 x: 1153,
+		 y: 772,
+		 width: 81,
+		 height: 134
+		},
+	];
+
+	for(var i=0; i<phaseData.length; i++) {
+		var phaseAttr = phaseData[i];
+		phases.push( new Phase(i + 1, "images/" + phaseAttr.src, phaseAttr.x + xOffset, phaseAttr.y + yOffset, phaseAttr.width, phaseAttr.height, openPhase) );
+	}
 
 }); // End $(document).ready
 
