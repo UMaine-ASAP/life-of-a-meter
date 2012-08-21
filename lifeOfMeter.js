@@ -73,6 +73,8 @@ $(document).ready(function(){
 	transparencyMask.hide();
 	transparencyMask.click( closePhase );
 
+	nodeSystem.setBottomLayer(transparencyMask);
+
 	// Create default images at starting locations
 	paper.image("images/overview.png", 0, 0, 1024, 798);
 
