@@ -1,24 +1,30 @@
-function Phase(id, src, x, y, width, height, moveToCenterCallback, moveToOriginCallback) {
+function Phase(id, src, x, y, width, height, moveToCenterCallback) {
 	this.id = id;
 	this.image = paper.image(src, x, y, width, height);
 	this.originalX = x;
 	this.originalY = y;
+    this.destX = x;
+    this.destY = y;
 	this.width = this.image.attrs.width;
 	this.height = this.image.attrs.height;
 
     var myself = this; // store reference for use in image function calls
 
-	this.moveToCenter = function() {
-		var image = this.image;
-
-		var destx = parseInt($('body').css('width'))  / 2 - image.attrs.width/2;
-		var desty = parseInt($('body').css('height')) / 2 - image.attrs.height/2;
-
-		image.animate({x: destx, y: desty}, 500, 'easeOut', function() {
-            if( myself.moveToCenterCallback != undefined) {
-                myself.moveToCenterCallback(myself);
+    this.moveTo = function(destX, destY, callback) {
+        this.destX = destX;
+        this.destY = destY;
+        this.image.animate({x: destX, y: destY}, 400, 'easeOut', function() {
+            if( callback ) {
+                callback(myself);
             }
-		});
+        });
+    };
+
+	this.moveToCenter = function() {
+		var destX = parseInt($('body').css('width'))  / 2 - this.width/2;
+		var destY = parseInt($('body').css('height')) / 2 - this.height/2;
+
+        this.moveTo(destX, destY, this.moveToCenterCallback);
 	};
 
     this.moveToCenterCallback = moveToCenterCallback;
@@ -27,15 +33,16 @@ function Phase(id, src, x, y, width, height, moveToCenterCallback, moveToOriginC
         this.image.toFront();
     };
 
-	this.moveToOrigin = function() {
-           this.image.animate({x: this.originalX, y: this.originalY}, 500, 'easeOut', function() {
-            if( myself.moveToOriginCallback != undefined) {
-                myself.moveToOriginCallback(myself);
-            }
-           });
-	};
+    this.moveToLeft = function(callback) {
+        var destX = parseInt($('body').css('width'))  / 2 - this.width/2 - 200 - this.width/2; // center - 200 - width/2
+        var destY = parseInt($('body').css('height')) / 2 - this.height/2;
+        this.moveTo(destX, destY, callback);
 
-    this.moveToOriginCallback = moveToOriginCallback;
+    };
+
+	this.moveToOrigin = function() {
+        this.moveTo(this.originalX, this.originalY);
+	};
 
     this.onClick = function() {
         // Make sure there isn't something already in the center
