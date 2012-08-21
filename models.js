@@ -32,6 +32,15 @@ function Phase(id, src, x, y, width, height, clickFunction) {
 
     };
 
+    this.behindObject = function(object) {
+        this.image.insertBefore(object);
+    };
+
+    this.afterObject = function(object) {
+        this.image.insertAfter(object);
+    };
+
+
     this.connectNode = function(node) {
         nodeSystem.connectNodes(currentPhase.node, node);
     };
