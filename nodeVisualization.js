@@ -3,13 +3,16 @@ var nodeSystem = {};
 (function() {
 	var defaultCircleAttrs = {'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5};
 
-	function node(x, y, size, text) {
+	function node(x, y, size, text, callback) {
 		this.x = x; //the center X position of the node
 		this.y = y; //the center Y position of the node
 		this.size = size; //the diameter of the node
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
-		this.defaultAnimationDuration = 250; //default animation duration in ms
+		this.defaultAnimationDuration = 400; //default animation duration in ms
 		this.connectingLines = [];
+		this.clickCallback = callback;
+
+		var thisNode = this;
 
 		//check to make sure that the nodeSystem has been initialized before making a node
 		if (nodeSystem._mainCanvas != undefined || nodeSystem._mainCanvas != null) {
@@ -62,15 +65,15 @@ var nodeSystem = {};
 			}
 
 			var targetNewConnections = [];
-			for (var i = 0; i < connectedNode.connectingLines.length; i++) {
-				if (targetIndexesToRemove.indexOf(i) != -1) {
-					continue;
-				}
-				targetNewConnections.push(connectedNode.connectingLines[i]);
-			}
+			// for (var i = 0; i < connectedNode.connectingLines.length; i++) {
+			// 	if (targetIndexesToRemove.indexOf(i) != -1) {
+			// 		continue;
+			// 	}
+			// 	targetNewConnections.push(connectedNode.connectingLines[i]);
+			// }
 
-			this.connectingLines = newConnections;
-			connectedNode.connectingLines = targetNewConnections;
+			// this.connectingLines = newConnections;
+			// connectedNode.connectingLines = targetNewConnections;
 
 			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
 			this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
@@ -81,16 +84,36 @@ var nodeSystem = {};
 			for (var i = 0; i < nodesToConnect.length; i++) {
 				nodeSystem.connectNodes(this, nodesToConnect[i]);
 			}
+		};
+
+		this.onClick = function() {
+			if(thisNode.clickCallback)
+				thisNode.clickCallback( thisNode );
+		};
+
+		this.circle.click( thisNode.onClick );
+		this.text.click( thisNode.onClick );
+
+		this.remove = function() {
+			// removing connecting lines
+			for (var i = 0; i < this.connectingLines.length; i++) {
+				this.connectingLines[i][1].remove();
+			}			
+			// remove objects
+			this.circle.remove();
+			this.text.remove();
 		}
 	}
 
 	nodeSystem = {
+		nodeGroups: [],
+
 		setCanvas: function(canvas) {
 			this._mainCanvas = canvas;
 		},
 
-		createNode: function(x, y, size, text) {
-			var newNode = new node(x, y, size, text);
+		createNode: function(x, y, size, text, callback) {
+			var newNode = new node(x, y, size, text, callback);
 			return newNode;
 		},
 
@@ -113,7 +136,11 @@ var nodeSystem = {};
 
 			firstNode.connectingLines.push([secondNode, line]);
 			secondNode.connectingLines.push([firstNode, line]);
-			line.toBack();
+
+			var front = paper.set();
+			front.push(firstNode.circle, secondNode.circle);
+
+			line.insertBefore(front);
 		},
 
 		getIndexOfNode: function(node, nodePathArray) {
@@ -124,7 +151,142 @@ var nodeSystem = {};
 			}
 
 			return -1;
-		}
+		},
+
+		getNodeFromGroup: function(groupID, nodeID) {
+			return this.nodeGroups[groupID][nodeID];
+		},
+
+		removeAllNodeGroups: function() {
+			var nodeGroupsLength = this.nodeGroups.length;
+			console.log("Removing " + nodeGroupsLength + " node groups");
+			for(var nodeGroupID=nodeGroupsLength-1; nodeGroupID>=0; nodeGroupID--) {
+				this.removeNodeGroup(nodeGroupID);
+			}
+		},
+
+		removeNodeGroup: function(nodeGroupID) {
+			console.log("removing node group: " + nodeGroupID);
+			var nodeGroup = this.nodeGroups[nodeGroupID];
+			var nodeGroupLength = nodeGroup.length;
+			for(var i=nodeGroupLength-1; i>=0; i--) {
+				nodeGroup[i].remove();
+				nodeGroup.remove(i);
+			}
+			this.nodeGroups.remove(i);
+
+		},
+
+		createNodeGroup: function(nodeNames, layoutType, callback, layoutAttrs, displayMethod) {
+			displayMethod = displayMethod || 'normal';
+
+			// Create new node group
+			var newNodeGroupID = this.nodeGroups.length;
+			this.nodeGroups.push([]);
+
+
+			var screenWidth  = parseInt( $('body').css('width') );
+			var screenHeight = parseInt( $('body').css('height') );
+
+			// Load default attributes
+			switch(layoutType) {
+				case 'alignVertical':
+				layoutAttrs.xOffset  = layoutAttrs.xOffset  || 0;
+				layoutAttrs.yOffset  = layoutAttrs.yOffset  || 0;
+				layoutAttrs.yPadding = layoutAttrs.yPadding || 10;
+				break;
+			}
+
+			// Create nodes
+			var node;
+			var xPosition;
+			var yPosition;
+			var nodeNamesLength = nodeNames.length;
+
+			var nodeSize = 50;
+
+			for(var i=0; i< nodeNamesLength; i++) {
+
+				// Set position based on layout type
+				switch(layoutType) {
+					case 'alignVertical':
+						xPosition = screenWidth  / 2 + nodeSize/2 +  layoutAttrs.xOffset;
+						var yDiff = i * (nodeSize + layoutAttrs.yPadding);
+						if( i % 2 == 1) {
+							yDiff = -yDiff - nodeSize - layoutAttrs.yPadding;
+						}
+						yPosition = screenHeight / 2 + yDiff  + layoutAttrs.yOffset;
+					break;
+
+					default:
+						xPosition = screenWidth  * Math.random();
+						yPosition = screenHeight * Math.random();
+					break;
+				}
+
+				// Add to group
+				switch(displayMethod) {
+					case 'animateFromCenter':
+						node = this.createNode(screenWidth/2, screenHeight/2, nodeSize, nodeNames[i], callback);
+						node.animateTo(xPosition, yPosition);
+					break;
+
+					case 'normal':
+					default:
+						node = this.createNode(xPosition, yPosition, nodeSize, nodeNames[i], callback);
+					break;
+				}
+
+				this.addNodeToGroup(node, newNodeGroupID);
+			}
+			return newNodeGroupID;
+		},
+
+		connectNodesBetweenGroups: function(nodeGroupID_1, nodeGroupID_2) {
+			var nodeGroup_1 = this.nodeGroups[nodeGroupID_1];
+			var nodeGroupLength_1 = nodeGroup_1.length;
+
+			var nodeGroup_2 = this.nodeGroups[nodeGroupID_2];
+			var nodeGroupLength_2 = nodeGroup_2.length;
+			console.log("attempting connection: nodegroup1-length: " + nodeGroupLength_1 +  " nodegroup2-length: " + nodeGroupLength_2);
+
+			for(var i1=0; i1<nodeGroupLength_1; i1++) {
+				for(var i2=0; i2<nodeGroupLength_2; i2++) {
+					console.log('connecting nodes node1: ' + nodeGroup_1[i1].contents + " node2: " + nodeGroup_2[i2].contents );
+					nodeSystem.connectNodes(nodeGroup_1[i1], nodeGroup_2[i2] );
+				}
+			}
+		},
+
+		removeAllButInGroup: function(nodeGroupID, node) {
+			var nodeGroup = this.nodeGroups[nodeGroupID];
+			var nodeGroupLength = nodeGroup.length;
+
+			for(var i=nodeGroupLength-1; i>=0; i--) {
+				if( node != nodeGroup[i] ) {
+					nodeGroup[i].remove();
+					nodeGroup.remove(i);
+
+				}
+			}
+		},
+
+		animateNodesInGroup: function(nodeGroupID, destX, destY) {
+			var nodeGroup 		= this.nodeGroups[nodeGroupID];
+			var nodeGroupLength = nodeGroup.length;
+
+			for(var i=0; i<nodeGroupLength; i++) {
+				var newX = ( destX == 'keep') ? nodeGroup[i].x: destX;
+				var newY = ( destY == 'keep') ? nodeGroup[i].y: destY;
+
+				nodeGroup[i].animateTo(newX, newY);
+			}
+		},
+
+		addNodeToGroup: function(node, nodeGroupID) {
+			console.log("Adding node " + node + " to nodeGroup " + nodeGroupID);
+			this.nodeGroups[nodeGroupID].push( node );
+		},
 	}
 })();
 
@@ -143,9 +305,9 @@ function loadNextLevel() {
  *
  * @return 	void
  */
-function createLevel(level, nodes, column) {
+function createLevel(level, nodeNames, column) {
 	nodeObjects[level] = [];
-	nodes.each( function() { 
+	nodeNames.each( function() { 
 		createNode(level, $(this).attr('name'), column);
 	});		
 }
