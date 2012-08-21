@@ -49,6 +49,11 @@ var nodeSystem = {};
 		//draw the text (after the circle, so that it appears on top of it)
 		this.text = this.canvas.text(this.x, this.y, this.contents);
 
+		this.toFront = function() {
+			this.circle.toFront();
+			this.text.toFront();
+		};
+
 		//function that animates the node from one position to another
 		this.animateTo = function(cx, cy) {
 			var nodesToConnect = [];
@@ -161,7 +166,9 @@ var nodeSystem = {};
 			var front = paper.set();
 			front.push(firstNode.circle, secondNode.circle);
 
-			line.insertBefore(front);
+			//line.insertBefore(front);
+			firstNode.toFront();
+			secondNode.toFront();
 		},
 
 		getIndexOfNode: function(node, nodePathArray) {
