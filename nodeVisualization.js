@@ -161,7 +161,7 @@ var nodeSystem = {};
 			var front = paper.set();
 			front.push(firstNode.circle, secondNode.circle);
 
-			line.insertBefore(front);
+			line.toBack();
 		},
 
 		getIndexOfNode: function(node, nodePathArray) {
