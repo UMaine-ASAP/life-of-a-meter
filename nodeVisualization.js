@@ -25,6 +25,7 @@ var nodeSystem = {};
 		this.defaultAnimationDuration = 400; //default animation duration in ms
 		this.connectingLines = [];
 		this.clickCallback = callback;
+		this.userData = undefined;
 
 		var thisNode = this;
 
