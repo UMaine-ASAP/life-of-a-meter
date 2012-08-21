@@ -229,16 +229,22 @@ function closePhase() {
 	if( currentPhase != undefined) {
 		currentPhase.moveToOrigin();
 	}
-	currentPhase = undefined;
+
+	currentPhase 		= undefined;
+	currentDepartment 	= undefined;
+	currentJobPosition 	= undefined;
 }
 
 function phaseClick(phase) {
         // Make sure there isn't something already in the center or not located in left
-        if( currentPhase && !( currentPhase && phase.location == 'left') ) return;
+        if( currentPhase && !( currentPhase && phase.location != 'center') ) return;
 
         // In left
-        if( currentPhase && phase.location == 'left') {
+        if( currentPhase && phase.location != 'center') {
 			// Remove old nodes            
+			currentDepartment = undefined;
+			currentJobPosition   = undefined;
+
             nodeSystem.removeNodeGroup( departmentNodeGroup );
             nodeSystem.removeNodeGroup( jobpositionNodeGroup );
 
@@ -289,8 +295,14 @@ function data_getDepartment(phaseID, department) {
 
 function data_getJobPositions(phaseID, department) {
 	var department = data_getDepartment(phaseID, department);
-	return department.find('positions');	
+	return department.find('position');	
 }
+
+function data_getJobPosition(phaseID, department, position) {
+	var department = data_getDepartment(phaseID, department);
+	return department.children('positions').children("position[name='" + position + "']");
+}
+
 
 function data_getDetails(xml_object) {
 	return {
@@ -357,8 +369,10 @@ function onClick_Department_Node(node) {
 	// don't process the same node twice!
 	if( activeNode == node ) return;
 	activeNode = node;
+	currentDepartment = node;
 
 	console.log("node clicked! " + node.contents);
+
 
 	/** Load description box */
 	var department 	 	  = data_getDepartment(currentPhase.id, node.contents);
@@ -367,33 +381,65 @@ function onClick_Department_Node(node) {
 	setDescriptionBox(departmentDetails.name, departmentDetails.description);
 
 
-	// Move current phase and nodeGroup to left column
+	/** Move center to left column */
 	currentPhase.moveToLeft( function() {
-			//currentPhase.connectNode(node);
+			nodeSystem.removeAllConnections(phaseNodeGroup);
+			currentPhase.connectNode(node);
 			nodeSystem.connectNodesBetweenGroups(phaseNodeGroup, departmentNodeGroup);
-			nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, jobpositionNodeGroup);	
+			nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, jobpositionNodeGroup);
 
     	    currentPhase.toFront();
 	});
 
-	// Move right column to center
+	/** Move right column to center */
 	var screenDim = getScreenDimensions();
 
-	nodeSystem.removeAllButInGroup(departmentNodeGroup, node);	
+	nodeSystem.removeAllButInGroup(departmentNodeGroup, node);
 	nodeSystem.animateNodesInGroup(departmentNodeGroup, screenDim.width/2, screenDim.height/2);
 
-	// Create next group
-	var jobPositions = data_getJobPositions(currentPhase.id, department.id);
-	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', onClick_JobPosition_Node,  {type: 'center', xOffset: currentPhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
+	/** Right Column */
+	if( currentJobPosition ) {
+		currentJobPosition = null;
+		nodeSystem.removeNodeGroup(jobpositionNodeGroup);
+	}
+	var data = data_getJobPositions(currentPhase.id, node.contents);
+	var jobPositions = data_mapNameToArray( data );
+		console.log('positions: ' + jobPositions);
 
-	// create lines again
+	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', onClick_JobPosition_Node,  {type: 'center', xOffset: currentPhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
 
 }
 
 function onClick_JobPosition_Node(node) {
 	// don't process the same node twice!
-	if( activeNode == node ) return;
+	if( activeNode == null ) return;
 	activeNode = node;
+	currentJobPosition = node;
+
+	var screenDim = getScreenDimensions();
+
+	/** Load description box */
+	var position 	 	  = data_getJobPosition(currentPhase.id, currentDepartment.contents, node.contents);
+	var positionDetails   = data_getDetails(position);
+
+	setDescriptionBox(positionDetails.name, positionDetails.description);	
+
+	/** Move Left column to origin */
+	nodeSystem.removeAllConnections(phaseNodeGroup);
+	currentPhase.moveToOrigin();
+	//currentPhase.behindObject(transparencyMask);
+	currentPhase.afterObject(transparencyMask);
+
+	/** Move Center column to left */
+	nodeSystem.animateNodesInGroup(departmentNodeGroup, screenDim.width/2 - 300, 'keep');	
+
+	/** Move right column to center */
+	var screenDim = getScreenDimensions();
+
+	nodeSystem.removeAllButInGroup(jobpositionNodeGroup, node);
+	nodeSystem.animateNodesInGroup(jobpositionNodeGroup, screenDim.width/2, screenDim.height/2);
+
+	// There is no right column
 
 
 }
