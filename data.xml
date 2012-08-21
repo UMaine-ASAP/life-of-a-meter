@@ -259,87 +259,7 @@
 			</departments>
 		</phase>
 
-		<phase order='7' name='Maintenance'>
-			<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</description>
-			<departments>
-				<department name='Customer Service'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-				<department name='Division Meter'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-				<department name='Line'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-				<department name='IT-System Support'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-			</departments>
-		</phase>
-
-		<phase order='8' name='Testing'>
-			<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-			</description>
-			<departments>
-				<department name='Maintenance: Meter Tech, PST'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-				<department name='Compliance: Div Meter, Line, Meter tech, PST'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-				<department name='Shop: Meter Tech, PST'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-				<department name='Reads: Business Support Services, Meter Tech, Div Meter, Line, CSC'>
-					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-						tempor incididunt ut labore et dolore magna aliqua.</description>
-					<employees>
-						<employee name='Tom Lehrer' position=''/>
-					</employees>
-				</department>
-			</departments>
-		</phase>
-
-		<phase order='9' name='AMI Trouble'>
+		<phase order='7' name='AMI Trouble'>
 			<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
 				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
 				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
@@ -385,6 +305,87 @@
 				</department>
 			</departments>
 		</phase>
+
+		<phase order='8' name='Maintenance'>
+			<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</description>
+			<departments>
+				<department name='Customer Service'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+				<department name='Division Meter'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+				<department name='Line'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+				<department name='IT-System Support'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+			</departments>
+		</phase>
+
+		<phase order='9' name='Testing'>
+			<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+				tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+				quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+				consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+				cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+				proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+			</description>
+			<departments>
+				<department name='Maintenance: Meter Tech, PST'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+				<department name='Compliance: Div Meter, Line, Meter tech, PST'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+				<department name='Shop: Meter Tech, PST'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+				<department name='Reads: Business Support Services, Meter Tech, Div Meter, Line, CSC'>
+					<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+						tempor incididunt ut labore et dolore magna aliqua.</description>
+					<employees>
+						<employee name='Tom Lehrer' position=''/>
+					</employees>
+				</department>
+			</departments>
+		</phase>
+
 
 		<phase order='10' name='Retire'>
 			<description>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
