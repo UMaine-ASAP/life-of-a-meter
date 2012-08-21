@@ -279,6 +279,11 @@ function data_getDepartment(phaseID, department) {
 	return phase.children('departments').children("department[name='" + department + "']");
 }
 
+function data_getJobPositions(phaseID, department) {
+	var department = data_getDepartment(phaseID, department);
+	return department.find('positions');	
+}
+
 function data_getDetails(xml_object) {
 	return {
 			'description': xml_object.children('description').text(),
@@ -346,13 +351,6 @@ function onClick_Department_Node(node) {
 	activeNode = node;
 
 	console.log("node clicked! " + node.contents);
-	var department = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + currentPhase.id + ")").find("department[name='" +  node.contents + "']");
-
-	var nodes = department.find('employee');
-	var nodeNames = [];
-	nodes.each( function() {
-		nodeNames.push( $(this).attr('name') );
-	});
 
 	/** Load description box */
 	var department 	 	  = data_getDepartment(currentPhase.id, node.contents);
@@ -376,14 +374,19 @@ function onClick_Department_Node(node) {
 	nodeSystem.removeAllButInGroup(departmentNodeGroup, node);	
 	nodeSystem.animateNodesInGroup(departmentNodeGroup, screenDim.width/2, screenDim.height/2);
 
-	// Create new group
-	jobpositionNodeGroup = nodeSystem.createNodeGroup(nodeNames, 'alignVertical', onClick_JobPosition_Node,  {type: 'center', xOffset: currentPhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
+	// Create next group
+	var jobPositions = data_getJobPositions(currentPhase.id, department.id);
+	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', onClick_JobPosition_Node,  {type: 'center', xOffset: currentPhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
 
 	// create lines again
 
 }
 
 function onClick_JobPosition_Node(node) {
+	// don't process the same node twice!
+	if( activeNode == node ) return;
+	activeNode = node;
+
 
 }
 
