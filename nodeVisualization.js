@@ -163,10 +163,9 @@ var nodeSystem = {};
 			firstNode.connectingLines.push([secondNode, line]);
 			secondNode.connectingLines.push([firstNode, line]);
 
-			var front = paper.set();
-			front.push(firstNode.circle, secondNode.circle);
 
-			line.toBack();
+			firstNode.toFront();
+			secondNode.toFront();
 		},
 
 		getIndexOfNode: function(node, nodePathArray) {
