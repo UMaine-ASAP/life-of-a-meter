@@ -8,6 +8,7 @@ function Phase(id, src, x, y, width, height, clickFunction) {
 	this.width = this.image.attrs.width;
 	this.height = this.image.attrs.height;
     this.location = '';
+    this.node = nodeSystem.createNode(30, 30, 0, '');
     this.clickFunction = clickFunction;
 
     var myself = this; // store reference for use in image function calls
@@ -15,11 +16,24 @@ function Phase(id, src, x, y, width, height, clickFunction) {
     this.moveTo = function(destX, destY, callback) {
         this.destX = destX;
         this.destY = destY;
+
+       this.node.x = destX + this.width/2;
+       this.node.y = destY + this.height/2;
+
+        this.toFront(); // Make sure image is above other
         this.image.animate({x: destX, y: destY}, 400, 'easeOut', function() {
             if( callback ) {
                 callback(myself);
             }
         });
+    };
+
+    this.hide = function() {
+
+    };
+
+    this.connectNode = function(node) {
+        nodeSystem.connectNodes(currentPhase.node, node);
     };
 
 	this.moveToCenter = function(callback) {
@@ -48,6 +62,7 @@ function Phase(id, src, x, y, width, height, clickFunction) {
     };
 
 	this.moveToOrigin = function() {
+        this.location = 'origin';
         this.moveTo(this.originalX, this.originalY);
 	};
 
