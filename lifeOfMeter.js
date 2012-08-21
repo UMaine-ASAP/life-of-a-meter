@@ -211,9 +211,7 @@ function closePhase() {
 	transparencyMask.hide();
 
 	//destroy nodes
-	for( node in nodeObjects['level1']) {
-		nodeObjects['level1'][node].remove();
-	}
+	nodeSystem.removeAllNodeGroups();
 
 	// Reset box
 	loadDefaultDescriptionBox();
