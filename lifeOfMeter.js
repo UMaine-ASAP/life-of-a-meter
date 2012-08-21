@@ -47,7 +47,7 @@ $(document).ready(function(){
 	// Create transparency layer
 	transparencyMask = paper.rect(0,0, "100%", "100%");
 
-	transparencyMask.attr({'fill': 'EFEFEF', 'opacity': '0'});
+	transparencyMask.attr({'fill': '#333', 'opacity': '0'});
 	transparencyMask.hide();
 	transparencyMask.click( closePhase );
 
@@ -147,7 +147,7 @@ function openPhase(phase) {
 
 	// Display transparency
 	transparencyMask.show();
-	transparencyMask.animate({'opacity': 0.3}, 500, 'linear');
+	transparencyMask.animate({'opacity': 0.8}, 500, 'linear');
 
 	/** Load description box */
 	var phase = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + phaseID + ")");
