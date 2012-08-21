@@ -10,19 +10,24 @@
 /*************/
 /* Globals
 /*************/
-var activeNode = null; 	// the "active" node -- the one in the center of the screen
 
 var nodeObjects = []; 	// Stores references to nodes in visualization
 
 var xmlData; 			// xml data storing data
 var paper; 				// Raphael.js object
-var currentPhase; 		// Phase currently selected. Undefined otherwise.
+
 var transparencyMask;	// Raphael transparency object used to hide the rest of the screen when an object has been selected
 
 
 var phaseNodeGroup;
 var departmentNodeGroup;
 var jobpositionNodeGroup;
+
+var currentPhase; 		// Phase currently selected. Undefined otherwise.
+var currentDepartment;
+var currentJobPosition;
+var activeNode = null; 	// the "active" node -- the one in the center of the screen
+
 
 /*************/
 /* Helper Functions
@@ -64,7 +69,6 @@ $(document).ready(function(){
 
 	//Raphael Setup
 	paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen - requires waiting for document.ready
-	nodeSystem.setCanvas(paper);
 
 	// Create transparency layer
 	transparencyMask = paper.rect(0,0, "100%", "100%");
@@ -73,6 +77,8 @@ $(document).ready(function(){
 	transparencyMask.hide();
 	transparencyMask.click( closePhase );
 
+	// Initialize node system
+	nodeSystem.setCanvas(paper);
 	nodeSystem.setBottomLayer(transparencyMask);
 
 	// Create default images at starting locations
