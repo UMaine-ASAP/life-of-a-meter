@@ -1,6 +1,20 @@
 var nodeSystem = {};
 
 (function() {
+
+	function graphNode(contents) {
+		this.contents = contents;
+		this.edgesFrom = [];
+		this.edgesTo = [];
+	}
+
+	function connectNodes(fromNode, toNode) {
+		if (fromNode.edgesTo.indexOf(toNode) != -1) {
+			fromNode.edgesTo.push(toNode);
+			toNode.edgesFrom.push(fromNode);
+		}
+	}
+
 	var defaultCircleAttrs = {'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5};
 
 	function node(x, y, size, text, callback) {
@@ -41,29 +55,24 @@ var nodeSystem = {};
 			var indexesToRemove = [];
 			var targetIndexesToRemove = [];
 
-			for (var i = 0; i < this.connectingLines.length; i++) {
-				var x = this.connectingLines[i];
+			if (this.connectingLines.length > 0) {
 
-				var connectedNode = x[0];
-				var connectedPath = x[1];
+				for (var i = 0; i < this.connectingLines.length; i++) {
+					var x = this.connectingLines[i];
 
-				//fade out the line
-				connectedPath.remove();
+					var connectedNode = x[0];
+					var connectedPath = x[1];
 
-				nodesToConnect.push(connectedNode);
-				indexesToRemove.push(this.connectingLines.indexOf(x));
-				targetIndexesToRemove.push([connectedNode, nodeSystem.getIndexOfNode(this, connectedNode.connectingLines)]);
-			}
+					//fade out the line
+					connectedPath.remove();
 
-			var newConnections = [];
-			for (var i = 0; i < this.connectingLines.length; i++) {
-				if (indexesToRemove.indexOf(i) != -1) {
-					continue;
+					nodesToConnect.push(connectedNode);
+					indexesToRemove.push(this.connectingLines.indexOf(x));
+					targetIndexesToRemove.push([connectedNode, nodeSystem.getIndexOfNode(this, connectedNode.connectingLines)]);
 				}
 
-				newConnections.push(this.connectingLines[i]);
-			}
 
+<<<<<<< HEAD
 			var targetNewConnections = [];
 			// for (var i = 0; i < connectedNode.connectingLines.length; i++) {
 			// 	if (targetIndexesToRemove.indexOf(i) != -1) {
@@ -74,6 +83,29 @@ var nodeSystem = {};
 
 			// this.connectingLines = newConnections;
 			// connectedNode.connectingLines = targetNewConnections;
+=======
+				var newConnections = [];
+				for (var i = 0; i < this.connectingLines.length; i++) {
+					if (indexesToRemove.indexOf(i) != -1) {
+						continue;
+					}
+
+					newConnections.push(this.connectingLines[i]);
+				}
+
+				var targetNewConnections = [];
+				for (var i = 0; i < connectedNode.connectingLines.length; i++) {
+					if (targetIndexesToRemove.indexOf(i) != -1) {
+						continue;
+					}
+					targetNewConnections.push(connectedNode.connectingLines[i]);
+				}
+
+				this.connectingLines = newConnections;
+				connectedNode.connectingLines = targetNewConnections;
+			}
+	
+>>>>>>> 8920e4c6fc36470a0d37b77696c6b6bd74979211
 
 			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
 			this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
