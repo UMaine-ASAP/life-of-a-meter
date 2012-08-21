@@ -181,6 +181,7 @@ var nodeSystem = {};
 			var front = paper.set();
 			front.push(firstNode.circle, secondNode.circle);
 			line.insertAfter(this.bottomLayer);
+
 		},
 
 		getIndexOfNode: function(node, nodePathArray) {
