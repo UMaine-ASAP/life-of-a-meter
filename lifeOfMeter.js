@@ -70,12 +70,12 @@ $(document).ready(function(){
  * @return void
  */
 function loadDefaultDescriptionBox() {
-	var instructions = $(xmlData).children('lifeOfMeter').children('instructions');
+	// var instructions = $(xmlData).children('lifeOfMeter').children('instructions');
 
-	var header 		= instructions.attr('name');
-	var description = instructions.children('description').text();
-
-	setDescriptionBox(header, description);
+	// var header 		= instructions.attr('name');
+	// var description = instructions.children('description').text();
+	$('#description-box').css('display','none');
+//	setDescriptionBox(header, description);
 }
 
 /**
@@ -89,6 +89,8 @@ function loadDefaultDescriptionBox() {
  * @return 	void
  */
 function setDescriptionBox(title, description) {
+	$('#description-box').css('display','block');
+
 	$('#description-title').html( title );
 	$('#description-content').html( description );
 
