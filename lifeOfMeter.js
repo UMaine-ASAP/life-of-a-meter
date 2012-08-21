@@ -31,7 +31,7 @@ function getScreenDimensions() {
 	var width  = parseInt( $('body').css('width') );
 	var height = parseInt( $('body').css('height') );
 
-	return {'width': width, 'height': height};
+	return {'width': width, 'height': height};	
 }
 
 // Array Remove - By John Resig (MIT Licensed)
@@ -80,65 +80,65 @@ $(document).ready(function(){
 	var xOffset = -211;
 	var yOffset = -170;
 
-	 var phaseData = [
+	 var phaseData = [	
 		{
-		 src: 'nDesignSpecs.png',
+		 src: 'nDesignSpecs.png', 
 		 x: 223,
 		 y: 295,
 		 width: 230,
 		 height: 200
 		},
 		{
-		 src: 'nPurchaseApproval.png',
+		 src: 'nPurchaseApproval.png', 
 		 x: 451,
 		 y: 296,
 		 width: 231,
 		 height: 191
 		},
 		{
-		 src: 'nPurchaseOrder.png',
+		 src: 'nPurchaseOrder.png', 
 		 x: 638,
 		 y: 299,
 		 width: 96,
 		 height: 181
 		},
 		{
-		 src: 'nReceiveMeters.png',
+		 src: 'nReceiveMeters.png', 
 		 x: 733,
 		 y: 311,
 		 width: 228,
 		 height: 163
 		},
 		{
-		 src: 'nDelivery.png',
+		 src: 'nDelivery.png', 
 		 x: 641,
 		 y: 556,
 		 width: 242,
 		 height: 134
 		},
 		{
-		 src: 'nMeterInstall.png',
+		 src: 'nMeterInstall.png', 
 		 x: 232,
 		 y: 538,
 		 width: 349,
 		 height: 217
 		},
-		{
-		 src: 'nAMITrouble.png',
+	 	{
+		 src: 'nAMITrouble.png', 
 		 x: 260,
 		 y: 768,
 		 width: 240,
 		 height: 182
 		},
 		{
-		 src: 'nMaintenance.png',
+		 src: 'nMaintenance.png', 
 		 x: 534,
 		 y: 809,
 		 width: 101,
 		 height: 124
 		},
 		{
-		 src: 'nTesting.png',
+		 src: 'nTesting.png', 
 		 x: 796,
 		 y: 792,
 		 width: 82,
@@ -256,10 +256,58 @@ function openPhase(phase) {
 
 	/** Load nodes */
 	var nodes = phase.find('department');
+	var nodeNames = [];
+	nodes.each( function() {
+		nodeNames.push( $(this).attr('name') );
+	});
 
-	createLevel('level1', nodes, 3); // Position next level of nodes to right
+	//createLevel('level1', nodes, 3); // Position next level of nodes to right
+
+	nodeSystem.setCanvas(paper);
+	//var firstNode = nodeSystem.createNode(250, 250, 50, "foo");
+
+	// Create node for image
+	phaseNodeGroup = nodeSystem.createNodeGroup([''], 'alignVertical', undefined, {});
+//	currentPhase.toFront();
+
+	departmentNodeGroup = nodeSystem.createNodeGroup(nodeNames, 'alignVertical', loadPositionsInDepartment, {type: 'center', xOffset: currentPhase.width/2 + 50}, 'animateFromCenter');
+
+	nodeSystem.connectNodesBetweenGroups(phaseNodeGroup, departmentNodeGroup);
 
 } // End load Data and nodes
+
+
+function loadPositionsInDepartment(node) {
+	console.log("node clicked! " + node.contents);
+	var department = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + currentPhase.id + ")").find("department[name='" +  node.contents + "']");
+
+	var nodes = department.find('employee');
+	var nodeNames = [];
+	nodes.each( function() {
+		nodeNames.push( $(this).attr('name') );
+	});
+
+
+	// Move current phase and nodeGroup to left column
+	currentPhase.moveToLeft();
+	var phaseNode = nodeSystem.getNodeFromGroup(phaseNodeGroup, 0);
+	phaseNode.animateTo(currentPhase.destX + currentPhase.width/2, currentPhase.destY + currentPhase.height/2);
+
+	// Move right column to center
+	var screenDim = getScreenDimensions();
+
+	nodeSystem.removeAllButInGroup(departmentNodeGroup, node);	
+	nodeSystem.animateNodesInGroup(departmentNodeGroup, screenDim.width/2, screenDim.height/2);
+
+	// Create new group
+	jobpositionNodeGroup = nodeSystem.createNodeGroup(nodeNames, 'alignVertical', undefined,  {type: 'center', xOffset: currentPhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
+
+	// create lines again
+	console.log("count: " + nodeSystem.nodeGroups[1].length);
+
+	nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, phaseNodeGroup);
+	nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, jobpositionNodeGroup);	
+}
 
 
 
