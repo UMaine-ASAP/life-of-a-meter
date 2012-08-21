@@ -148,6 +148,16 @@ var nodeSystem = {};
 			return newNode;
 		},
 
+		removeAllConnections: function(nodeGroup) {
+			for (var i = 0; i < nodeGroup.length; i++) {
+				for (var nodeLineGroup in nodeGroup.connectingLines) {
+					nodeLineGroup[1].remove();
+				}
+
+				nodeGroup[i].connectingLines = [];
+			}
+		},
+
 		connectNodes: function(firstNode, secondNode) {
 			for (var i = 0; i < firstNode.connectingLines.length; i++) {
 				if (firstNode.connectingLines[i][0] == secondNode) {
