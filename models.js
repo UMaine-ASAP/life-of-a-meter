@@ -1,4 +1,4 @@
-function Phase(id, src, x, y, width, height, moveToCenterCallback) {
+function Phase(id, src, x, y, width, height, clickFunction) {
 	this.id = id;
 	this.image = paper.image(src, x, y, width, height);
 	this.originalX = x;
@@ -7,6 +7,8 @@ function Phase(id, src, x, y, width, height, moveToCenterCallback) {
     this.destY = y;
 	this.width = this.image.attrs.width;
 	this.height = this.image.attrs.height;
+    this.location = '';
+    this.clickFunction = clickFunction;
 
     var myself = this; // store reference for use in image function calls
 
@@ -20,14 +22,16 @@ function Phase(id, src, x, y, width, height, moveToCenterCallback) {
         });
     };
 
-	this.moveToCenter = function() {
+	this.moveToCenter = function(callback) {
 		var destX = parseInt($('body').css('width'))  / 2 - this.width/2;
 		var destY = parseInt($('body').css('height')) / 2 - this.height/2;
 
-        this.moveTo(destX, destY, this.moveToCenterCallback);
+        this.location = 'center';
+
+        this.moveTo(destX, destY, callback);
 	};
 
-    this.moveToCenterCallback = moveToCenterCallback;
+//    this.moveToCenterCallback = moveToCenterCallback;
 
     this.toFront = function() {
         this.image.toFront();
@@ -36,6 +40,9 @@ function Phase(id, src, x, y, width, height, moveToCenterCallback) {
     this.moveToLeft = function(callback) {
         var destX = parseInt($('body').css('width'))  / 2 - this.width/2 - 200 - this.width/2; // center - 200 - width/2
         var destY = parseInt($('body').css('height')) / 2 - this.height/2;
+
+        this.location = 'left';
+
         this.moveTo(destX, destY, callback);
 
     };
@@ -45,15 +52,7 @@ function Phase(id, src, x, y, width, height, moveToCenterCallback) {
 	};
 
     this.onClick = function() {
-        // Make sure there isn't something already in the center
-        if( currentPhase ) return;
-
-        // Set currentPhase to the clicked one
-        currentPhase = myself;
-
-        // Animate image to center of page
-        myself.toFront();
-        myself.moveToCenter();
+        myself.clickFunction(myself);
     };
 
 	// set image properties

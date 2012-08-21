@@ -155,7 +155,7 @@ $(document).ready(function(){
 
 	for(var i=0; i<phaseData.length; i++) {
 		var phaseAttr = phaseData[i];
-		phases.push( new Phase(i + 1, "images/" + phaseAttr.src, phaseAttr.x + xOffset, phaseAttr.y + yOffset, phaseAttr.width, phaseAttr.height, openPhase) );
+		phases.push( new Phase(i + 1, "images/" + phaseAttr.src, phaseAttr.x + xOffset, phaseAttr.y + yOffset, phaseAttr.width, phaseAttr.height, phaseClick) );
 	}
 
 }); // End $(document).ready
@@ -223,6 +223,23 @@ function closePhase() {
 	currentPhase = undefined;
 }
 
+function phaseClick(myself) {
+        // Make sure there isn't something already in the center
+        if( currentPhase && !( currentPhase && myself.location == 'left') ) return;
+
+        if( currentPhase && myself.location == 'left') {
+            nodeSystem.removeAllNodeGroups();
+        }
+
+        // Set currentPhase to the clicked one
+        currentPhase = myself;
+        console.log('running');
+        // Animate image to center of page
+        myself.toFront();
+        myself.moveToCenter( function() { openPhase(myself); });
+
+}
+
 
 /**
  * Open Phase
@@ -268,7 +285,7 @@ function openPhase(phase) {
 
 	// Create node for image
 	phaseNodeGroup = nodeSystem.createNodeGroup([''], 'alignVertical', undefined, {});
-//	currentPhase.toFront();
+	currentPhase.toFront();
 
 	departmentNodeGroup = nodeSystem.createNodeGroup(nodeNames, 'alignVertical', loadPositionsInDepartment, {type: 'center', xOffset: currentPhase.width/2 + 50}, 'animateFromCenter');
 
@@ -307,6 +324,8 @@ function loadPositionsInDepartment(node) {
 
 	nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, phaseNodeGroup);
 	nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, jobpositionNodeGroup);	
+	currentPhase.toFront();
+
 }
 
 
