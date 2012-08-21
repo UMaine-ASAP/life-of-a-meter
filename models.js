@@ -45,6 +45,7 @@ function Phase(id, src, x, y, width, height, moveToCenterCallback, moveToOriginC
         currentPhase = myself;
 
         // Animate image to center of page
+        myself.toFront();
         myself.moveToCenter();
     };
 
