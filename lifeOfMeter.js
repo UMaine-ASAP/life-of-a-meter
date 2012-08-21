@@ -64,6 +64,7 @@ $(document).ready(function(){
 
 	//Raphael Setup
 	paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen - requires waiting for document.ready
+	nodeSystem.setCanvas(paper);
 
 	// Create transparency layer
 	transparencyMask = paper.rect(0,0, "100%", "100%");
