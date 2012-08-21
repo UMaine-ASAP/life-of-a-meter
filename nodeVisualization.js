@@ -72,18 +72,7 @@ var nodeSystem = {};
 				}
 
 
-<<<<<<< HEAD
-			var targetNewConnections = [];
-			// for (var i = 0; i < connectedNode.connectingLines.length; i++) {
-			// 	if (targetIndexesToRemove.indexOf(i) != -1) {
-			// 		continue;
-			// 	}
-			// 	targetNewConnections.push(connectedNode.connectingLines[i]);
-			// }
 
-			// this.connectingLines = newConnections;
-			// connectedNode.connectingLines = targetNewConnections;
-=======
 				var newConnections = [];
 				for (var i = 0; i < this.connectingLines.length; i++) {
 					if (indexesToRemove.indexOf(i) != -1) {
@@ -105,7 +94,7 @@ var nodeSystem = {};
 				connectedNode.connectingLines = targetNewConnections;
 			}
 	
->>>>>>> 8920e4c6fc36470a0d37b77696c6b6bd74979211
+
 
 			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
 			this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
