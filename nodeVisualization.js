@@ -49,6 +49,11 @@ var nodeSystem = {};
 		//draw the text (after the circle, so that it appears on top of it)
 		this.text = this.canvas.text(this.x, this.y, this.contents);
 
+		this.toFront = function() {
+			this.circle.toFront();
+			this.text.toFront();
+		};
+
 		//function that animates the node from one position to another
 		this.animateTo = function(cx, cy) {
 			var nodesToConnect = [];
@@ -174,21 +179,21 @@ var nodeSystem = {};
 			return -1;
 		},
 
-		getNodeFromGroup: function(groupID, nodeID) {
-			return this.nodeGroups[groupID][nodeID];
+		getNodeFromGroup: function(group, nodeID) {
+			return group[nodeID];
 		},
 
 		removeAllNodeGroups: function() {
 			var nodeGroupsLength = this.nodeGroups.length;
 			console.log("Removing " + nodeGroupsLength + " node groups");
 			for(var nodeGroupID=nodeGroupsLength-1; nodeGroupID>=0; nodeGroupID--) {
-				this.removeNodeGroup(nodeGroupID);
+				this.removeNodeGroup(this.nodeGroups[nodeGroupID]);
 			}
 		},
 
-		removeNodeGroup: function(nodeGroupID) {
-			console.log("removing node group: " + nodeGroupID);
-			var nodeGroup = this.nodeGroups[nodeGroupID];
+		removeNodeGroup: function(nodeGroup) {
+			console.log("removing node group: " + nodeGroup);
+//			var nodeGroup = this.nodeGroups[nodeGroupID];
 			var nodeGroupLength = nodeGroup.length;
 			for(var i=nodeGroupLength-1; i>=0; i--) {
 				nodeGroup[i].remove();
@@ -196,6 +201,12 @@ var nodeSystem = {};
 			}
 			this.nodeGroups.remove(i);
 
+		},
+
+		createNodeGroupFromNodes: function(nodes) {
+			var newNodeGroupID = this.nodeGroups.length;
+			this.nodeGroups.push( nodes );
+			return this.nodeGroups[newNodeGroupID];
 		},
 
 		createNodeGroup: function(nodeNames, layoutType, callback, layoutAttrs, displayMethod) {
@@ -258,16 +269,16 @@ var nodeSystem = {};
 					break;
 				}
 
-				this.addNodeToGroup(node, newNodeGroupID);
+				this.addNodeToGroup(node, this.nodeGroups[newNodeGroupID]);
 			}
-			return newNodeGroupID;
+			return this.nodeGroups[newNodeGroupID];
 		},
 
-		connectNodesBetweenGroups: function(nodeGroupID_1, nodeGroupID_2) {
-			var nodeGroup_1 = this.nodeGroups[nodeGroupID_1];
+		connectNodesBetweenGroups: function(nodeGroup_1, nodeGroup_2) {
+//			var nodeGroup_1 = this.nodeGroups[nodeGroupID_1];
 			var nodeGroupLength_1 = nodeGroup_1.length;
 
-			var nodeGroup_2 = this.nodeGroups[nodeGroupID_2];
+//			var nodeGroup_2 = this.nodeGroups[nodeGroupID_2];
 			var nodeGroupLength_2 = nodeGroup_2.length;
 			console.log("attempting connection: nodegroup1-length: " + nodeGroupLength_1 +  " nodegroup2-length: " + nodeGroupLength_2);
 
@@ -279,8 +290,8 @@ var nodeSystem = {};
 			}
 		},
 
-		removeAllButInGroup: function(nodeGroupID, node) {
-			var nodeGroup = this.nodeGroups[nodeGroupID];
+		removeAllButInGroup: function(nodeGroup, node) {
+//			var nodeGroup = this.nodeGroups[nodeGroupID];
 			var nodeGroupLength = nodeGroup.length;
 
 			for(var i=nodeGroupLength-1; i>=0; i--) {
@@ -292,8 +303,8 @@ var nodeSystem = {};
 			}
 		},
 
-		animateNodesInGroup: function(nodeGroupID, destX, destY) {
-			var nodeGroup 		= this.nodeGroups[nodeGroupID];
+		animateNodesInGroup: function(nodeGroup, destX, destY) {
+//			var nodeGroup 		= this.nodeGroups[nodeGroupID];
 			var nodeGroupLength = nodeGroup.length;
 
 			for(var i=0; i<nodeGroupLength; i++) {
@@ -304,9 +315,9 @@ var nodeSystem = {};
 			}
 		},
 
-		addNodeToGroup: function(node, nodeGroupID) {
-			console.log("Adding node " + node + " to nodeGroup " + nodeGroupID);
-			this.nodeGroups[nodeGroupID].push( node );
+		addNodeToGroup: function(node, nodeGroup) {
+			console.log("Adding node " + node + " to nodeGroup " + nodeGroup);
+			nodeGroup.push( node );
 		},
 	}
 })();
