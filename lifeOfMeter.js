@@ -224,23 +224,75 @@ function closePhase() {
 	currentPhase = undefined;
 }
 
-function phaseClick(myself) {
-        // Make sure there isn't something already in the center
-        if( currentPhase && !( currentPhase && myself.location == 'left') ) return;
+function phaseClick(phase) {
+        // Make sure there isn't something already in the center or not located in left
+        if( currentPhase && !( currentPhase && phase.location == 'left') ) return;
 
-        if( currentPhase && myself.location == 'left') {
-            nodeSystem.removeAllNodeGroups();
+        // In left
+        if( currentPhase && phase.location == 'left') {
+			// Remove old nodes            
+            nodeSystem.removeNodeGroup( departmentNodeGroup );
+            nodeSystem.removeNodeGroup( jobpositionNodeGroup );
+
+            var departmentNames = data_mapNameToArray( data_getDepartments(currentPhase.id) );
+
+            departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', onClick_Department_Node, {type: 'center', xOffset: currentPhase.width/2 + 50}, 'animateFromCenter');
+
+			/** Load description box */
+			var phaseData  	 = data_getPhase(currentPhase.id);
+			var phaseDetails = data_getDetails(phaseData);
+
+			setDescriptionBox(phaseDetails.name, phaseDetails.description);
+
+
+        	// Move back to center
+	        phase.moveToCenter( function() { 
+	            nodeSystem.connectNodesBetweenGroups(phaseNodeGroup, departmentNodeGroup);
+    	        currentPhase.toFront();
+			});
+
+            return;
         }
 
-        // Set currentPhase to the clicked one
-        currentPhase = myself;
-        console.log('running');
-        // Animate image to center of page
-        myself.toFront();
-        myself.moveToCenter( function() { openPhase(myself); });
+        // No phase loaded. Load selected phase
+        currentPhase = phase;
 
+        // Animate image to center of page
+        phase.moveToCenter( function() { openPhase(phase); });
 }
 
+
+/*************************/
+/* Data Access
+/*************************/
+function data_getPhase(phaseID) {
+	return $(xmlData).children('lifeOfMeter').children('phases').find("phase[order='" + phaseID + "']");
+}
+
+function data_getDepartments(phaseID) {
+	var phase = data_getPhase(phaseID);
+	return phase.find('department');
+}
+
+function data_getDepartment(phaseID, department) {
+	var phase = data_getPhase(phaseID);
+	return phase.children('departments').children("department[name='" + department + "']");
+}
+
+function data_getDetails(xml_object) {
+	return {
+			'description': xml_object.children('description').text(),
+			'name': 	xml_object.attr('name'),
+	};
+}
+
+function data_mapNameToArray(xml_objects) {
+	var result = [];
+	xml_objects.each( function() {
+		result.push( $(this).attr('name') );
+	});
+	return result;
+}
 
 /**
  * Open Phase
@@ -255,7 +307,6 @@ function openPhase(phase) {
 	var phaseID = phase.id;		
     console.log("loading phase with ID: " + phaseID);
 
-
 	// Order objects
 	transparencyMask.toFront();
 	currentPhase.toFront();
@@ -265,37 +316,35 @@ function openPhase(phase) {
 	transparencyMask.animate({'opacity': 0.8}, 500, 'linear');
 
 	/** Load description box */
-	var phase = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + phaseID + ")");
+	var phaseData 	 = data_getPhase(phaseID);
+	var phaseDetails = data_getDetails(phaseData);
 
-	var phaseDescription = phase.children('description').text();
-	var phaseName = phase.attr('name');
+	setDescriptionBox(phaseDetails.name, phaseDetails.description);
 
-	setDescriptionBox(phaseName, phaseDescription);
-
-	/** Load nodes */
-	var nodes = phase.find('department');
-	var nodeNames = [];
-	nodes.each( function() {
-		nodeNames.push( $(this).attr('name') );
-	});
-
-	//createLevel('level1', nodes, 3); // Position next level of nodes to right
-
-	nodeSystem.setCanvas(paper);
-	//var firstNode = nodeSystem.createNode(250, 250, 50, "foo");
+	/** Load Department Names */
+	departmentNames = data_mapNameToArray( data_getDepartments(phaseID) );
 
 	// Create node for image
-	phaseNodeGroup = nodeSystem.createNodeGroup([''], 'alignVertical', undefined, {});
-	currentPhase.toFront();
+	phaseNodeGroup = nodeSystem.createNodeGroupFromNodes([currentPhase.node] );//nodeSystem.createNodeGroup([''], 'alignVertical', undefined, {});
 
-	departmentNodeGroup = nodeSystem.createNodeGroup(nodeNames, 'alignVertical', loadPositionsInDepartment, {type: 'center', xOffset: currentPhase.width/2 + 50}, 'animateFromCenter');
+	departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', onClick_Department_Node, {type: 'center', xOffset: currentPhase.width/2 + 50}, 'animateFromCenter');
+
 
 	nodeSystem.connectNodesBetweenGroups(phaseNodeGroup, departmentNodeGroup);
+
+ 	// Put phase on front
+	currentPhase.toFront();
+
+	activeNode = currentPhase.node;
 
 } // End load Data and nodes
 
 
-function loadPositionsInDepartment(node) {
+function onClick_Department_Node(node) {
+	// don't process the same node twice!
+	if( activeNode == node ) return;
+	activeNode = node;
+
 	console.log("node clicked! " + node.contents);
 	var department = $(xmlData).children('lifeOfMeter').children('phases').find("phase:nth-child(" + currentPhase.id + ")").find("department[name='" +  node.contents + "']");
 
@@ -305,11 +354,21 @@ function loadPositionsInDepartment(node) {
 		nodeNames.push( $(this).attr('name') );
 	});
 
+	/** Load description box */
+	var department 	 	  = data_getDepartment(currentPhase.id, node.contents);
+	var departmentDetails = data_getDetails(department);
+
+	setDescriptionBox(departmentDetails.name, departmentDetails.description);
+
 
 	// Move current phase and nodeGroup to left column
-	currentPhase.moveToLeft();
-	var phaseNode = nodeSystem.getNodeFromGroup(phaseNodeGroup, 0);
-	phaseNode.animateTo(currentPhase.destX + currentPhase.width/2, currentPhase.destY + currentPhase.height/2);
+	currentPhase.moveToLeft( function() {
+			//currentPhase.connectNode(node);
+			nodeSystem.connectNodesBetweenGroups(phaseNodeGroup, departmentNodeGroup);
+			nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, jobpositionNodeGroup);	
+
+    	    currentPhase.toFront();
+	});
 
 	// Move right column to center
 	var screenDim = getScreenDimensions();
@@ -318,14 +377,13 @@ function loadPositionsInDepartment(node) {
 	nodeSystem.animateNodesInGroup(departmentNodeGroup, screenDim.width/2, screenDim.height/2);
 
 	// Create new group
-	jobpositionNodeGroup = nodeSystem.createNodeGroup(nodeNames, 'alignVertical', undefined,  {type: 'center', xOffset: currentPhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
+	jobpositionNodeGroup = nodeSystem.createNodeGroup(nodeNames, 'alignVertical', onClick_JobPosition_Node,  {type: 'center', xOffset: currentPhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
 
 	// create lines again
-	console.log("count: " + nodeSystem.nodeGroups[1].length);
 
-	nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, phaseNodeGroup);
-	nodeSystem.connectNodesBetweenGroups(departmentNodeGroup, jobpositionNodeGroup);	
-	currentPhase.toFront();
+}
+
+function onClick_JobPosition_Node(node) {
 
 }
 
@@ -340,27 +398,5 @@ function loadPositionsInDepartment(node) {
  *
  * @return 	void
  */
-function loadDepartmentEmployees(department) {
-   console.log("loading phase employees");
-   var employees = null;
 
-   $(xmlData).find("department").each(function() {
-      if ($(this).attr("name") == department) {
-          console.log("matched " + department);
-           employees = $(this).find("employee");
-      }
-   });
-
-   console.log("count of nodeObjects: " + nodeObjects['level1'].length);
-
-   for (var i = 0; i < nodeObjects['level1'].length; i++) {
-       if (nodeObjects['level1'][i] == activeNode) {
-           continue;
-       }
-
-       nodeObjects['level1'][i].remove();
-   }
-
-   createLevel('level1', employees, 3);
-}
 
