@@ -46,6 +46,17 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
+
+// Implement index of, especially for IE
+if (!Array.prototype.indexOf) { 
+    Array.prototype.indexOf = function(obj, start) {
+         for (var i = (start || 0), j = this.length; i < j; i++) {
+             if (this[i] === obj) { return i; }
+         }
+         return -1;
+    }
+}
+
 $(document).ready(function(){
 	
 	/*************/
@@ -159,7 +170,7 @@ $(document).ready(function(){
 		 y: 772,
 		 width: 81,
 		 height: 134
-		},
+		}
 	];
 
 	for(var i=0; i<phaseData.length; i++) {
@@ -307,7 +318,7 @@ function data_getJobPosition(phaseID, department, position) {
 function data_getDetails(xml_object) {
 	return {
 			'description': xml_object.children('description').text(),
-			'name': 	xml_object.attr('name'),
+			'name': 	xml_object.attr('name')
 	};
 }
 

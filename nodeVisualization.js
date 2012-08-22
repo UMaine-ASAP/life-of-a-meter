@@ -334,8 +334,8 @@ var nodeSystem = {};
 		addNodeToGroup: function(node, nodeGroup) {
 			console.log("Adding node " + node + " to nodeGroup " + nodeGroup);
 			nodeGroup.push( node );
-		},
-	}
+		}
+	};
 })();
 
 function loadNextLevel() {
