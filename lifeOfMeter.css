@@ -15,10 +15,13 @@ body {
 	margin: 0 auto;
 }
 
+/** Make sure images are always on top */
 img {
 	position: absolute;
 	z-index: 0;
 }
+
+/** Description Box */
 
 #description-box {
 	position: absolute;
