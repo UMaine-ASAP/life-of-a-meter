@@ -9,12 +9,19 @@ body {
 
 #container {
 	background-color: #333;
+	width: 1024px;
+	height: 768px;
+	position: relative;
+	margin: 0 auto;
 }
 
+/** Make sure images are always on top */
 img {
 	position: absolute;
 	z-index: 0;
 }
+
+/** Description Box */
 
 #description-box {
 	position: absolute;

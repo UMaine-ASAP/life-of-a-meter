@@ -1,3 +1,17 @@
+/**
+ * Node Visualization
+ *
+ * Node-based visualization system
+ *
+ * This file defines the node, nodegroup, and nodeSystem objects. To use, nodeSystem needs to be initialized by calling nodeSystem.setCanvas() passing a reference to a Raphael object.
+ *
+ * @Requires raphael.js
+ * @Requires jquery.js
+ *
+ * @Author Ross Trundy, Tim Westbaker
+ * @Created 8-20-2012
+ */
+
 var nodeSystem = {};
 
 (function() {
@@ -15,6 +29,20 @@ var nodeSystem = {};
 		}
 	}
 
+
+	/**
+	 * Node
+	 *
+	 * Creates a node object
+	 *
+	 * @param 	int 		x 			starting x position
+	 * @param 	int 		y 			starting y position
+	 * @param 	int 		size 		size of node to create (radius of circle)
+	 * @param 	string 		text 		Text to place in node
+	 * @param 	function   	callback 	function to call when clicking node
+	 *
+	 * @return  object 		node
+	 */
 	var defaultCircleAttrs = {'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5};
 
 	function node(x, y, size, text, callback) {
@@ -134,16 +162,23 @@ var nodeSystem = {};
 		}
 	}
 
+	/**
+	 * Node System
+	 *
+	 * Defines the node management system. Used to create nodes, node groups
+	 *
+	 * Be sure to initialize by calling nodeSystem.setCanvas()
+	 */
 	nodeSystem = {
 		nodeGroups: [],
 		bottomLayer: undefined,
 
-		setBottomLayer: function(object) {
-			this.bottomLayer = object;
-		},
-
 		setCanvas: function(canvas) {
 			this._mainCanvas = canvas;
+		},
+
+		setBottomLayer: function(object) {
+			this.bottomLayer = object;
 		},
 
 		createNode: function(x, y, size, text, callback) {
@@ -197,30 +232,13 @@ var nodeSystem = {};
 			return -1;
 		},
 
-		getNodeFromGroup: function(group, nodeID) {
-			return group[nodeID];
-		},
+		/**************************************************/
+		/* Node Group functionality
+		/**************************************************/
 
-		removeAllNodeGroups: function() {
-			var nodeGroupsLength = this.nodeGroups.length;
-			console.log("Removing " + nodeGroupsLength + " node groups");
-			for(var nodeGroupID=nodeGroupsLength-1; nodeGroupID>=0; nodeGroupID--) {
-				this.removeNodeGroup(this.nodeGroups[nodeGroupID]);
-			}
-		},
-
-		removeNodeGroup: function(nodeGroup) {
-			console.log("removing node group: " + nodeGroup);
-//			var nodeGroup = this.nodeGroups[nodeGroupID];
-			var nodeGroupLength = nodeGroup.length;
-			for(var i=nodeGroupLength-1; i>=0; i--) {
-				nodeGroup[i].remove();
-				nodeGroup.remove(i);
-			}
-			this.nodeGroups.remove(i);
-
-		},
-
+		/*****/
+		/* Initialization
+		/*****/
 		createNodeGroupFromNodes: function(nodes) {
 			var newNodeGroupID = this.nodeGroups.length;
 			this.nodeGroups.push( nodes );
@@ -292,24 +310,60 @@ var nodeSystem = {};
 			return this.nodeGroups[newNodeGroupID];
 		},
 
-		connectNodesBetweenGroups: function(nodeGroup_1, nodeGroup_2) {
-//			var nodeGroup_1 = this.nodeGroups[nodeGroupID_1];
-			var nodeGroupLength_1 = nodeGroup_1.length;
+		/*****/
+		/* Manipulate
+		/*****/
 
-//			var nodeGroup_2 = this.nodeGroups[nodeGroupID_2];
-			var nodeGroupLength_2 = nodeGroup_2.length;
-			console.log("attempting connection: nodegroup1-length: " + nodeGroupLength_1 +  " nodegroup2-length: " + nodeGroupLength_2);
+		addNodeToGroup: function(node, nodeGroup) {
+			console.log("Adding node " + node + " to nodeGroup " + nodeGroup);
+			nodeGroup.push( node );
+		},
 
-			for(var i1=0; i1<nodeGroupLength_1; i1++) {
-				for(var i2=0; i2<nodeGroupLength_2; i2++) {
-					console.log('connecting nodes node1: ' + nodeGroup_1[i1].contents + " node2: " + nodeGroup_2[i2].contents );
-					nodeSystem.connectNodes(nodeGroup_1[i1], nodeGroup_2[i2] );
-				}
+		animateNodesInGroup: function(nodeGroup, destX, destY) {
+			var nodeGroupLength = nodeGroup.length;
+
+			for(var i=0; i<nodeGroupLength; i++) {
+				var newX = ( destX == 'keep') ? nodeGroup[i].x: destX;
+				var newY = ( destY == 'keep') ? nodeGroup[i].y: destY;
+
+				nodeGroup[i].animateTo(newX, newY);
 			}
 		},
 
+
+		/*****/
+		/* Access
+		/*****/
+
+		getNodeFromGroup: function(group, nodeID) {
+			return group[nodeID];
+		},
+
+		/*****/
+		/* Destruction
+		/*****/
+
+		removeAllNodeGroups: function() {
+			var nodeGroupsLength = this.nodeGroups.length;
+			console.log("Removing " + nodeGroupsLength + " node groups");
+			for(var nodeGroupID=nodeGroupsLength-1; nodeGroupID>=0; nodeGroupID--) {
+				this.removeNodeGroup(this.nodeGroups[nodeGroupID]);
+			}
+		},
+
+		removeNodeGroup: function(nodeGroup) {
+			console.log("removing node group: " + nodeGroup);
+
+			var nodeGroupLength = nodeGroup.length;
+			for(var i=nodeGroupLength-1; i>=0; i--) {
+				nodeGroup[i].remove();
+				nodeGroup.remove(i);
+			}
+			this.nodeGroups.remove(i);
+
+		},
+
 		removeAllButInGroup: function(nodeGroup, node) {
-//			var nodeGroup = this.nodeGroups[nodeGroupID];
 			var nodeGroupLength = nodeGroup.length;
 
 			for(var i=nodeGroupLength-1; i>=0; i--) {
@@ -321,43 +375,23 @@ var nodeSystem = {};
 			}
 		},
 
-		animateNodesInGroup: function(nodeGroup, destX, destY) {
-//			var nodeGroup 		= this.nodeGroups[nodeGroupID];
-			var nodeGroupLength = nodeGroup.length;
+		/*****/
+		/* Inter-group functions
+		/*****/
 
-			for(var i=0; i<nodeGroupLength; i++) {
-				var newX = ( destX == 'keep') ? nodeGroup[i].x: destX;
-				var newY = ( destY == 'keep') ? nodeGroup[i].y: destY;
+		connectNodesBetweenGroups: function(nodeGroup_1, nodeGroup_2) {
+			var nodeGroupLength_1 = nodeGroup_1.length;
+			var nodeGroupLength_2 = nodeGroup_2.length;
 
-				nodeGroup[i].animateTo(newX, newY);
+			console.log("attempting connection: nodegroup1-length: " + nodeGroupLength_1 +  " nodegroup2-length: " + nodeGroupLength_2);
+
+			for(var i1=0; i1<nodeGroupLength_1; i1++) {
+				for(var i2=0; i2<nodeGroupLength_2; i2++) {
+					console.log('connecting nodes node1: ' + nodeGroup_1[i1].contents + " node2: " + nodeGroup_2[i2].contents );
+					nodeSystem.connectNodes(nodeGroup_1[i1], nodeGroup_2[i2] );
+				}
 			}
-		},
+		}
 
-		addNodeToGroup: function(node, nodeGroup) {
-			console.log("Adding node " + node + " to nodeGroup " + nodeGroup);
-			nodeGroup.push( node );
-		},
-	}
+	};
 })();
-
-function loadNextLevel() {
-
-}
-
-/**
- * Create Level
- *
- * Generates a series of nodes at the same depth
- *
- * @param 	level 	string
- * @param 	nodes 	array
- * @param 	column 	int 		indicates where the nodes should be placed visibly. 1 indicates far left, 2 center, 3 far right, otherwise nodes are not visible
- *
- * @return 	void
- */
-function createLevel(level, nodeNames, column) {
-	nodeObjects[level] = [];
-	nodeNames.each( function() { 
-		createNode(level, $(this).attr('name'), column);
-	});		
-}
