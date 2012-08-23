@@ -49,7 +49,7 @@ var nodeSystem = {};
 		this.x = x; //the center X position of the node
 		this.y = y; //the center Y position of the node
 		var tempText = nodeSystem._mainCanvas.text(0, 0, text);
-		this.size = 30 > (tempText.getBBox().width / 2) + 10 ? 50 : (tempText.getBBox().width / 2) + 10; //the diameter of the node
+		this.size = 30 > (tempText.getBBox().width / 2) + 10 ? 30 : (tempText.getBBox().width / 2) + 10; //the diameter of the node
 		tempText.remove();
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
 		this.defaultAnimationDuration = 400; //default animation duration in ms
@@ -155,7 +155,17 @@ var nodeSystem = {};
 			// removing connecting lines
 			for (var i = 0; i < this.connectingLines.length; i++) {
 				this.connectingLines[i][1].remove();
+				var thisIndex = nodeSystem.getIndexOfNode(this, this.connectingLines[i][0].connectingLines);
+
+				if (thisIndex == -1) {
+					console.log("removing node " + this.contents + ": connection with " + this.connectingLines[i][0].contents + " was not two-way");
+					continue;
+				}
+
+				this.connectingLines[i][0].connectingLines[thisIndex][1].remove();
+				this.connectingLines[i][0].connectingLines.splice(thisIndex, 1);
 			}			
+
 			// remove objects
 			this.circle.remove();
 			this.text.remove();
