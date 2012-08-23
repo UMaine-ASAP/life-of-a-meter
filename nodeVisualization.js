@@ -55,7 +55,7 @@ var nodeSystem = {};
 		this.defaultAnimationDuration = 400; //default animation duration in ms
 		this.connectingLines = [];
 		this.clickCallback = callback;
-		this.userData = undefined;
+		this.userData = {};
 
 		var thisNode = this;
 
@@ -86,7 +86,7 @@ var nodeSystem = {};
 		};
 
 		//function that animates the node from one position to another
-		this.animateTo = function(cx, cy) {
+		this.animateTo = function(cx, cy, callback) {
 			var nodesToConnect = [];
 			var indexesToRemove = [];
 			var targetIndexesToRemove = [];
@@ -138,8 +138,15 @@ var nodeSystem = {};
 			this.x = cx;
 			this.y = cy;
 
+			if (this.userData['physicsBody'] != undefined && this.userData['physicsBody'].m_body != undefined) {
+				this.userData['physicsBody'].m_body.SetPosition({x: x, y: y - nodePhysics.worldHeight});
+			}
 			for (var i = 0; i < nodesToConnect.length; i++) {
 				nodeSystem.connectNodes(this, nodesToConnect[i]);
+			}
+
+			if (callback != undefined) {
+				callback(this);
 			}
 		};
 
@@ -169,6 +176,8 @@ var nodeSystem = {};
 			// remove objects
 			this.circle.remove();
 			this.text.remove();
+
+			nodePhysics.removeNode(this);
 		}
 	}
 
@@ -255,6 +264,10 @@ var nodeSystem = {};
 			return this.nodeGroups[newNodeGroupID];
 		},
 
+		addNodeToPhysics: function(node) {
+			nodePhysics.addNode(node);
+		},
+
 		createNodeGroup: function(nodeNames, layoutType, callback, layoutAttrs, displayMethod) {
 			displayMethod = displayMethod || 'normal';
 
@@ -306,7 +319,7 @@ var nodeSystem = {};
 				switch(displayMethod) {
 					case 'animateFromCenter':
 						node = this.createNode(screenWidth/2, screenHeight/2, nodeSize, nodeNames[i], callback);
-						node.animateTo(xPosition, yPosition);
+						node.animateTo(xPosition, yPosition, this.addNodeToPhysics);
 					break;
 
 					case 'normal':
