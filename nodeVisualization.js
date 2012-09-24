@@ -1,3 +1,8 @@
+String.prototype.splice = function(idx, rem, s ) {
+    return (this.slice(0, idx) + s + this.slice(idx + Math.abs(rem)));
+};
+
+
 /**
  * Node Visualization
  *
@@ -49,7 +54,20 @@ var nodeSystem = {};
 		this.x = x; //the center X position of the node
 		this.y = y; //the center Y position of the node
 		var tempText = nodeSystem._mainCanvas.text(0, 0, text);
-		this.size = 30 > (tempText.getBBox().width / 2) + 10 ? 30 : (tempText.getBBox().width / 2) + 10; //the diameter of the node
+		this.size = 30 > (tempText.getBBox().width / 2) + 10 ? 30 : (tempText.getBBox().width / 2) + 10; //the diameter of the 
+
+		if (this.size > 50) {
+			tempText.remove();
+			console.log("size > 100, fixing");
+			//hacky fix -- just hyphenate it in the center
+			var midSpace = text.length / 2;
+			text = text.splice(midSpace, 0, "-\n");
+
+			var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
+			this.size = (newTempText.getBBox().width / 2) + 10; //we probably won't need to do this more than once
+			newTempText.remove();
+		}
+
 		tempText.remove();
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
 		this.defaultAnimationDuration = 400; //default animation duration in ms

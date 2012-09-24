@@ -101,8 +101,9 @@ var nodePhysics = {
 	},
 
 	physicsStep: function() {
-		nodePhysics.world.Step(nodePhysics.timeStep, nodePhysics.velocityIterations, nodePhysics.positionIterations);
-		nodePhysics.updateNodes();
+		//uncomment these to re-enable physics
+		//nodePhysics.world.Step(nodePhysics.timeStep, nodePhysics.velocityIterations, nodePhysics.positionIterations);
+		//nodePhysics.updateNodes();
 	}
 }
 
