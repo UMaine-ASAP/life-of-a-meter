@@ -61,7 +61,7 @@ var nodeSystem = {};
 			console.log("size > 100, fixing");
 			//hacky fix -- just hyphenate it in the center
 			var midSpace = text.length / 2;
-			text = text.splice(midSpace, 0, "-\n");
+			text = text.splice(midSpace, 0, "\n");
 
 			var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
 			this.size = (newTempText.getBBox().width / 2) + 10; //we probably won't need to do this more than once
@@ -311,41 +311,61 @@ var nodeSystem = {};
 			var xPosition;
 			var yPosition;
 			var nodeNamesLength = nodeNames.length;
-
+			var lastIReset = 0;
+			var currentHeight = 0;
+			var currentXOffset = 0;
 			var nodeSize = 50;
+			var totalNodeHeight = 0;
+			var nodeOffsetOnNewColumn = 75;
+			var nodeYOffset = 0;
 
 			for(var i=0; i< nodeNamesLength; i++) {
+				totalNodeHeight += nodeSize;
+
+				if (totalNodeHeight > screenHeight - 100) //-75 so that we can give nodes a bit of padding
+				{
+					totalNodeHeight = 0;
+					lastIReset = i;
+					currentXOffset += nodeOffsetOnNewColumn;
+				}
 
 				// Set position based on layout type
 				switch(layoutType) {
 					case 'alignVertical':
-						xPosition = screenWidth  / 2 + nodeSize/2 +  layoutAttrs.xOffset;
-						var yDiff = i * (nodeSize + layoutAttrs.yPadding);
+						xPosition = screenWidth / 2 + nodeSize/2 + layoutAttrs.xOffset + currentXOffset;
+						var yDiff = (i - lastIReset) * (nodeSize + layoutAttrs.yPadding);
 						if( i % 2 == 1) {
 							yDiff = -yDiff - nodeSize - layoutAttrs.yPadding;
 						}
-						yPosition = screenHeight / 2 + yDiff  + layoutAttrs.yOffset;
-					break;
+						yPosition = screenHeight / 2 + yDiff + layoutAttrs.yOffset;
+						break;
 
 					default:
-						xPosition = screenWidth  * Math.random();
+						xPosition = screenWidth * Math.random();
 						yPosition = screenHeight * Math.random();
-					break;
-				}
+						break;
+					}
 
-				// Add to group
+					// Add to group
 				switch(displayMethod) {
 					case 'animateFromCenter':
 						node = this.createNode(screenWidth/2, screenHeight/2, nodeSize, nodeNames[i], callback);
+
+						if (node.size * 2 > nodeOffsetOnNewColumn)
+						{							
+							nodeOffsetOnNewColumn = 50 + node.size * 2;
+							console.log("increasing nodeOffsetOnNewColumn to " + nodeOffsetOnNewColumn);
+						}
+
+						totalNodeHeight += node.size;
 						node.animateTo(xPosition, yPosition, this.addNodeToPhysics);
-					break;
+						break;
 
 					case 'normal':
 					default:
 						node = this.createNode(xPosition, yPosition, nodeSize, nodeNames[i], callback);
-					break;
-				}
-
+						break;
+					}
 				this.addNodeToGroup(node, this.nodeGroups[newNodeGroupID]);
 			}
 			return this.nodeGroups[newNodeGroupID];
@@ -356,7 +376,6 @@ var nodeSystem = {};
 		/*****/
 
 		addNodeToGroup: function(node, nodeGroup) {
-			console.log("Adding node " + node + " to nodeGroup " + nodeGroup);
 			nodeGroup.push( node );
 		},
 
@@ -424,11 +443,8 @@ var nodeSystem = {};
 			var nodeGroupLength_1 = nodeGroup_1.length;
 			var nodeGroupLength_2 = nodeGroup_2.length;
 
-			console.log("attempting connection: nodegroup1-length: " + nodeGroupLength_1 +  " nodegroup2-length: " + nodeGroupLength_2);
-
 			for(var i1=0; i1<nodeGroupLength_1; i1++) {
 				for(var i2=0; i2<nodeGroupLength_2; i2++) {
-					console.log('connecting nodes node1: ' + nodeGroup_1[i1].contents + " node2: " + nodeGroup_2[i2].contents );
 					nodeSystem.connectNodes(nodeGroup_1[i1], nodeGroup_2[i2] );
 				}
 			}
