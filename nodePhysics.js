@@ -11,8 +11,6 @@ var nodePhysics = {
 		this.doSleep = doSleep;
 
 		this.world = new b2World(gravity, doSleep);
-		console.log("successfully initialized b2world");
-
 		var fixDef = new b2FixtureDef;
 		fixDef.density = .5;
 		fixDef.friction = 0.4;
@@ -114,7 +112,5 @@ $(document).ready(function() {
 	var gravity = new b2Vec2(-.1, -20); //we don't want gravity
 	var doSleep = true; //bodies that come to rest should not stay active
 
-	console.log("initializing world with worldHeight " + worldHeight + " and worldWidth " + worldWidth);
 	nodePhysics.init(worldHeight, worldWidth, gravity, doSleep);
-
 });

@@ -68,7 +68,6 @@ var nodeSystem = {};
 		//splits the node's text in half and joins it on a newline if it's unreasonably long
 		if (this.size > 50) {
 			tempText.remove();
-			console.log("size > 100, fixing");
 			//hacky fix -- just hyphenate it in the center
 			var midSpace = text.length / 2;
 			text = text.splice(midSpace, 0, "\n");
@@ -193,7 +192,6 @@ var nodeSystem = {};
 				var thisIndex = nodeSystem.getIndexOfNode(this, this.connectingLines[i][0].connectingLines);
 
 				if (thisIndex == -1) {
-					console.log("removing node " + this.contents + ": connection with " + this.connectingLines[i][0].contents + " was not two-way");
 					continue;
 				}
 
@@ -374,7 +372,6 @@ var nodeSystem = {};
 						if (node.size * 2 > nodeOffsetOnNewColumn)
 						{							
 							nodeOffsetOnNewColumn = 50 + node.size * 2;
-							console.log("increasing nodeOffsetOnNewColumn to " + nodeOffsetOnNewColumn);
 						}
 
 						totalNodeHeight += node.size;
@@ -425,15 +422,12 @@ var nodeSystem = {};
 
 		removeAllNodeGroups: function() {
 			var nodeGroupsLength = this.nodeGroups.length;
-			console.log("Removing " + nodeGroupsLength + " node groups");
 			for(var nodeGroupID=nodeGroupsLength-1; nodeGroupID>=0; nodeGroupID--) {
 				this.removeNodeGroup(this.nodeGroups[nodeGroupID]);
 			}
 		},
 
 		removeNodeGroup: function(nodeGroup) {
-			console.log("removing node group: " + nodeGroup);
-
 			var nodeGroupLength = nodeGroup.length;
 			for(var i=nodeGroupLength-1; i>=0; i--) {
 				nodeGroup[i].remove();

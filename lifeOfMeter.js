@@ -82,10 +82,8 @@ $(document).ready(function(){
     	type: "GET",
     	url: "data.xml",
     	dataType: "xml",
-    	success: function(xml){ 
-    		console.log("loaded xml file");
+    	success: function(xml){     		
     		xmlData = xml;
-
     		loadDefaultDescriptionBox();
     	}
 	});
@@ -192,9 +190,6 @@ function setDescriptionBox(title, description) {
  * @return void
  */
 function closePhase() {
-
-	console.log("closing phase");
-
 	// hide transparency mask
 	transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
 	transparencyMask.hide();
@@ -276,8 +271,6 @@ function phaseClick(phase) {
  */
 function openPhase(phase) {
 	var phaseID = phase.id;		
-    console.log("loading phase with ID: " + phaseID);
-
 	// Order objects
 	transparencyMask.toFront();
 	activePhase.toFront();
@@ -326,9 +319,6 @@ function DepartmentNodeClick(node) {
 	activeNode = node;
 	activeDepartmentNode = node;
 
-	console.log("node clicked! " + node.contents);
-
-
 	/** Load description box */
 	var department 	 	  = data_getDepartment(activePhase.id, node.contents);
 	var departmentDetails = data_getDetails(department);
@@ -359,7 +349,6 @@ function DepartmentNodeClick(node) {
 	}
 	var data = data_getJobPositions(activePhase.id, node.contents);
 	var jobPositions = data_mapNameToArray( data );
-		console.log('positions: ' + jobPositions);
 
 	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', JobPositionNodeClick,  {type: 'center', xOffset: activePhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
 
