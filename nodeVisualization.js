@@ -49,13 +49,23 @@ var nodeSystem = {};
 	 * @return  object 		node
 	 */
 	var defaultCircleAttrs = {'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5};
+	var defaultNodeSizePadding = 20;
+	var nodeMinSize = 30;
+
+	function guessNodeSize(text) {
+		var tempText = nodeSystem._mainCanvas.text(0, 0, text);
+		var initialSize = (tempText.getBBox().width / 2) + defaultNodeSizePadding;
+		tempText.remove();
+		return (nodeMinSize > initialSize ? nodeMinSize : initialSize);
+	}
 
 	function node(x, y, size, text, callback) {
 		this.x = x; //the center X position of the node
 		this.y = y; //the center Y position of the node
 		var tempText = nodeSystem._mainCanvas.text(0, 0, text);
-		this.size = 30 > (tempText.getBBox().width / 2) + 10 ? 30 : (tempText.getBBox().width / 2) + 10; //the diameter of the 
+		this.size = guessNodeSize(text);
 
+		//splits the node's text in half and joins it on a newline if it's unreasonably long
 		if (this.size > 50) {
 			tempText.remove();
 			console.log("size > 100, fixing");
@@ -64,7 +74,7 @@ var nodeSystem = {};
 			text = text.splice(midSpace, 0, "\n");
 
 			var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
-			this.size = (newTempText.getBBox().width / 2) + 10; //we probably won't need to do this more than once
+			this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding; //we probably won't need to do this more than once
 			newTempText.remove();
 		}
 
@@ -247,7 +257,7 @@ var nodeSystem = {};
 			}
 
 			var pathstring = "M " + firstNode.x + " " + firstNode.y + " L" + secondNode.x + " " + secondNode.y;
-			var line = paper.path(pathstring);
+			var line = paper.path(pathstring).attr({'stroke-width': 2});
 
 
 			firstNode.connectingLines.push([secondNode, line]);
@@ -315,18 +325,27 @@ var nodeSystem = {};
 			var currentHeight = 0;
 			var currentXOffset = 0;
 			var nodeSize = 50;
-			var totalNodeHeight = 0;
+			var totalNodeHeight = 50;
 			var nodeOffsetOnNewColumn = 75;
 			var nodeYOffset = 0;
+			var resetNodeYOffset = false;
 
 			for(var i=0; i< nodeNamesLength; i++) {
+				if (resetNodeYOffset) nodeYOffset = 0;
 				totalNodeHeight += nodeSize;
 
-				if (totalNodeHeight > screenHeight - 100) //-75 so that we can give nodes a bit of padding
+
+
+				if (totalNodeHeight > screenHeight - 100) //-100 so that we can give nodes a bit of padding
 				{
 					totalNodeHeight = 0;
 					lastIReset = i;
 					currentXOffset += nodeOffsetOnNewColumn;
+				}
+
+				if (totalNodeHeight < 100)
+				{
+					totalNodeHeight = 100;
 				}
 
 				// Set position based on layout type
@@ -337,7 +356,8 @@ var nodeSystem = {};
 						if( i % 2 == 1) {
 							yDiff = -yDiff - nodeSize - layoutAttrs.yPadding;
 						}
-						yPosition = screenHeight / 2 + yDiff + layoutAttrs.yOffset;
+						yPosition = screenHeight / 2 + yDiff + layoutAttrs.yOffset + nodeYOffset;
+
 						break;
 
 					default:
