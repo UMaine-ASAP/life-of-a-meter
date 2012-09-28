@@ -53,7 +53,7 @@ var nodeSystem = {};
 	var nodeMinSize = 30;
 
 	function guessNodeSize(text) {
-		var tempText = nodeSystem._mainCanvas.text(0, 0, text);
+		var tempText = nodeSystem._mainCanvas.text(0, 0, text).attr({'font-weight': 'bold'});
 		var initialSize = (tempText.getBBox().width / 2) + defaultNodeSizePadding;
 		tempText.remove();
 		return (nodeMinSize > initialSize ? nodeMinSize : initialSize);
@@ -75,6 +75,16 @@ var nodeSystem = {};
 			var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
 			this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding; //we probably won't need to do this more than once
 			newTempText.remove();
+
+			if (this.size > 50)
+			{
+				text = text.splice(text.length / 4, 0, "\n");
+				text = text.splice(text.length - Math.round(text.length * .25), 0, "\n");
+
+				var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
+				this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding;
+				newTempText.remove();
+			}
 		}
 
 		tempText.remove();
@@ -105,7 +115,7 @@ var nodeSystem = {};
 		this.circle.attr(defaultCircleAttrs);
 
 		//draw the text (after the circle, so that it appears on top of it)
-		this.text = this.canvas.text(this.x, this.y, this.contents);
+		this.text = this.canvas.text(this.x, this.y, this.contents).attr({'font-weight': 'bold'});
 
 		this.toFront = function() {
 			this.circle.toFront();
@@ -332,8 +342,6 @@ var nodeSystem = {};
 				if (resetNodeYOffset) nodeYOffset = 0;
 				totalNodeHeight += nodeSize;
 
-
-
 				if (totalNodeHeight > screenHeight - 100) //-100 so that we can give nodes a bit of padding
 				{
 					totalNodeHeight = 0;
@@ -341,6 +349,7 @@ var nodeSystem = {};
 					currentXOffset += nodeOffsetOnNewColumn;
 				}
 
+				//this staggers nodes to help minimize line overlap
 				if (totalNodeHeight < 100)
 				{
 					totalNodeHeight = 100;
@@ -355,6 +364,18 @@ var nodeSystem = {};
 							yDiff = -yDiff - nodeSize - layoutAttrs.yPadding;
 						}
 						yPosition = screenHeight / 2 + yDiff + layoutAttrs.yOffset + nodeYOffset;
+
+						if (yPosition < 30)
+						{
+							yPosition += 30;
+							totalNodeHeight += 30;
+						}
+
+						if (yPosition > (screenHeight - 10))
+						{
+							yPosition -= 10;
+							totalNodeHeight -= 10;
+						}
 
 						break;
 
