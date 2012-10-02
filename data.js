@@ -1,4 +1,67 @@
-var appData = {
+var departments;
+var phases;
+var jobs;
+var departmentPhases;
+
+$.ajax({
+	url: 'fetchdepartments.php'
+}).success(function(data) {
+	console.log("DEPARTMENTS");
+	departments = eval("(" + data + ")");
+	console.log(departments);
+	loadPhases();
+});
+
+var loadPhases = function()
+{
+	$.ajax({
+		url: 'fetchphases.php'
+	}).success(function(data) {
+		phases = eval("(" + data + ")");
+		console.log("PHASES");
+		console.log(phases);
+		loadJobs();
+	});
+}
+
+var loadJobs = function()
+{
+	$.ajax({
+		url: 'fetchjobs.php'
+	}).success(function(data) {
+		console.log("JOBS");
+		jobs = eval("(" + data + ")");
+		console.log(jobs);
+		buildRelations();
+	});
+}
+
+//associate departments with phases
+var buildRelations = function() 
+{
+	departmentPhases = [];
+
+	for (var h = 0; h < departments.length; h++)
+	{
+		var departmentObject = departments[h];
+		var phaseID = departmentObject['phase_id'];
+
+		for (var i = 0; i < phases.length; i++)
+		{
+			if (phases[i]['id'] == phaseID)
+			{
+				departmentPhases.push([departmentObject, phases[i]]);
+			}
+		}
+	}
+
+	console.log("DEPARTMENT PHASES");
+	console.log(departmentPhases);
+}
+
+
+
+/*var appData = {
 	phases: [
 		{
 			name: 'designspecs',
@@ -90,169 +153,4 @@ var appData = {
 		},
 	]
 };
-
-		Employees (unknown amount)
-		Description
-Purchase Approval
-Description
-	T&D Planning
-	Description
-		Employees (unknown amount)
-		Description
-	Executive Approval
-	Description
-		Employees (unknown amount)
-		Description
-Purchase Order
-Description
-	Stockroom – Purchasing Agent
-	Description
-		Employees (unknown amount)
-		Description
-Receive Meters/Modules
-Description
-	Banner Tech
-	Description
-		Employees (unknown amount)
-		Description
-	Business Support Services
-	Description
-		Employees (unknown amount)
-		Description
-	Account/Rates
-	Description
-		Employees (unknown amount)
-		Description
-	PST
-	Description
-		Employees (unknown amount)
-		Description
-Delivery to Outlying Divisions
-Description
-	Stockroom
-Description
-		Employees (unknown amount)
-		Description
-Fleet
-Description
-		Employees (unknown amount)
-		Description
-Meter Install/Exchange
-Description
-	Safety (training)
-	Description
-		Employees (unknown amount)
-		Description
-	Meter Tech
-	Description
-		Employees (unknown amount)
-		Description
-	Planning
-	Description
-		Employees (unknown amount)
-		Description
-	Engineering
-	Description
-		Employees (unknown amount)
-		Description
-	Key Accounts
-	Description
-		Employees (unknown amount)
-		Description
-	PST
-	Description
-		Employees (unknown amount)
-		Description
-	Line
-	Description
-		Employees (unknown amount)
-		Description
-	System Ops
-	Description
-		Employees (unknown amount)
-		Description
-	Customer Service
-	Description
-		Employees (unknown amount)
-		Description
-	Central Dispatch
-	Description
-		Employees (unknown amount)
-		Description
-	Business Support Services
-	Description
-		Employees (unknown amount)
-		Description
-	Admins
-	Description
-		Employees (unknown amount)
-		Description
-Maintenance
-Description
-	Customer Service
-	Description
-		Employees (unknown amount)
-		Description
-	Division Meter
-	Description
-		Employees (unknown amount)
-		Description
-	Line
-	Description
-		Employees (unknown amount)
-		Description
-	IT-System Support
-	Description
-		Employees (unknown amount)
-		Description
-Testing
-Description
-	Maintenance: Meter Tech, PST
-	Description
-		Employees (unknown amount)
-		Description
-	Compliance: Div Meter, Line, Meter tech, PST
-	Description
-		Employees (unknown amount)
-		Description
-	Shop: Meter Tech, PST
-	Description
-		Employees (unknown amount)
-		Description
-	Reads: Business Support Services, Meter Tech, Div Meter, Line, CSC
-	Description
-		Employees (unknown amount)
-		Description
-AMI Trouble
-Description
-	TNS
-	Description
-		Employees (unknown amount)
-		Description
-	Div Meter
-	Description
-		Employees (unknown amount)
-		Description
-	CSC
-	Description
-		Employees (unknown amount)
-		Description
-	Line
-	Description
-		Employees (unknown amount)
-		Description
-	Meter Tech
-	Description
-		Employees (unknown amount)
-		Description
-Retire
-Description
-	Removal – Div Meter, Line, Meter Tech, Plant, Environmental
-	Description
-		Employees (unknown amount)
-		Description
-	Junk – Meter Tech, Stockroom, PST
-	Description
-		Employees (unknown amount)
-		Description
-
+*/
