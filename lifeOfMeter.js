@@ -109,30 +109,42 @@ $(document).ready(function(){
 	/** Create default images at starting locations */
 
 	// Set big picture at bottom
-	paper.image("images/overview.png", 0, 0, 1024, 798);
+	paper.image("images/overview.png", 0, 0, 1000, 772);
 
 
 	// Set default phases and positions
+	var scale = 1;
 	var phaseData = [	
-			{ src: 'nDesignSpecs.png',  	id: 1,  x: 223,  y: 295, width: 230, height: 200 },
-			{ src: 'nPurchaseApproval.png', id: 2,  x: 451,  y: 296, width: 231, height: 191 },
-			{ src: 'nPurchaseOrder.png',  	id: 3,  x: 638,  y: 299, width: 96,  height: 181 },
-			{ src: 'nReceiveMeters.png',  	id: 4,  x: 733,  y: 311, width: 228, height: 163 },
-			{ src: 'nDelivery.png', 		id: 5,  x: 641,  y: 556, width: 242, height: 134 },
-			{ src: 'nMeterInstall.png',  	id: 6,  x: 232,  y: 538, width: 349, height: 217 },
-	 		{ src: 'nAMITrouble.png',  		id: 7,  x: 260,  y: 768, width: 240, height: 182 },
-			{ src: 'nMaintenance.png',  	id: 8,  x: 534,  y: 809, width: 101, height: 124 },
-			{ src: 'nTesting.png',  		id: 9,  x: 796,  y: 792, width: 82,  height: 120 },
-			{ src: 'nRetire.png', 			id: 10, x: 1153, y: 772, width: 81,  height: 134 }
+			{ src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: 10,    y: 109, width: 229,  height: 200 },
+			{ src: 'map/subregions-02.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 272,  y: 109, width: 296,  height: 200 },
+			{ src: 'map/subregions-03.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 3,  x: 678,  y: 109, width: 432,  height: 200 },
+			{ src: 'map/subregions-04.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 555,  y: 308, width: 456, height: 187 },
+			{ src: 'map/subregions-05.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: 95,    y: 320, width: 393, height: 209 },
+			{ src: 'map/subregions-06.png',  alt_img: '', alt_image_aspect: 0, id: 6,  x: 216,  y: 568, width: 345, height: 254 },
+	 	 	{ src: 'map/subregions-07.png',  alt_img: '', alt_image_aspect: 0, id: 7,  x: 593,  y: 558, width: 264, height: 198 },
+	 	 	{ src: 'map/subregions-08.png',  alt_img: '', alt_image_aspect: 0, id: 8,  x: 822,  y: 619, width: 123, height: 145 }
+
+	 	 	/*** Image transparencies ***/
+			// { src: 'map/transparent-with-border.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: 0,    y: 68, width: 184,  height: 156 },
+			// { src: 'transparent-with-border.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 182,  y: 68, width: 227,  height: 156 },
+			// { src: 'transparent-with-border.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 3,  x: 439,  y: 68, width: 353,  height: 156 },
+			// { src: 'transparent-with-border.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 341,  y: 231, width: 414, height: 156 },
+			// { src: 'transparent-with-border.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: 0,    y: 231, width: 310, height: 165 },
+			// { src: 'transparent-with-border.png',  alt_img: '', alt_image_aspect: 0, id: 6,  x: 120,  y: 410, width: 269, height: 202 },
+	 	//  	{ src: 'transparent-with-border.png',  alt_img: '', alt_image_aspect: 0, id: 7,  x: 447,  y: 429, width: 213, height: 154 },
+	 	//  	{ src: 'transparent-with-border.png',  alt_img: '', alt_image_aspect: 0, id: 7,  x: 677,  y: 482, width: 114, height: 130 }
+
+			// { src: 'nMaintenance.png',  	id: 8,  x: 534,  y: 809, width: 101, height: 124 },
+			// { src: 'nTesting.png',  		id: 9,  x: 796,  y: 792, width: 82,  height: 120 },
+			// { src: 'nRetire.png', 			id: 10, x: 1153, y: 772, width: 81,  height: 134 }
 		];
 
-	var xOffset = -211;
-	var yOffset = -170;
-
 	allPhases = [];
+	xOffset = 0;
+	yOffset = 86;
 	for(var i=0; i<phaseData.length; i++) {
 		var phaseAttr = phaseData[i];
-		allPhases.push( new Phase(phaseAttr.id, "images/" + phaseAttr.src, phaseAttr.x + xOffset, phaseAttr.y + yOffset, phaseAttr.width, phaseAttr.height, phaseClick) );
+		allPhases.push( new Phase(phaseAttr.id, "images/" + phaseAttr.src, (phaseAttr.x+xOffset)*scale, (phaseAttr.y+yOffset)*scale, phaseAttr.width*scale, phaseAttr.height*scale, "images/alt/" + phaseAttr.alt_img, phaseAttr.alt_image_aspect, phaseClick) );
 	}
 
 }); // End $(document).ready

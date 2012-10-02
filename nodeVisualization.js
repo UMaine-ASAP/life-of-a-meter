@@ -48,7 +48,7 @@ var nodeSystem = {};
 	 *
 	 * @return  object 		node
 	 */
-	var defaultCircleAttrs = {'fill': '#77C4D3', 'stroke': '#DAEDE2', 'stroke-width': 5};
+	var defaultCircleAttrs = {'fill': '#E89C23', 'stroke': '#111', 'stroke-width': 2};
 	var defaultNodeSizePadding = 20;
 	var nodeMinSize = 30;
 
