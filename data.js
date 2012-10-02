@@ -1,25 +1,25 @@
-var departments;
-var phases;
+var dataDepartments;
+var dataPhases;
 var jobs;
-var departmentPhases;
+var dataDepartmentPhases;
 
 $.ajax({
-	url: 'fetchdepartments.php'
+	url: 'fetchDepartments.php'
 }).success(function(data) {
-	console.log("DEPARTMENTS");
-	departments = eval("(" + data + ")");
-	console.log(departments);
-	loadPhases();
+	console.log("dataDepartments");
+	dataDepartments = eval("(" + data + ")");
+	console.log(dataDepartments);
+	loaddataPhases();
 });
 
-var loadPhases = function()
+var loaddataPhases = function()
 {
 	$.ajax({
-		url: 'fetchphases.php'
+		url: 'fetchPhases.php'
 	}).success(function(data) {
-		phases = eval("(" + data + ")");
-		console.log("PHASES");
-		console.log(phases);
+		dataPhases = eval("(" + data + ")");
+		console.log("dataPhases");
+		console.log(dataPhases);
 		loadJobs();
 	});
 }
@@ -36,33 +36,33 @@ var loadJobs = function()
 	});
 }
 
-//associate departments with phases
+//associate dataDepartments with dataPhases
 var buildRelations = function() 
 {
-	departmentPhases = [];
+	dataDepartmentPhases = [];
 
-	for (var h = 0; h < departments.length; h++)
+	for (var h = 0; h < dataDepartments.length; h++)
 	{
-		var departmentObject = departments[h];
+		var departmentObject = dataDepartments[h];
 		var phaseID = departmentObject['phase_id'];
 
-		for (var i = 0; i < phases.length; i++)
+		for (var i = 0; i < dataPhases.length; i++)
 		{
-			if (phases[i]['id'] == phaseID)
+			if (dataPhases[i]['id'] == phaseID)
 			{
-				departmentPhases.push([departmentObject, phases[i]]);
+				dataDepartmentPhases.push([departmentObject, dataPhases[i]]);
 			}
 		}
 	}
 
-	console.log("DEPARTMENT PHASES");
-	console.log(departmentPhases);
+	console.log("DEPARTMENT dataPhases");
+	console.log(dataDepartmentPhases);
 }
 
 
 
 /*var appData = {
-	phases: [
+	dataPhases: [
 		{
 			name: 'designspecs',
 			description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -71,7 +71,7 @@ var buildRelations = function()
 			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-			departments: [ 
+			dataDepartments: [ 
 				{
 					name: 'Legal (purchase contracts)',
 					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -137,7 +137,7 @@ var buildRelations = function()
 			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
 			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
 			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-			departments: [
+			dataDepartments: [
 				{
 					name: 'Legal (purchase contracts)',
 					description: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
