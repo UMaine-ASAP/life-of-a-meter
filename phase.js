@@ -11,7 +11,7 @@
  * @Created 8-20-2012
  */
 
-function Phase(id, src, x, y, width, height, clickFunction) {
+function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio, clickFunction) {
 	this.id = id;
 
 	this.image = paper.image(src, x, y, width, height);
@@ -34,6 +34,12 @@ function Phase(id, src, x, y, width, height, clickFunction) {
     // store reference for use in image function calls
     var myself = this; 
 
+    // Center Image
+//    var centerX = parseInt($('body').css('width'))  / 2 - 300*altImageAspectRatio/2;
+//    var centerY = parseInt($('body').css('height'))  / 2 - 300/2;
+//    this.selectedImage = paper.image(selectedImage, centerX, centerY, 300*altImageAspectRatio, 300);
+//    this.selectedImage.hide();
+  
 
     /*************/
     /* Order
@@ -81,7 +87,11 @@ function Phase(id, src, x, y, width, height, clickFunction) {
 		var destY = parseInt($('body').css('height')) / 2 - this.height/2;
 
         this.location = 'center';
-
+        // this.selectedImage.show();
+        // if( callback ) {
+        //     callback(myself);
+        //             this.selectedImage.toFront();
+        // }
         this.moveTo(destX, destY, callback);
 	};
 
