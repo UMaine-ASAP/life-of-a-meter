@@ -90,7 +90,7 @@ var nodeSystem = {};
 
 		tempText.remove();
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
-		this.defaultAnimationDuration = 400; //default animation duration in ms
+		this.defaultAnimationDuration = animation_speed; //default animation duration in ms
 		this.connectingLines = [];
 		this.clickCallback = callback;
 		this.userData = {};
@@ -177,7 +177,7 @@ var nodeSystem = {};
 			this.y = cy;
 
 			if (this.userData['physicsBody'] != undefined && this.userData['physicsBody'].m_body != undefined) {
-				this.userData['physicsBody'].m_body.SetPosition({x: x, y: y - nodePhysics.worldHeight});
+				//this.userData['physicsBody'].m_body.SetPosition({x: x, y: y - nodePhysics.worldHeight});
 			}
 			for (var i = 0; i < nodesToConnect.length; i++) {
 				nodeSystem.connectNodes(this, nodesToConnect[i]);
@@ -214,7 +214,7 @@ var nodeSystem = {};
 			this.circle.remove();
 			this.text.remove();
 
-			nodePhysics.removeNode(this);
+			//nodePhysics.removeNode(this);
 		}
 	}
 
@@ -302,7 +302,7 @@ var nodeSystem = {};
 		},
 
 		addNodeToPhysics: function(node) {
-			nodePhysics.addNode(node);
+			//nodePhysics.addNode(node);
 		},
 
 		createNodeGroup: function(nodeNames, layoutType, callback, layoutAttrs, displayMethod) {

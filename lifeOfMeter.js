@@ -39,7 +39,7 @@ var activeDepartmentNode;  	// Department currently selected. Undefined otherwis
 var activeJobPositionNode; 	// Job Position currently selected. Undefined otherwise.
 var activeNode; 			// the "active" node -- the one in the center of the screen
 
-var jsonData;
+var animation_speed = 0;
 
 
 /*****************************************/
@@ -109,9 +109,9 @@ $(document).ready(function(){
 	paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen - requires waiting for document.ready
 
 	/** Create transparency layer */
-	transparencyMask = paper.rect(0,0, "100%", "100%");
-
-	transparencyMask.attr({'fill': '#333', 'opacity': '0'});
+//	transparencyMask = paper.rect(0,0, "100%", "100%");
+	transparencyMask = paper.image("images/transparent_mask.png", 0, 0, 1000, 773);
+//	transparencyMask.attr({'fill': '#333', 'opacity': '0'});
 	transparencyMask.hide();
 	transparencyMask.click( closePhase );
 
@@ -218,7 +218,7 @@ function setDescriptionBox(title, description) {
  */
 function closePhase() {
 	// hide transparency mask
-	transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
+	//transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
 	transparencyMask.hide();
 
 	//destroy nodes
@@ -304,7 +304,7 @@ function openPhase(phase) {
 
 	// Display transparency
 	transparencyMask.show();
-	transparencyMask.animate({'opacity': 0.8}, 500, 'linear');
+//	transparencyMask.animate({'opacity': 0.8}, 500, 'linear');
 
 	/** Load description box */
 	var phaseData 	 = data_getPhase(phaseID);

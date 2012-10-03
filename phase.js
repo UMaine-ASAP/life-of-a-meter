@@ -70,7 +70,7 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
        this.node.y = destY + this.height/2;
 
         this.toFront(); // Make sure image is above other
-        this.image.animate({x: destX, y: destY}, 400, 'easeOut', function() {
+        this.image.animate({x: destX, y: destY}, animation_speed, 'easeOut', function() {
             if( callback ) {
                 callback(myself);
             }
