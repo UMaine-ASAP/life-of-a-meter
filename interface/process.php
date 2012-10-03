@@ -7,6 +7,7 @@ $database->connect();
 <!-- Below are the static options for phases. They are in HTML and not queried through phpMyAdmin -->
 <html> 
 	<head>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css"/>    
 		<title>Bangor Hydro Job Phases, Departments, and Positions</title>
 	</head>
   <body>

@@ -15,7 +15,7 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
 	this.id = id;
 
 	this.image = paper.image(src, x, y, width, height);
-    this.node  = nodeSystem.createNode(30, 30, 0, '');
+    this.node  = nodeSystem.createNode(0, 0, 0, '');
 
     // Used for movement back to origin
 	this.originalX = x;

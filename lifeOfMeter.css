@@ -35,6 +35,8 @@ img {
 	margin: 10px;
 	background-color: #EFEFEF;
 	width: 400px;
+	max-height: 600px;
+	overflow-y: scroll;
 }
 #description-header {
 	margin-top: 0;

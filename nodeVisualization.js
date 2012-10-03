@@ -53,6 +53,7 @@ var nodeSystem = {};
 	var nodeMinSize = 30;
 
 	function guessNodeSize(text) {
+		if(text == "") return 0;
 		var tempText = nodeSystem._mainCanvas.text(0, 0, text).attr({'font-weight': 'bold'});
 		var initialSize = (tempText.getBBox().width / 2) + defaultNodeSizePadding;
 		tempText.remove();

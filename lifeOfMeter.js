@@ -39,6 +39,8 @@ var activeDepartmentNode;  	// Department currently selected. Undefined otherwis
 var activeJobPositionNode; 	// Job Position currently selected. Undefined otherwise.
 var activeNode; 			// the "active" node -- the one in the center of the screen
 
+var jsonData;
+
 
 /*****************************************/
 /* Helper Functions
@@ -78,15 +80,26 @@ $(document).ready(function(){
 	/*************/
 	/* Read remote xml
 	/*************/
+	// $.ajax({
+ //    	type: "GET",
+ //    	url: "data.xml",
+ //    	dataType: "xml",
+ //    	success: function(xml){     		
+ //    		xmlData = xml;
+
+ //    	}
+	// });
+
 	$.ajax({
-    	type: "GET",
-    	url: "data.xml",
-    	dataType: "xml",
-    	success: function(xml){     		
-    		xmlData = xml;
-    		loadDefaultDescriptionBox();
-    	}
+		url: 'data.php',
+		dataType: 'xml'
+	}).success(function(xml) {
+		console.log("Loaded xml data from server");
+		xmlData = xml;
+		console.log(xml);
+		loadDefaultDescriptionBox();
 	});
+
 
 	/*************/
 	/* Initialization
@@ -115,12 +128,12 @@ $(document).ready(function(){
 	// Set default phases and positions
 	var scale = 1;//8346 × 6445
 	var phaseData = [	
-			{ src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: -104.5, y: 9, width: 229,  height: 200 },
+			{ src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: -103.5, y: 9, width: 229,  height: 200 },
 			{ src: 'map/subregions-02.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 124,  y: 9, width: 296,  height: 200 },
 			{ src: 'map/subregions-03.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 3,  x: 462,  y: 9, width: 432,  height: 200 },
 
 			{ src: 'map/subregions-04.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 327,  y: 216, width: 456, height: 187 },
-			{ src: 'map/subregions-05.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: -101.5,    y: 217, width: 393, height: 209 },
+			{ src: 'map/subregions-05.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: -100.5,    y: 217, width: 393, height: 209 },
 
 			{ src: 'map/subregions-06.png',  alt_img: '', alt_image_aspect: 0, id: 6,  x: 43.5,  y: 442, width: 345, height: 254 },
 	 	 	{ src: 'map/subregions-07.png',  alt_img: '', alt_image_aspect: 0, id: 7,  x: 461,  y: 460, width: 264, height: 198 },
@@ -252,44 +265,16 @@ function phaseClick(phase) {
 
         nodeSystem.removeNodeGroup( departmentNodeGroup );
         nodeSystem.removeNodeGroup( jobpositionNodeGroup );
-        var phaseID;
 
-        for (var i = 0; i < dataPhases.length; i++)
-        {
-        	if (dataPhases[i]['title'] == phase)
-        	{
-        		phaseID = dataPhases[i]['phase_id'];
-        	}
-        }
-
-        var departments;
-
-        for (var i = 0; i < dataDepartments.length; i++)
-        {
-        	if (dataDepartments[i]['phase_id'] == phase_id)
-        	{
-        		departments.push(dataDepartments[i]);
-        	}
-        }
-
-        console.log("found " + departments.length + " departments");
-
-        var departmentNames = [];
-        for (var i = 0; i < departments.length; i++)
-        {
-        	departmentNames.push(departments['title']);
-        }
-
-        //var departmentNames = data_mapNameToArray( data_getDepartments(activePhase.id) );
+        var departmentNames = data_mapNameToArray( data_getDepartments(activePhase.id) );
 
         departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', DepartmentNodeClick, {type: 'center', xOffset: activePhase.width/2 + 50}, 'animateFromCenter');
 
 		/** Load description box */
 		var phaseData  	 = data_getPhase(activePhase.id);
 		var phaseDetails = data_getDetails(phaseData);
-		console.log("setting title box to " + phaseDetails['title'] + "; description: " + phaseDetails['description']);
 
-		setDescriptionBox(phaseDetails['title'], phaseDetails['description']);
+		setDescriptionBox(phaseDetails.name, phaseDetails.description);
 
 
     	// Move back to center
@@ -325,30 +310,10 @@ function openPhase(phase) {
 	var phaseData 	 = data_getPhase(phaseID);
 	var phaseDetails = data_getDetails(phaseData);
 
-	var title = "qqqqq";
-	var description = "fffff";
-
-	for (var i = 0; i < dataPhases.length; i++)
-	{
-		if (dataPhases[i]['title'] == phase)
-		{
-			title = dataPhases[i]['title'];
-			description = dataPhases[i]['description'];
-			break;
-		}
-	}
-
-	setDescriptionBox(phaseDetails['title'], phaseDetails['description']);
+	setDescriptionBox(phaseDetails.name, phaseDetails.description);
 
 	/** Load Department Names */
-	var departmentNames = [];
-
-	for (var i = 0; i < dataDepartments.length; i++)
-	{
-		departmentNames.push(dataDepartments[i]['title']);
-	}
-
-	//departmentNames = data_mapNameToArray( data_getDepartments(phaseID) );
+	departmentNames = data_mapNameToArray( data_getDepartments(phaseID) );
 
 	// Create node for image
 	phaseNodeGroup = nodeSystem.createNodeGroupFromNodes([activePhase.node] );
@@ -380,12 +345,12 @@ function DepartmentNodeClick(node) {
 	if( activeNode == node ) return;
 	activeNode = node;
 	activeDepartmentNode = node;
-
+console.log(node.contents);
 	/** Load description box */
 	var department 	 	  = data_getDepartment(activePhase.id, node.contents);
 	var departmentDetails = data_getDetails(department);
 
-	setDescriptionBox(department['title'], departmentDetails['description']);
+	setDescriptionBox(departmentDetails.name, departmentDetails.description);
 
 
 	/** Move center to left column */
@@ -462,67 +427,45 @@ function JobPositionNodeClick(node) {
 /*************/
 /* App Logic - Data
 /*************/
-
+function cleanName(text)
+{
+	return text.replace("\n", "");
+}
 
 function data_getPhase(phaseID) {
 	return $(xmlData).children('lifeOfMeter').children('phases').find("phase[order='" + phaseID + "']");
 }
 
 function data_getDepartments(phaseID) {
-	var departments = [];
-	for (var i = 0; i < dataDepartmentPhases.length; i++)
-	{
-		if (dataDepartmentPhases[i][1]['phase_id'] == phaseID)
-		{
-			departments.push(dataDepartmentPhases[i][0]);
-		}
-	}
-
-	return departments;
+	var phase = data_getPhase(phaseID);
+	return phase.find('department');
 }
 
 function data_getDepartment(phaseID, department) {
-	var department;
-
-	for (var i = 0; i < dataDepartments.length; i++)
-	{
-		if (dataDepartments[i]['name'] == department)
-		{
-			department = dataDepartments[i];
-		}
-	}
-
-	return department;
-
+	department = cleanName(department);
 	var phase = data_getPhase(phaseID);
 	return phase.children('departments').children("department[name='" + department + "']");
 }
 
 function data_getJobPositions(phaseID, department) {
 	var department = data_getDepartment(phaseID, department);
-	return "foo";
+	return department.find('position');	
 }
 
 function data_getJobPosition(phaseID, department, position) {
 	var department = data_getDepartment(phaseID, department);
-	return "foo-jobPosition";
 	return department.children('positions').children("position[name='" + position + "']");
 }
 
 // Get description and name for specific, singular data object (phase, department, or job position)
 function data_getDetails(xml_object) {
-
-	return xml_object;
 	return {
 			'description': xml_object.children('description').text(),
 			'name': 	xml_object.attr('name')
 	};
 }
 
-
 function data_mapNameToArray(xml_objects) {
-
-	return xml_objects;
 	var result = [];
 	xml_objects.each( function() {
 		result.push( $(this).attr('name') );
