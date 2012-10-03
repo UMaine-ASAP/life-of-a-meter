@@ -94,9 +94,7 @@ $(document).ready(function(){
 		url: 'data.php',
 		dataType: 'xml'
 	}).success(function(xml) {
-		console.log("Loaded xml data from server");
 		xmlData = xml;
-		console.log(xml);
 		loadDefaultDescriptionBox();
 	});
 
