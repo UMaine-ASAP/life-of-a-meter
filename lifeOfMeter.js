@@ -19,6 +19,8 @@
 /* Globals
 /*****************************************/
 
+var useTransparencyImage = true;
+
 var paper; 					// Raphael.js object
 
 // Data
@@ -107,9 +109,20 @@ $(document).ready(function(){
 	paper = Raphael("container", "100%", "100%"); // Set canvas to fullscreen - requires waiting for document.ready
 
 	/** Create transparency layer */
-//	transparencyMask = paper.rect(0,0, "100%", "100%");
-	transparencyMask = paper.image("images/transparent_mask.png", 0, 0, 1000, 773);
-//	transparencyMask.attr({'fill': '#333', 'opacity': '0'});
+	if (useTransparencyImage)
+	{
+		transparencyMask = paper.image("images/transparent_mask.png", 0, 0, 1000, 773);
+	}
+	else
+	{
+		transparencyMask = paper.rect(0,0, "100%", "100%");
+	}
+
+	if (!useTransparencyImage)
+	{
+		transparencyMask.attr({'fill': '#333', 'opacity': '0'});
+	}
+	
 	transparencyMask.hide();
 	transparencyMask.click( closePhase );
 
@@ -126,11 +139,11 @@ $(document).ready(function(){
 	// Set default phases and positions
 	var scale = 1;//8346 × 6445
 	var phaseData = [	
-			{ src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: -103.5, y: 9, width: 229,  height: 200 },
-			{ src: 'map/subregions-02.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 124,  y: 9, width: 296,  height: 200 },
-			{ src: 'map/subregions-03.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 3,  x: 462,  y: 9, width: 432,  height: 200 },
+			{ src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 3,  x: -103.5, y: 9, width: 229,  height: 200 },
+			{ src: 'map/subregions-02.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 124,  y: 9, width: 296,  height: 200 , id: 4},
+			{ src: 'map/subregions-03.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 2,  x: 462,  y: 9, width: 432,  height: 200 },
 
-			{ src: 'map/subregions-04.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 327,  y: 216, width: 456, height: 187 },
+			{ src: 'map/subregions-04.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 327,  y: 216, width: 456, height: 187, id: 1},
 			{ src: 'map/subregions-05.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: -100.5,    y: 217, width: 393, height: 209 },
 
 			{ src: 'map/subregions-06.png',  alt_img: '', alt_image_aspect: 0, id: 6,  x: 43.5,  y: 442, width: 345, height: 254 },
@@ -216,7 +229,11 @@ function setDescriptionBox(title, description) {
  */
 function closePhase() {
 	// hide transparency mask
-	//transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
+	if (!useTransparencyImage)
+	{
+		transparencyMask.animate({'opacity': 0.0}, 500, 'linear');
+	}
+	
 	transparencyMask.hide();
 
 	//destroy nodes
@@ -302,7 +319,11 @@ function openPhase(phase) {
 
 	// Display transparency
 	transparencyMask.show();
-//	transparencyMask.animate({'opacity': 0.8}, 500, 'linear');
+	if (!useTransparencyImage)
+	{
+		transparencyMask.animate({'opacity': 0.8}, 500, 'linear');
+	}
+	
 
 	/** Load description box */
 	var phaseData 	 = data_getPhase(phaseID);
@@ -325,7 +346,6 @@ function openPhase(phase) {
 	activePhase.toFront();
 
 	activeNode = activePhase.node;
-
 } // OpenPhase
 
 
