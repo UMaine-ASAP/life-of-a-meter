@@ -343,7 +343,6 @@ function DepartmentNodeClick(node) {
 	if( activeNode == node ) return;
 	activeNode = node;
 	activeDepartmentNode = node;
-console.log(node.contents);
 	/** Load description box */
 	var department 	 	  = data_getDepartment(activePhase.id, node.contents);
 	var departmentDetails = data_getDetails(department);
