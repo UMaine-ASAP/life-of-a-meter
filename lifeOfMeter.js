@@ -252,16 +252,44 @@ function phaseClick(phase) {
 
         nodeSystem.removeNodeGroup( departmentNodeGroup );
         nodeSystem.removeNodeGroup( jobpositionNodeGroup );
+        var phaseID;
 
-        var departmentNames = data_mapNameToArray( data_getDepartments(activePhase.id) );
+        for (var i = 0; i < dataPhases.length; i++)
+        {
+        	if (dataPhases[i]['title'] == phase)
+        	{
+        		phaseID = dataPhases[i]['phase_id'];
+        	}
+        }
+
+        var departments;
+
+        for (var i = 0; i < dataDepartments.length; i++)
+        {
+        	if (dataDepartments[i]['phase_id'] == phase_id)
+        	{
+        		departments.push(dataDepartments[i]);
+        	}
+        }
+
+        console.log("found " + departments.length + " departments");
+
+        var departmentNames = [];
+        for (var i = 0; i < departments.length; i++)
+        {
+        	departmentNames.push(departments['title']);
+        }
+
+        //var departmentNames = data_mapNameToArray( data_getDepartments(activePhase.id) );
 
         departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', DepartmentNodeClick, {type: 'center', xOffset: activePhase.width/2 + 50}, 'animateFromCenter');
 
 		/** Load description box */
 		var phaseData  	 = data_getPhase(activePhase.id);
 		var phaseDetails = data_getDetails(phaseData);
+		console.log("setting title box to " + phaseDetails['title'] + "; description: " + phaseDetails['description']);
 
-		setDescriptionBox(phaseDetails.name, phaseDetails.description);
+		setDescriptionBox(phaseDetails['title'], phaseDetails['description']);
 
 
     	// Move back to center
@@ -297,10 +325,30 @@ function openPhase(phase) {
 	var phaseData 	 = data_getPhase(phaseID);
 	var phaseDetails = data_getDetails(phaseData);
 
-	setDescriptionBox(phaseDetails.name, phaseDetails.description);
+	var title = "qqqqq";
+	var description = "fffff";
+
+	for (var i = 0; i < dataPhases.length; i++)
+	{
+		if (dataPhases[i]['title'] == phase)
+		{
+			title = dataPhases[i]['title'];
+			description = dataPhases[i]['description'];
+			break;
+		}
+	}
+
+	setDescriptionBox(phaseDetails['title'], phaseDetails['description']);
 
 	/** Load Department Names */
-	departmentNames = data_mapNameToArray( data_getDepartments(phaseID) );
+	var departmentNames = [];
+
+	for (var i = 0; i < dataDepartments.length; i++)
+	{
+		departmentNames.push(dataDepartments[i]['title']);
+	}
+
+	//departmentNames = data_mapNameToArray( data_getDepartments(phaseID) );
 
 	// Create node for image
 	phaseNodeGroup = nodeSystem.createNodeGroupFromNodes([activePhase.node] );
@@ -337,7 +385,7 @@ function DepartmentNodeClick(node) {
 	var department 	 	  = data_getDepartment(activePhase.id, node.contents);
 	var departmentDetails = data_getDetails(department);
 
-	setDescriptionBox(departmentDetails.name, departmentDetails.description);
+	setDescriptionBox(department['title'], departmentDetails['description']);
 
 
 	/** Move center to left column */
@@ -421,34 +469,60 @@ function data_getPhase(phaseID) {
 }
 
 function data_getDepartments(phaseID) {
-	var phase = data_getPhase(phaseID);
-	return phase.find('department');
+	var departments = [];
+	for (var i = 0; i < dataDepartmentPhases.length; i++)
+	{
+		if (dataDepartmentPhases[i][1]['phase_id'] == phaseID)
+		{
+			departments.push(dataDepartmentPhases[i][0]);
+		}
+	}
+
+	return departments;
 }
 
 function data_getDepartment(phaseID, department) {
+	var department;
+
+	for (var i = 0; i < dataDepartments.length; i++)
+	{
+		if (dataDepartments[i]['name'] == department)
+		{
+			department = dataDepartments[i];
+		}
+	}
+
+	return department;
+
 	var phase = data_getPhase(phaseID);
 	return phase.children('departments').children("department[name='" + department + "']");
 }
 
 function data_getJobPositions(phaseID, department) {
 	var department = data_getDepartment(phaseID, department);
-	return department.find('position');	
+	return "foo";
 }
 
 function data_getJobPosition(phaseID, department, position) {
 	var department = data_getDepartment(phaseID, department);
+	return "foo-jobPosition";
 	return department.children('positions').children("position[name='" + position + "']");
 }
 
 // Get description and name for specific, singular data object (phase, department, or job position)
 function data_getDetails(xml_object) {
+
+	return xml_object;
 	return {
 			'description': xml_object.children('description').text(),
 			'name': 	xml_object.attr('name')
 	};
 }
 
+
 function data_mapNameToArray(xml_objects) {
+
+	return xml_objects;
 	var result = [];
 	xml_objects.each( function() {
 		result.push( $(this).attr('name') );
