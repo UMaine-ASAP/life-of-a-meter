@@ -109,20 +109,22 @@ $(document).ready(function(){
 	/** Create default images at starting locations */
 
 	// Set big picture at bottom
-	paper.image("images/overview.png", 0, 0, 1000, 772);
+	paper.image("images/overview.png", 0, 0, 1000, 773);
 
 
 	// Set default phases and positions
-	var scale = 1;
+	var scale = 1;//8346 × 6445
 	var phaseData = [	
-			{ src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: 10,    y: 109, width: 229,  height: 200 },
-			{ src: 'map/subregions-02.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 272,  y: 109, width: 296,  height: 200 },
-			{ src: 'map/subregions-03.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 3,  x: 678,  y: 109, width: 432,  height: 200 },
-			{ src: 'map/subregions-04.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 555,  y: 308, width: 456, height: 187 },
-			{ src: 'map/subregions-05.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: 95,    y: 320, width: 393, height: 209 },
-			{ src: 'map/subregions-06.png',  alt_img: '', alt_image_aspect: 0, id: 6,  x: 216,  y: 568, width: 345, height: 254 },
-	 	 	{ src: 'map/subregions-07.png',  alt_img: '', alt_image_aspect: 0, id: 7,  x: 593,  y: 558, width: 264, height: 198 },
-	 	 	{ src: 'map/subregions-08.png',  alt_img: '', alt_image_aspect: 0, id: 8,  x: 822,  y: 619, width: 123, height: 145 }
+			{ src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: -104.5, y: 9, width: 229,  height: 200 },
+			{ src: 'map/subregions-02.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 124,  y: 9, width: 296,  height: 200 },
+			{ src: 'map/subregions-03.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 3,  x: 462,  y: 9, width: 432,  height: 200 },
+
+			{ src: 'map/subregions-04.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 327,  y: 216, width: 456, height: 187 },
+			{ src: 'map/subregions-05.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: -101.5,    y: 217, width: 393, height: 209 },
+
+			{ src: 'map/subregions-06.png',  alt_img: '', alt_image_aspect: 0, id: 6,  x: 43.5,  y: 442, width: 345, height: 254 },
+	 	 	{ src: 'map/subregions-07.png',  alt_img: '', alt_image_aspect: 0, id: 7,  x: 461,  y: 460, width: 264, height: 198 },
+	 	 	{ src: 'map/subregions-08.png',  alt_img: '', alt_image_aspect: 0, id: 8,  x: 760,  y: 547, width: 123, height: 145 }
 
 	 	 	/*** Image transparencies ***/
 			// { src: 'map/transparent-with-border.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 1,  x: 0,    y: 68, width: 184,  height: 156 },
@@ -140,11 +142,11 @@ $(document).ready(function(){
 		];
 
 	allPhases = [];
-	xOffset = 0;
-	yOffset = 86;
+	xOffset = 103.5;
+	yOffset = 76.55;
 	for(var i=0; i<phaseData.length; i++) {
 		var phaseAttr = phaseData[i];
-		allPhases.push( new Phase(phaseAttr.id, "images/" + phaseAttr.src, (phaseAttr.x+xOffset)*scale, (phaseAttr.y+yOffset)*scale, phaseAttr.width*scale, phaseAttr.height*scale, "images/alt/" + phaseAttr.alt_img, phaseAttr.alt_image_aspect, phaseClick) );
+		allPhases.push( new Phase(phaseAttr.id, "images/" + phaseAttr.src, phaseAttr.x+xOffset, phaseAttr.y+yOffset, phaseAttr.width, phaseAttr.height, "images/alt/" + phaseAttr.alt_img, phaseAttr.alt_image_aspect, phaseClick) );
 	}
 
 }); // End $(document).ready
