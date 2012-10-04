@@ -13,6 +13,8 @@
 
 function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio, clickFunction) {
 	this.id = id;
+    this.image = null;
+    this._src = src;
 
 	this.image = paper.image(src, x, y, width, height);
     this.node  = nodeSystem.createNode(0, 0, 0, '');
