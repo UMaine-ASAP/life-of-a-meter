@@ -4,7 +4,7 @@ $pass = '';
 $host = 'localhost';
 $dbname = 'loam';
 
-require_once "interface/database.php";
+require_once "manage/database.php";
 
 function xmlspecialchars($text)
 {
