@@ -1,5 +1,5 @@
 <?php
-$user = 'root';
+$user = 'loam';
 $pass = '';
 $host = 'localhost';
 $dbname = 'loam';
@@ -83,7 +83,7 @@ foreach($phases as &$phase)
 
 
 		// Create positions
-		$positions = $database->query("SELECT * FROM jobs WHERE phase_id = %d", $phase['id']);
+		$positions = $database->query("SELECT * FROM jobs WHERE department_id = %d", $department['id']);
 
 		$positionsItems = $dom->createElement("positions");
 		$departmentItem->appendChild($positionsItems);		
