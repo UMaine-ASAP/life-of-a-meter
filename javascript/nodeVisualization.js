@@ -48,13 +48,13 @@ var nodeSystem = {};
 	 *
 	 * @return  object 		node
 	 */
-	var defaultCircleAttrs = {'fill': '#E89C23', 'stroke': '#111', 'stroke-width': 2};
+	var defaultCircleAttrs = {'fill': '#FAAE1A', 'stroke': '#111', 'stroke-width': 2};
 	var defaultNodeSizePadding = 20;
 	var nodeMinSize = 30;
 
 	function guessNodeSize(text) {
 		if(text == "") return 0;
-		var tempText = nodeSystem._mainCanvas.text(0, 0, text).attr({'font-weight': 'bold'});
+		var tempText = nodeSystem._mainCanvas.text(0, 0, text).attr({'font-weight': 'bolder', 'font-size': 16});
 		var initialSize = (tempText.getBBox().width / 2) + defaultNodeSizePadding;
 		tempText.remove();
 		return (nodeMinSize > initialSize ? nodeMinSize : initialSize);
@@ -67,7 +67,7 @@ var nodeSystem = {};
 		this.size = guessNodeSize(text);
 
 		//splits the node's text in half and joins it on a newline if it's unreasonably long
-		if (this.size > 50) {
+		if (this.size > 75) {
 			tempText.remove();
 			/* -- find a space to split on -- */
 			//var splitIndex = 0;
@@ -81,27 +81,28 @@ var nodeSystem = {};
 			// } while(splitIndex == 0 || searchIndex > text.length);
 			// if(searchIndex > text.length)
 			var splitIndex = text.indexOf(' ');
-			if(splitIndex > 15)
+			if(splitIndex > 16)
 				splitIndex = text.indexOf(' ', ++splitIndex);
+			if(splitIndex != -1) {
+				text = text.splice(splitIndex, 0, "\n");
 
-			text = text.splice(splitIndex, 0, "\n");
 
+				var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
+				this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding; //we probably won't need to do this more than once
+				newTempText.remove();
 
-			var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
-			this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding; //we probably won't need to do this more than once
-			newTempText.remove();
+				if (this.size > 70)
+				{
+					//text = text.splice(splitIndex, 0, "\n");
+					splitIndex = text.indexOf(' ', ++splitIndex);
 
-			if (this.size > 50)
-			{
-				//text = text.splice(splitIndex, 0, "\n");
-				splitIndex = text.indexOf(' ', ++splitIndex);
+					if(splitIndex != -1) {
+						text = text.splice(splitIndex, 0, "\n");
 
-				if(splitIndex != -1) {
-					text = text.splice(splitIndex, 0, "\n");
-
-					var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
-					this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding;
-					newTempText.remove();
+						var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
+						this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding;
+						newTempText.remove();
+					}
 				}
 			}
 		}
@@ -128,13 +129,15 @@ var nodeSystem = {};
 		}
 
 		//start by drawing the circle, then the text (so that the text appears on top of the circle)
+		if (this.size > 5)
+			this.size -= 5;
 		this.circle = this.canvas.ellipse(this.x, this.y, this.size, this.size);
 
 		//set the circle's attributes to the default
 		this.circle.attr(defaultCircleAttrs);
 
 		//draw the text (after the circle, so that it appears on top of it)
-		this.text = this.canvas.text(this.x, this.y, this.contents).attr({'font-weight': 'bold'});
+		this.text = this.canvas.text(this.x, this.y, this.contents).attr({'font-weight': 'bolder', 'font-size': 12});
 
 		this.toFront = function() {
 			this.circle.toFront();
@@ -361,7 +364,7 @@ var nodeSystem = {};
 				if (resetNodeYOffset) nodeYOffset = 0;
 				totalNodeHeight += nodeSize;
 
-				if (totalNodeHeight > screenHeight - 100) //-100 so that we can give nodes a bit of padding
+				if (totalNodeHeight > screenHeight - nodeSize) //-100 so that we can give nodes a bit of padding
 				{
 					totalNodeHeight = 0;
 					lastIReset = i;
@@ -369,10 +372,10 @@ var nodeSystem = {};
 				}
 
 				//this staggers nodes to help minimize line overlap
-				if (totalNodeHeight < 100)
-				{
-					totalNodeHeight = 100;
-				}
+				// if (totalNodeHeight < 150)
+				// {
+				// 	totalNodeHeight = 150;
+				// }
 
 				// Set position based on layout type
 				switch(layoutType) {
@@ -390,7 +393,7 @@ var nodeSystem = {};
 							totalNodeHeight += 30;
 						}
 
-						if (yPosition > (screenHeight - 10))
+						if (yPosition > (screenHeight - 50))
 						{
 							yPosition -= 10;
 							totalNodeHeight -= 10;

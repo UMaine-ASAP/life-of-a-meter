@@ -18,17 +18,29 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
 
 	this.image = paper.image(src, x, y, width, height);
     this.node  = nodeSystem.createNode(0, 0, 0, '');
-    this.border = paper.rect(x, y, width, height).attr({ 'stroke': "#333", "stroke-width": 10});
+
     // Used for movement back to origin
-	this.originalX = x;
-	this.originalY = y;
+    var centerX = parseInt($('body').css('width'))  / 2 - 300*altImageAspectRatio/2;
+    var centerY = parseInt($('body').css('height'))  / 2 - 300/2;
+
+	this.originalX = centerX;
+	this.originalY = centerY;
     this.location = 'origin'; // One of origin, center, or left
 
     this.destX = x;
     this.destY = y;
 
-	this.width  = this.image.attrs.width;
-	this.height = this.image.attrs.height;
+    // create popout image
+    this.selectedImage = paper.image(selectedImage, centerX, centerY, 300*altImageAspectRatio, 300);
+    this.selectedImage.hide();
+
+
+	this.width  = this.selectedImage.attrs.width;
+	this.height = this.selectedImage.attrs.height;
+
+    // Generate border
+    this.border = paper.rect(centerX, centerY, this.width, this.height).attr({ 'stroke': "#fff", "stroke-width": 3});
+    this.border.hide();
 
     // Onclick function
     this.clickFunction = clickFunction;
@@ -36,11 +48,6 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     // store reference for use in image function calls
     var myself = this; 
 
-    // Center Image
-//    var centerX = parseInt($('body').css('width'))  / 2 - 300*altImageAspectRatio/2;
-//    var centerY = parseInt($('body').css('height'))  / 2 - 300/2;
-//    this.selectedImage = paper.image(selectedImage, centerX, centerY, 300*altImageAspectRatio, 300);
-//    this.selectedImage.hide();
   
 
     /*************/
@@ -48,17 +55,32 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     /*************/
 
     this.toFront = function() {
-        this.image.toFront();
+        this.selectedImage.toFront();
+        this.border.toFront();        
     };
 
     this.behindObject = function(object) {
-        this.image.insertBefore(object);
+        this.selectedImage.insertBefore(object);
+        this.border.insertBefore(object);        
+
     };
 
     this.afterObject = function(object) {
-        this.image.insertAfter(object);
+        this.selectedImage.insertAfter(object);
+        this.border.insertAfter(object);
     };
 
+
+    this.showImage = function() {
+        this.selectedImage.show();
+        this.border.show();
+    };
+
+
+    this.hideImage = function() {
+        this.selectedImage.hide();
+        this.border.hide();
+    };
 
     /*************/
     /* Positioning
@@ -72,15 +94,26 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
        this.node.y = destY + this.height/2;
 
         this.toFront(); // Make sure image is above other
-        this.image.animate({x: destX, y: destY}, animation_speed, 'easeOut', function() {
-            if( callback ) {
-                callback(myself);
-            }
+        this.selectedImage.animate({x: destX, y: destY}, animation_speed, 'easeOut', function() {
+           if( callback ) {
+               callback(myself);
+           }
         });
+        // just move the image, no callback
+        // this.selectedImage.attr('x', destX);
+        // this.selectedImage.attr('y', destY);
+        
+        // if( callback ) {
+        //         callback(myself);
+        // }
+
+        this.border.attr('x', destX);
+        this.border.attr('y', destY);
     };
 
     this.moveToOrigin = function() {
         this.location = 'origin';
+        this.hideImage();
         this.moveTo(this.originalX, this.originalY);
     };
 
@@ -89,12 +122,9 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
 		var destY = parseInt($('body').css('height')) / 2 - this.height/2;
 
         this.location = 'center';
-        // this.selectedImage.show();
-        // if( callback ) {
-        //     callback(myself);
-        //             this.selectedImage.toFront();
-        // }
+        this.showImage();
         this.moveTo(destX, destY, callback);
+
 	};
 
 
@@ -131,5 +161,7 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     /*************/
 	this.image.attrs.position = "absolute";
 	this.image.click( myself.onClick );
+    this.selectedImage.click( myself.onClick );
+
 
 }; // End model Phase
