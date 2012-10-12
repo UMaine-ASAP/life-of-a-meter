@@ -351,6 +351,7 @@ function DepartmentNodeClick(node) {
 	if( activeNode == node ) return;
 	activeNode = node;
 	activeDepartmentNode = node;
+
 	/** Load description box */
 	var department 	  = data_getDepartment(activePhase.id, node.contents);
 	var departmentDetails = data_getDetails(department);
@@ -433,7 +434,7 @@ function JobPositionNodeClick(node) {
 /*************/
 function cleanName(text)
 {
-	return text.replace("\n", "");
+	return text.replace(/\n/g, "");
 }
 
 function data_getPhase(phaseID) {
