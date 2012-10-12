@@ -48,7 +48,7 @@ var nodeSystem = {};
 	 *
 	 * @return  object 		node
 	 */
-	var defaultCircleAttrs = {'fill': '#FAAE1A', 'stroke': '#111', 'stroke-width': 2};
+	var defaultCircleAttrs = {'fill': '#FAAE1A', 'stroke': '#111', 'stroke-width': 2, 'cursor': 'pointer'};
 	var defaultNodeSizePadding = 20;
 	var nodeMinSize = 30;
 
@@ -60,54 +60,37 @@ var nodeSystem = {};
 		return (nodeMinSize > initialSize ? nodeMinSize : initialSize);
 	}
 
+function wordwrap( str, width, brk, cut ) {
+ 
+    brk = brk || '\n';
+    width = width || 75;
+    cut = cut || false;
+ 
+    if (!str) { return str; }
+ 
+    var regex = '.{1,' +width+ '}(\\s|$)' + (cut ? '|.{' +width+ '}|.+$' : '|\\S+?(\\s|$)');
+ 
+    return str.match( RegExp(regex, 'g') ).join( brk );
+ 
+}	
+
 	function node(x, y, size, text, callback) {
 		this.x = x; //the center X position of the node
 		this.y = y; //the center Y position of the node
-		var tempText = nodeSystem._mainCanvas.text(0, 0, text);
 		this.size = guessNodeSize(text);
 
-		//splits the node's text in half and joins it on a newline if it's unreasonably long
-		if (this.size > 75) {
-			tempText.remove();
-			/* -- find a space to split on -- */
-			//var splitIndex = 0;
-			//var searchIndex = 0;
-			// do
-			// {
-			// 	searchIndex++;
-			// 	searchIndex = text.indexOf(' ', searchIndex);
-			// 	if( text.length - 5 < searchIndex && searchIndex < text.length + 5)
-			// 		splitIndex = searchIndex;
-			// } while(splitIndex == 0 || searchIndex > text.length);
-			// if(searchIndex > text.length)
-			var splitIndex = text.indexOf(' ');
-			if(splitIndex > 16)
-				splitIndex = text.indexOf(' ', ++splitIndex);
-			if(splitIndex != -1) {
-				text = text.splice(splitIndex, 0, "\n");
-
-
-				var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
-				this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding; //we probably won't need to do this more than once
-				newTempText.remove();
-
-				if (this.size > 70)
-				{
-					//text = text.splice(splitIndex, 0, "\n");
-					splitIndex = text.indexOf(' ', ++splitIndex);
-
-					if(splitIndex != -1) {
-						text = text.splice(splitIndex, 0, "\n");
-
-						var newTempText = nodeSystem._mainCanvas.text(0, 0, text);
-						this.size = (newTempText.getBBox().width / 2) + defaultNodeSizePadding;
-						newTempText.remove();
-					}
-				}
-			}
+		//Make all nodes the same size
+		if( this.size < 66 && this.size != 0) {
+			this.size = 66;
 		}
 
-		tempText.remove();
+		// IF the node is long, wrap text
+		if (this.size > 66) {
+			this.size = 66;
+	
+			text = wordwrap(text, 20);
+		}
+
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
 		this.defaultAnimationDuration = animation_speed; //default animation duration in ms
 		this.connectingLines = [];
@@ -137,7 +120,7 @@ var nodeSystem = {};
 		this.circle.attr(defaultCircleAttrs);
 
 		//draw the text (after the circle, so that it appears on top of it)
-		this.text = this.canvas.text(this.x, this.y, this.contents).attr({'font-weight': 'bolder', 'font-size': 12});
+		this.text = this.canvas.text(this.x, this.y, this.contents).attr({'font-weight': 'bolder', 'font-size': 12, 'cursor': 'pointer'});
 
 		this.toFront = function() {
 			this.circle.toFront();
@@ -342,7 +325,7 @@ var nodeSystem = {};
 				case 'alignVertical':
 				layoutAttrs.xOffset  = layoutAttrs.xOffset  || 0;
 				layoutAttrs.yOffset  = layoutAttrs.yOffset  || 0;
-				layoutAttrs.yPadding = layoutAttrs.yPadding || 10;
+				layoutAttrs.yPadding = layoutAttrs.yPadding || 0;
 				break;
 			}
 
@@ -354,9 +337,9 @@ var nodeSystem = {};
 			var lastIReset = 0;
 			var currentHeight = 0;
 			var currentXOffset = 0;
-			var nodeSize = 50;
+			var nodeSize = 66;
 			var totalNodeHeight = 50;
-			var nodeOffsetOnNewColumn = 75;
+			var nodeOffsetOnNewColumn = 0;
 			var nodeYOffset = 0;
 			var resetNodeYOffset = false;
 
@@ -414,7 +397,7 @@ var nodeSystem = {};
 
 						if (node.size * 2 > nodeOffsetOnNewColumn)
 						{							
-							nodeOffsetOnNewColumn = 50 + node.size * 2;
+							nodeOffsetOnNewColumn = 10 + node.size * 2;
 						}
 
 						totalNodeHeight += node.size;
