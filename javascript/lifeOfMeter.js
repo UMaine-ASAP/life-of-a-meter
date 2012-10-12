@@ -141,17 +141,6 @@ $(document).ready(function(){
 	// Set default phases and positions
 	var scale = 1;//8346 × 6445
 	var phaseData = [	
-			// { src: 'map/subregions-01.png',  alt_img: 'Smart Meter Step by Step (design Specs).JPG', alt_image_aspect: 2472 / 800, id: 3,  x: -103.5, y: 9, width: 229,  height: 200 },
-			// { src: 'map/subregions-02.png',  alt_img: '', alt_image_aspect: 0, id: 2,  x: 124,  y: 9, width: 296,  height: 200 , id: 4},
-			// { src: 'map/subregions-03.png',  alt_img: 'Meter (receive meters.modules).jpg', alt_image_aspect: 2048/1536, id: 2,  x: 462,  y: 9, width: 432,  height: 200 },
-
-			// { src: 'map/subregions-04.png',  alt_img: '', alt_image_aspect: 0, id: 4,  x: 327,  y: 216, width: 456, height: 187, id: 1},
-			// { src: 'map/subregions-05.png',  alt_img: '', alt_image_aspect: 0, id: 5,  x: -100.5,    y: 217, width: 393, height: 209 },
-
-			// { src: 'map/subregions-06.png',  alt_img: '', alt_image_aspect: 0, id: 6,  x: 43.5,  y: 442, width: 345, height: 254 },
-	 	//  	{ src: 'map/subregions-07.png',  alt_img: '', alt_image_aspect: 0, id: 7,  x: 461,  y: 460, width: 264, height: 198 },
-	 	//  	{ src: 'map/subregions-08.png',  alt_img: '', alt_image_aspect: 0, id: 8,  x: 760,  y: 547, width: 123, height: 145 }
-
 	 	 	/*** Image transparencies ***/
 			{ src: 'transparent.png',  popout_img: '1_design_specs_v2.jpg', 						popout_image_aspect: 470 / 300, id: 1,  x: -103.5,    y: 9, width: 229,  height: 200 },
 			{ src: 'transparent.png',  popout_img: '2_purchase_approval_and_order.jpg',		 	popout_image_aspect: 420/420, id: 2,  x: 124,  y: 9, width: 296,  height: 200 },
@@ -161,10 +150,6 @@ $(document).ready(function(){
 			{ src: 'transparent.png',  popout_img: '6_maintenance_and_testing.jpg', 				popout_image_aspect: 3072/2304, id: 6,  x: -20,  y: 442, width: 345, height: 254 },
 	 	 	{ src: 'transparent.png',  popout_img: '7_ami_trouble.jpg', 						popout_image_aspect: 420/420, id: 7,  x: 461,  y: 460, width: 264, height: 198 },
 	 	 	{ src: 'transparent.png',  popout_img: '8_retire.jpg', 							popout_image_aspect: 1600/1200, id: 7,  x: 760,  y: 547, width: 123, height: 145 }
-
-			// { src: 'nMaintenance.png',  	id: 8,  x: 534,  y: 809, width: 101, height: 124 },
-			// { src: 'nTesting.png',  		id: 9,  x: 796,  y: 792, width: 82,  height: 120 },
-			// { src: 'nRetire.png', 			id: 10, x: 1153, y: 772, width: 81,  height: 134 }
 		];
 
 	allPhases = [];
