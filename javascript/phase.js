@@ -39,7 +39,7 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
 	this.height = this.selectedImage.attrs.height;
 
     // Generate border
-    this.border = paper.rect(centerX, centerY, this.width, this.height).attr({ 'stroke': "#fff", "stroke-width": 3});
+    this.border = paper.rect(centerX, centerY, this.width, this.height).attr({ 'stroke': "#fff", "stroke-width": 0});
     this.border.hide();
 
     // Onclick function
@@ -94,11 +94,21 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
        this.node.y = destY + this.height/2;
 
         this.toFront(); // Make sure image is above other
-        this.selectedImage.animate({x: destX, y: destY}, animation_speed, 'easeOut', function() {
-           if( callback ) {
-               callback(myself);
-           }
-        });
+
+        if(animation_speed == -1) {
+            this.selectedImage.attr('x', destX);
+            this.selectedImage.attr('y', destY);            
+            if( callback ) {
+                callback(myself);
+            }
+
+        } else {
+            this.selectedImage.animate({x: destX, y: destY}, animation_speed, 'easeOut', function() {
+                if( callback ) {
+                callback(myself);
+                }
+            });
+        }
         // just move the image, no callback
         // this.selectedImage.attr('x', destX);
         // this.selectedImage.attr('y', destY);
@@ -127,6 +137,10 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
 
 	};
 
+    this.returnFromHiding = function(callback) {
+        this.showImage();
+        this.moveToLeft(callback);
+    };
 
     this.moveToLeft = function(callback) {
         var destX = parseInt($('body').css('width'))  / 2 - this.width/2 - 200 - this.width/2; // center - 200 - width/2
@@ -151,6 +165,7 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     /*************/
 
     this.onClick = function() {
+        
         if( myself.clickFunction ) {
             myself.clickFunction(myself);
         }

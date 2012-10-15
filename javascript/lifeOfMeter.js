@@ -43,6 +43,27 @@ var activeNode; 			// the "active" node -- the one in the center of the screen
 
 var animation_speed = 0;
 
+/** Spinner **/
+
+// var opts = {
+//   lines: 9, // The number of lines to draw
+//   length: 17, // The length of each line
+//   width: 7, // The line thickness
+//   radius: 23, // The radius of the inner circle
+//   corners: 1, // Corner roundness (0..1)
+//   rotate: 0, // The rotation offset
+//   color: '#000', // #rgb or #rrggbb
+//   speed: 1.2, // Rounds per second
+//   trail: 54, // Afterglow percentage
+//   shadow: false, // Whether to render a shadow
+//   hwaccel: true, // Whether to use hardware acceleration
+//   className: 'spinner', // The CSS class to assign to the spinner
+//   zIndex: 2e9, // The z-index (defaults to 2000000000)
+//   top: 773/2, // Top position relative to parent in px
+//   left: 1000/2 // Left position relative to parent in px
+// };
+
+// var spinner;
 
 /*****************************************/
 /* Helper Functions
@@ -142,14 +163,14 @@ $(document).ready(function(){
 	var scale = 1;//8346 × 6445
 	var phaseData = [	
 	 	 	/*** Image transparencies ***/
-			{ src: 'transparent.png',  popout_img: '1_design_specs_v2.jpg', 						popout_image_aspect: 470 / 300, id: 1,  x: -103.5,    y: 9, width: 229,  height: 200 },
-			{ src: 'transparent.png',  popout_img: '2_purchase_approval_and_order.jpg',		 	popout_image_aspect: 420/420, id: 2,  x: 124,  y: 9, width: 296,  height: 200 },
+			{ src: 'transparent.png',  popout_img: '1_design_specs_v2.jpg', 						popout_image_aspect: 733/1.2 / 274, id: 1,  x: -103.5,    y: 9, width: 229,  height: 200 },
+			{ src: 'transparent.png',  popout_img: '2_purchase_approval_and_order.jpg',		 	popout_image_aspect: 390/420, id: 2,  x: 124,  y: 9, width: 296,  height: 200 },
 			{ src: 'transparent.png',  popout_img: '3_receive_meters.jpg', 						popout_image_aspect: 2048/1536, id: 3,  x: 462,  y: 9, width: 432,  height: 200 },
 			{ src: 'transparent.png',  popout_img: '4_delivery_to_outlying_divisions.jpg', 			popout_image_aspect: 1600/1200, id: 4,  x: 377,  y: 210, width: 456, height: 187 },
 			{ src: 'transparent.png',  popout_img: '5_meter_install_and_exchange.jpg', 			popout_image_aspect: 2304/3072, id: 5,  x: -100.5,    y: 210, width: 393, height: 209 },
 			{ src: 'transparent.png',  popout_img: '6_maintenance_and_testing.jpg', 				popout_image_aspect: 3072/2304, id: 6,  x: -20,  y: 442, width: 345, height: 254 },
-	 	 	{ src: 'transparent.png',  popout_img: '7_ami_trouble.jpg', 						popout_image_aspect: 420/420, id: 7,  x: 461,  y: 460, width: 264, height: 198 },
-	 	 	{ src: 'transparent.png',  popout_img: '8_retire.jpg', 							popout_image_aspect: 1600/1200, id: 7,  x: 760,  y: 547, width: 123, height: 145 }
+	 	 	{ src: 'transparent.png',  popout_img: '7_ami_trouble.jpg', 						popout_image_aspect: 267/404, id: 7,  x: 461,  y: 460, width: 264, height: 198 },
+	 	 	{ src: 'transparent.png',  popout_img: '8_retire.jpg', 							popout_image_aspect: 1600/1200, id: 8,  x: 760,  y: 547, width: 123, height: 145 }
 		];
 
 	allPhases = [];
@@ -159,6 +180,26 @@ $(document).ready(function(){
 		var phaseAttr = phaseData[i];
 		allPhases.push( new Phase(phaseAttr.id, "images/" + phaseAttr.src, phaseAttr.x+xOffset, phaseAttr.y+yOffset, phaseAttr.width, phaseAttr.height, "images/popout/" + phaseAttr.popout_img, phaseAttr.popout_image_aspect, phaseClick) );
 	}
+
+	// Create loading spinner
+	// var target = document.getElementById('container');
+	// spinner = new Spinner(opts).spin(target);
+	// spinner.stop();
+
+	/* Back button */
+	$('#backButton').click( function() {
+		if(activeJobPositionNode != null) {
+			// Move back to department
+			DepartmentNodeClick(activeDepartmentNode);
+		} else if(activeDepartmentNode != null) {
+			// move back to phase
+			phaseClick(activePhase);
+		} else {
+			// close shop!
+			closePhase();
+		}
+	});
+
 
 }); // End $(document).ready
 
@@ -180,7 +221,7 @@ $(document).ready(function(){
  * @return void
  */
 function loadDefaultDescriptionBox() {
-	$('#description-box').css('display','none');
+	$('#description-box').hide();
 }
 
 
@@ -194,13 +235,29 @@ function loadDefaultDescriptionBox() {
  *
  * @return 	void
  */
-function setDescriptionBox(title, description) {
+function setDescriptionBox(phaseName, departmentName, jobName, description) {
 	$('#description-box').css('display','block');
 
-	$('#description-title').html( title );
+	showDisplayIf('#description-phaseName', phaseName != '');
+	$('#description-phaseName').html( phaseName );
+
+	showDisplayIf('#description-departmentName', departmentName != '');
+	$('#description-departmentName').html( departmentName );
+
+	showDisplayIf('#description-jobName', jobName != '');
+	$('#description-jobName').html( jobName );
+
 	$('#description-content').html( description );
 }
 
+function showDisplayIf(element, condition)
+{
+	if(condition) {
+		$(element).show();
+	} else {
+		$(element).hide();
+	}
+}
 
 /*************/
 /* App Logic - Controllers
@@ -277,7 +334,7 @@ function phaseClick(phase) {
 		var phaseData  	 = data_getPhase(activePhase.id);
 		var phaseDetails = data_getDetails(phaseData);
 
-		setDescriptionBox(phaseDetails.name, phaseDetails.description);
+		setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);
 
 
     	// Move back to center
@@ -287,6 +344,8 @@ function phaseClick(phase) {
 		});
 
     }
+
+
 }
 
 
@@ -317,7 +376,7 @@ function openPhase(phase) {
 	var phaseData 	 = data_getPhase(phaseID);
 	var phaseDetails = data_getDetails(phaseData);
 
-	setDescriptionBox(phaseDetails.name, phaseDetails.description);
+	setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);
 
 	/** Load Department Names */
 	departmentNames = data_mapNameToArray( data_getDepartments(phaseID) );
@@ -356,7 +415,10 @@ function DepartmentNodeClick(node) {
 	var department 	  = data_getDepartment(activePhase.id, node.contents);
 	var departmentDetails = data_getDetails(department);
 
-	setDescriptionBox(departmentDetails.name, departmentDetails.description);
+	var phaseData 	 = data_getPhase(activePhase.id);
+	var phaseDetails = data_getDetails(phaseData);
+
+	setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
 
 
 	/** Move center to left column */
@@ -377,12 +439,13 @@ function DepartmentNodeClick(node) {
 	/** Right Column */
 	if( activeJobPositionNode ) {
 		activeJobPositionNode = null;
+		activePhase.returnFromHiding();
 		nodeSystem.removeNodeGroup(jobpositionNodeGroup);
 	}
 	var data = data_getJobPositions(activePhase.id, node.contents);
 	var jobPositions = data_mapNameToArray( data );
 
-	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', JobPositionNodeClick,  {type: 'center', xOffset: activePhase.width/2 + 50 + 100 + 50}, 'animateFromCenter');
+	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', JobPositionNodeClick,  {type: 'center', xOffset: activePhase.width/2 }, 'animateFromCenter');
 
 }
 
@@ -405,10 +468,16 @@ function JobPositionNodeClick(node) {
 	var screenDim = getScreenDimensions();
 
 	/** Load description box */
+	var phaseData 	 = data_getPhase(activePhase.id);
+	var phaseDetails = data_getDetails(phaseData);
+
+	var department 	  = data_getDepartment(activePhase.id, node.contents);
+	var departmentDetails = data_getDetails(department);
+
 	var position 	 	  = data_getJobPosition(activePhase.id, activeDepartmentNode.contents, node.contents);
 	var positionDetails   = data_getDetails(position);
 
-	setDescriptionBox(positionDetails.name, positionDetails.description);	
+	setDescriptionBox(phaseDetails.name, departmentDetails.name, positionDetails.name, positionDetails.description);	
 
 	/** Move Left column to origin */
 	nodeSystem.removeAllConnections(phaseNodeGroup);
@@ -420,8 +489,6 @@ function JobPositionNodeClick(node) {
 	nodeSystem.animateNodesInGroup(departmentNodeGroup, screenDim.width/2 - 300, 'keep');	
 
 	/** Move right column to center */
-	var screenDim = getScreenDimensions();
-
 	nodeSystem.removeAllButInGroup(jobpositionNodeGroup, node);
 	nodeSystem.animateNodesInGroup(jobpositionNodeGroup, screenDim.width/2, screenDim.height/2);
 
@@ -458,6 +525,8 @@ function data_getJobPositions(phaseID, department) {
 }
 
 function data_getJobPosition(phaseID, department, position) {
+	department = cleanName(department);
+	position = cleanName(position);
 	var department = data_getDepartment(phaseID, department);
 	return department.children('positions').children("position[name='" + position + "']");
 }

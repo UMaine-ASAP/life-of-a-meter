@@ -80,16 +80,11 @@ function wordwrap( str, width, brk, cut ) {
 		this.size = guessNodeSize(text);
 
 		//Make all nodes the same size
-		if( this.size < 66 && this.size != 0) {
-			this.size = 66;
+		if( this.size != 0) {
+			this.size = 67;
 		}
 
-		// IF the node is long, wrap text
-		if (this.size > 66) {
-			this.size = 66;
-	
-			text = wordwrap(text, 20);
-		}
+		text = wordwrap(text, 16);
 
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
 		this.defaultAnimationDuration = animation_speed; //default animation duration in ms
@@ -172,10 +167,15 @@ function wordwrap( str, width, brk, cut ) {
 				connectedNode.connectingLines = targetNewConnections;
 			}
 	
-
-
-			this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
-			this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
+			if( this.defaultAnimationDuration == 0) {
+				this.circle.attr('cx', cx);
+				this.circle.attr('cy', cy);
+				this.text.attr('x', cx);
+				this.text.attr('y', cy);
+			} else {
+				this.circle.animate({cx: cx, cy: cy}, this.defaultAnimationDuration, 'easeOut');
+				this.text.animate({x: cx, y: cy}, this.defaultAnimationDuration, 'easeOut');
+			}
 			
 			this.x = cx;
 			this.y = cy;

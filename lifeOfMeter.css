@@ -19,12 +19,16 @@ body {
 	margin: 0 auto;
 }
 
+
 /** Make sure images are always on top */
 img {
 	position: absolute;
 	z-index: 0;
 }
 
+#backButton:visited {
+	color: #00E;
+}
 /** Description Box */
 
 #description-box {
@@ -41,3 +45,31 @@ img {
 #description-header {
 	margin-top: 0;
 }
+
+.parent-phase {
+	display: block;
+	font-size: 22px;
+}
+
+
+/* headers */
+#description-phaseName 
+{
+	margin-top: 4px;
+	margin-bottom: 4px;	
+}
+
+#description-departmentName
+{
+	margin-top: 4px;
+	margin-bottom: 4px;	
+	padding-left: 1em;
+} 
+
+#description-jobName 
+{
+	margin-top: 4px;
+	margin-bottom: 4px;	
+	padding-left: 1em;
+}
+
