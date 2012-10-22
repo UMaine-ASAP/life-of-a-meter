@@ -7,6 +7,7 @@ html, body {
 body {
 	width: 1000px;
 	height: 773px;
+	font-size: 16px;
 	position: relative;
 	margin: 0 auto;
 }
@@ -26,9 +27,6 @@ img {
 	z-index: 0;
 }
 
-#backButton:visited {
-	color: #00E;
-}
 /** Description Box */
 
 #description-box {
@@ -38,9 +36,9 @@ img {
 	padding: 10px;
 	margin: 10px;
 	background-color: #EFEFEF;
-	width: 400px;
-	max-height: 500px;
-	overflow-y: scroll;
+	width: 590px;
+	max-height: 200px;
+	overflow-y: auto;
 }
 #description-header {
 	margin-top: 0;
@@ -51,6 +49,18 @@ img {
 	font-size: 22px;
 }
 
+#backButton
+{
+	position: absolute;
+	top: 8px;
+	right: 8px;
+/*	padding-left: 4px;
+	padding-right: 4px;
+*/}
+
+#backButton:visited {
+	color: #00E;	
+}
 
 /* headers */
 #description-phaseName 
@@ -64,12 +74,15 @@ img {
 	margin-top: 4px;
 	margin-bottom: 4px;	
 	padding-left: 1em;
+	line-height: 20px;
+	font-size: 22px;
 } 
 
 #description-jobName 
 {
-	margin-top: 4px;
-	margin-bottom: 4px;	
-	padding-left: 1em;
+	font-size: 18px;
+	margin-top: 10px;
+	margin-bottom: 10px;	
+	padding-left: 2em;
 }
 
