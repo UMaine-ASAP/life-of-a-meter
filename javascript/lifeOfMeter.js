@@ -41,6 +41,9 @@ var activeDepartmentNode;  	// Department currently selected. Undefined otherwis
 var activeJobPositionNode; 	// Job Position currently selected. Undefined otherwise.
 var activeNode; 			// the "active" node -- the one in the center of the screen
 
+// Currently hovered Node
+var currentHoveredNode;
+
 var animation_speed = 0;
 
 /** Spinner **/
@@ -160,7 +163,6 @@ $(document).ready(function(){
 
 
 	// Set default phases and positions
-	var scale = 1;//8346 × 6445
 	var phaseData = [	
 	 	 	/*** Image transparencies ***/
 			{ src: 'transparent.png',  popout_img: '1_design_specs_v2.jpg', 						popout_image_aspect: 733/1.2 / 274, id: 1,  x: -103.5,    y: 9, width: 229,  height: 200 },
@@ -178,7 +180,7 @@ $(document).ready(function(){
 	yOffset = 76.55;
 	for(var i=0; i<phaseData.length; i++) {
 		var phaseAttr = phaseData[i];
-		allPhases.push( new Phase(phaseAttr.id, "images/" + phaseAttr.src, phaseAttr.x+xOffset, phaseAttr.y+yOffset, phaseAttr.width, phaseAttr.height, "images/popout/" + phaseAttr.popout_img, phaseAttr.popout_image_aspect, phaseClick) );
+		allPhases.push( new Phase(phaseAttr.id, "images/" + phaseAttr.src, phaseAttr.x+xOffset, phaseAttr.y+yOffset, phaseAttr.width, phaseAttr.height, "images/popout/" + phaseAttr.popout_img, phaseAttr.popout_image_aspect, phaseClick, processPhaseHover) );
 	}
 
 	// Create loading spinner
@@ -263,6 +265,76 @@ function showDisplayIf(element, condition)
 /* App Logic - Controllers
 /*************/
 
+/**
+ * Hover Phase Image
+ *
+ * Highlights nodes on hover
+ *
+ * @return void
+ */
+function processPhaseHover(phase, isEnteringHover)
+{
+	// if(currentHoveredNode != undefined) {
+	// 	currentHoveredNode.unHighlight();
+	// }
+	if( activeDepartmentNode == undefined)
+	{
+		phase.useBorder(true);
+	}
+	if( activeDepartmentNode != undefined)
+	{
+		if(isEnteringHover)
+		{
+			phase.useBorder(true);			
+		} else {
+			phase.useBorder(false);			
+
+		}
+	}	
+}
+
+/**
+ * Hover Node
+ *
+ * Highlights nodes on hover
+ *
+ * @return void
+ */
+function processNodeHover(node, isEnteringHover)
+{
+	// Only process new nodes
+	if(/*currentHoveredNode !== undefined && node == currentHoveredNode ||*/ node == activeNode)
+	{
+		return;
+	}
+
+	if(currentHoveredNode == activeNode)
+	{
+		currentHoveredNode = undefined;
+	}
+
+	// Entering hover state
+	if(isEnteringHover)
+	{
+		//activePhase.useBorder(false);		
+		//if( activeNode.isHighlighted ) {
+			//activeNode.unHighlight();
+		//}
+
+		// Un-highlight old node
+		if(currentHoveredNode != undefined) {
+			currentHoveredNode.unHighlight();
+		}
+		node.highlight();
+
+		currentHoveredNode = node;
+	} else {
+		// hover ended
+
+		node.unHighlight();
+	}
+}
+
 
 /**
  * Close Phase
@@ -291,7 +363,7 @@ function closePhase() {
 		activePhase.moveToOrigin();
 	}
 
-	activePhase 		= undefined;
+	activePhase 			= undefined;
 	activeDepartmentNode 	= undefined;
 	activeJobPositionNode 	= undefined;
 }
@@ -328,10 +400,10 @@ function phaseClick(phase) {
 
         var departmentNames = data_mapNameToArray( data_getDepartments(activePhase.id) );
 
-        departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', DepartmentNodeClick, {type: 'center', xOffset: activePhase.width/2 + 50}, 'animateFromCenter');
+        departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', DepartmentNodeClick, processNodeHover, {type: 'center', xOffset: activePhase.width/2 + 50}, 'animateFromCenter');
 
 		/** Load description box */
-		var phaseData  	 = data_getPhase(activePhase.id);
+		var phaseData    = data_getPhase(activePhase.id);
 		var phaseDetails = data_getDetails(phaseData);
 
 		setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);
@@ -384,7 +456,7 @@ function openPhase(phase) {
 	// Create node for image
 	phaseNodeGroup = nodeSystem.createNodeGroupFromNodes([activePhase.node] );
 
-	departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', DepartmentNodeClick, {type: 'center', xOffset: activePhase.width/2 + 50}, 'animateFromCenter');
+	departmentNodeGroup = nodeSystem.createNodeGroup(departmentNames, 'alignVertical', DepartmentNodeClick, processNodeHover, {type: 'center', xOffset: activePhase.width/2 + 50}, 'animateFromCenter');
 
 
 	nodeSystem.connectNodesBetweenGroups(phaseNodeGroup, departmentNodeGroup);
@@ -393,6 +465,8 @@ function openPhase(phase) {
 	activePhase.toFront();
 
 	activeNode = activePhase.node;
+	activeNode.highlight();
+	activePhase.useBorder(true);
 } // OpenPhase
 
 
@@ -410,6 +484,8 @@ function DepartmentNodeClick(node) {
 	if( activeNode == node ) return;
 	activeNode = node;
 	activeDepartmentNode = node;
+	activePhase.useBorder(false);
+	activeNode.highlight();
 
 	/** Load description box */
 	var department 	  = data_getDepartment(activePhase.id, node.contents);
@@ -445,7 +521,7 @@ function DepartmentNodeClick(node) {
 	var data = data_getJobPositions(activePhase.id, node.contents);
 	var jobPositions = data_mapNameToArray( data );
 
-	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', JobPositionNodeClick,  {type: 'center', xOffset: activePhase.width/2 }, 'animateFromCenter');
+	jobpositionNodeGroup = nodeSystem.createNodeGroup(jobPositions, 'alignVertical', JobPositionNodeClick, processNodeHover, {type: 'center', xOffset: activePhase.width/2 }, 'animateFromCenter');
 
 }
 
@@ -462,8 +538,10 @@ function DepartmentNodeClick(node) {
 function JobPositionNodeClick(node) {
 	// don't process the same node twice!
 	if( activeNode == null ) return;
+	activeNode.unHighlight(); // unhighlight department node
 	activeNode = node;
 	activeJobPositionNode = node;
+	activeNode.highlight();
 
 	var screenDim = getScreenDimensions();
 

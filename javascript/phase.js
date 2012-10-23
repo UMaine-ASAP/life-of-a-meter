@@ -11,7 +11,7 @@
  * @Created 8-20-2012
  */
 
-function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio, clickFunction) {
+function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio, clickFunction, hoverFunction) {
 	this.id = id;
     this.image = null;
     this._src = src;
@@ -39,11 +39,12 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
 	this.height = this.selectedImage.attrs.height;
 
     // Generate border
-    this.border = paper.rect(centerX, centerY, this.width, this.height).attr({ 'stroke': "#fff", "stroke-width": 0});
+    this.border = paper.rect(centerX, centerY, this.width, this.height).attr({ 'stroke': "#0CB260", "stroke-width": 5, 'cursor': 'pointer'});
     this.border.hide();
 
     // Onclick function
     this.clickFunction = clickFunction;
+    this.hoverFunction = hoverFunction;
 
     // store reference for use in image function calls
     var myself = this; 
@@ -55,8 +56,8 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     /*************/
 
     this.toFront = function() {
+        this.border.toFront();
         this.selectedImage.toFront();
-        this.border.toFront();        
     };
 
     this.behindObject = function(object) {
@@ -80,6 +81,14 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     this.hideImage = function() {
         this.selectedImage.hide();
         this.border.hide();
+    };
+
+    this.useBorder = function(isUsingBorder) {
+        if( isUsingBorder ) {
+            this.border.attr('stroke-width', 5);
+        } else {
+            this.border.attr('stroke-width', 0);            
+        }
     };
 
     /*************/
@@ -161,7 +170,7 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     };
 
     /*************/
-    /* Click
+    /* Click & Hover
     /*************/
 
     this.onClick = function() {
@@ -171,6 +180,12 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
         }
     };
 
+    this.onHover = function(isEnteringHover) {
+        if( myself.hoverFunction ) {
+            myself.hoverFunction(myself, isEnteringHover);
+        }
+    }
+
     /*************/
     /* Image properties
     /*************/
@@ -178,5 +193,6 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
 	this.image.click( myself.onClick );
     this.selectedImage.click( myself.onClick );
 
+    this.selectedImage.hover(function() { myself.onHover(true);}, function() { myself.onHover(false);} );
 
 }; // End model Phase

@@ -48,7 +48,7 @@ var nodeSystem = {};
 	 *
 	 * @return  object 		node
 	 */
-	var defaultCircleAttrs = {'fill': '#FAAE1A', 'stroke': '#111', 'stroke-width': 2, 'cursor': 'pointer'};
+	var defaultCircleAttrs = {'fill': '#FAAE1A', 'stroke': '#111', 'stroke-width': 2, 'cursor': 'pointer', 'hover_fill': '#0CB260'};
 	var defaultNodeSizePadding = 20;
 	var nodeMinSize = 30;
 
@@ -74,7 +74,7 @@ function wordwrap( str, width, brk, cut ) {
  
 }	
 
-	function node(x, y, size, text, callback) {
+	function node(x, y, size, text, click_callback, hover_callback) {
 		this.x = x; //the center X position of the node
 		this.y = y; //the center Y position of the node
 		this.size = guessNodeSize(text);
@@ -89,8 +89,10 @@ function wordwrap( str, width, brk, cut ) {
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
 		this.defaultAnimationDuration = animation_speed; //default animation duration in ms
 		this.connectingLines = [];
-		this.clickCallback = callback;
+		this.clickCallback = click_callback;
+		this.hoverCallback = hover_callback;
 		this.userData = {};
+		this.isHighlighted = false;
 
 		var thisNode = this;
 
@@ -200,6 +202,47 @@ function wordwrap( str, width, brk, cut ) {
 		this.circle.click( thisNode.onClick );
 		this.text.click( thisNode.onClick );
 
+		this.circle.hover(function ()
+			{
+				if( thisNode.hoverCallback != undefined ) 
+				{
+					thisNode.hoverCallback(thisNode, true);
+				}
+			},
+		  	function () 
+		  	{
+				if( thisNode.hoverCallback != undefined ) 
+				{
+					thisNode.hoverCallback(thisNode, false);
+				}
+		  	}
+		);
+		this.text.hover(function ()
+			{
+				if( thisNode.hoverCallback != undefined ) 
+				{
+					thisNode.hoverCallback(thisNode, true);
+				}
+			},
+		  	function () 
+		  	{
+				if( thisNode.hoverCallback != undefined ) 
+				{
+					thisNode.hoverCallback(thisNode, false);
+				}
+		  	}
+		);
+
+		this.highlight = function() {
+			thisNode.isHighlighted = true;
+			thisNode.circle.attr({"fill": defaultCircleAttrs.hover_fill});
+		};
+
+		this.unHighlight = function() {
+			thisNode.isHighlighted = false;			
+	    		thisNode.circle.attr({"fill": defaultCircleAttrs.fill});
+		};
+
 		this.remove = function() {
 			// removing connecting lines
 			for (var i = 0; i < this.connectingLines.length; i++) {
@@ -241,8 +284,8 @@ function wordwrap( str, width, brk, cut ) {
 			this.bottomLayer = object;
 		},
 
-		createNode: function(x, y, size, text, callback) {
-			var newNode = new node(x, y, size, text, callback);
+		createNode: function(x, y, size, text, click_callback, hover_callback) {
+			var newNode = new node(x, y, size, text, click_callback, hover_callback);
 			return newNode;
 		},
 
@@ -292,6 +335,7 @@ function wordwrap( str, width, brk, cut ) {
 			return -1;
 		},
 
+
 		/**************************************************/
 		/* Node Group functionality
 		/**************************************************/
@@ -309,7 +353,7 @@ function wordwrap( str, width, brk, cut ) {
 			//nodePhysics.addNode(node);
 		},
 
-		createNodeGroup: function(nodeNames, layoutType, callback, layoutAttrs, displayMethod) {
+		createNodeGroup: function(nodeNames, layoutType, click_callback, hover_callback, layoutAttrs, displayMethod) {
 			displayMethod = displayMethod || 'normal';
 
 			// Create new node group
@@ -393,7 +437,7 @@ function wordwrap( str, width, brk, cut ) {
 					// Add to group
 				switch(displayMethod) {
 					case 'animateFromCenter':
-						node = this.createNode(screenWidth/2, screenHeight/2, nodeSize, nodeNames[i], callback);
+						node = this.createNode(screenWidth/2, screenHeight/2, nodeSize, nodeNames[i], click_callback, hover_callback);
 
 						if (node.size * 2 > nodeOffsetOnNewColumn)
 						{							
@@ -406,7 +450,7 @@ function wordwrap( str, width, brk, cut ) {
 
 					case 'normal':
 					default:
-						node = this.createNode(xPosition, yPosition, nodeSize, nodeNames[i], callback);
+						node = this.createNode(xPosition, yPosition, nodeSize, nodeNames[i], click_callback, hover_callback);
 						break;
 					}
 				this.addNodeToGroup(node, this.nodeGroups[newNodeGroupID]);
