@@ -36,6 +36,7 @@ var departmentNodeGroup;
 var jobpositionNodeGroup;
 
 // Selected nodes
+var currentLocation;
 var activePhase; 			// Phase currently selected. Undefined otherwise.
 var activeDepartmentNode;  	// Department currently selected. Undefined otherwise.
 var activeJobPositionNode; 	// Job Position currently selected. Undefined otherwise.
@@ -277,6 +278,8 @@ function processPhaseHover(phase, isEnteringHover)
 	// if(currentHoveredNode != undefined) {
 	// 	currentHoveredNode.unHighlight();
 	// }
+	// reverse active node
+
 	if( activeDepartmentNode == undefined)
 	{
 		phase.useBorder(true);
@@ -285,8 +288,10 @@ function processPhaseHover(phase, isEnteringHover)
 	{
 		if(isEnteringHover)
 		{
+			activeNode.unHighlight();
 			phase.useBorder(true);			
 		} else {
+			activeNode.highlight();
 			phase.useBorder(false);			
 
 		}
@@ -316,11 +321,14 @@ function processNodeHover(node, isEnteringHover)
 	// Entering hover state
 	if(isEnteringHover)
 	{
+		$('#click-for-details').css('left', node.x - 60);
+		$('#click-for-details').css('top', node.y - 55);		
+		$('#click-for-details').css('display', 'block');
 		//activePhase.useBorder(false);		
 		//if( activeNode.isHighlighted ) {
 			//activeNode.unHighlight();
 		//}
-
+		activeNode.unHighlight();
 		// Un-highlight old node
 		if(currentHoveredNode != undefined) {
 			currentHoveredNode.unHighlight();
@@ -328,10 +336,87 @@ function processNodeHover(node, isEnteringHover)
 		node.highlight();
 
 		currentHoveredNode = node;
+
+		// Load data for node
+		switch(currentLocation)
+		{
+			case 'phase':
+				// Hovered nodes are departments
+				var department 	  = data_getDepartment(activePhase.id, node.contents);
+				var departmentDetails = data_getDetails(department);
+
+				var phaseData 	 = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
+			break;
+			case 'department':
+				// Hovered nodes are jobs
+				var phaseData 	 = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				var department 	  = data_getDepartment(activePhase.id, node.contents);
+				var departmentDetails = data_getDetails(department);
+
+				var position 	 	  = data_getJobPosition(activePhase.id, activeDepartmentNode.contents, node.contents);
+				var positionDetails   = data_getDetails(position);
+
+				setDescriptionBox(phaseDetails.name, departmentDetails.name, positionDetails.name, positionDetails.description);	
+
+			break;
+			case 'job':
+				// Hovered node is active department node
+				var department 	  = data_getDepartment(activePhase.id, activeDepartmentNode.contents);
+				var departmentDetails = data_getDetails(department);
+
+				var phaseData 	 = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
+
+			break;
+
+		}
+
 	} else {
 		// hover ended
-
+		$('#click-for-details').css('display', 'none');		
 		node.unHighlight();
+		if(activeDepartmentNode == undefined)
+			activePhase.useBorder(true);
+		activeNode.highlight();
+		// Load description from primary node
+		switch(currentLocation)
+		{
+			case 'phase':
+				var phaseData    = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);			
+			break;
+			case 'department':
+				var department 	  = data_getDepartment(activePhase.id, activeDepartmentNode.contents);
+				var departmentDetails = data_getDetails(department);
+
+				var phaseData 	 = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
+
+			break;
+			case 'job':
+				var phaseData 	 = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				var department 	  = data_getDepartment(activePhase.id, activeJobPositionNode.contents);
+				var departmentDetails = data_getDetails(department);
+
+				var position 	 	  = data_getJobPosition(activePhase.id, activeDepartmentNode.contents, node.contents);
+				var positionDetails   = data_getDetails(position);
+
+				setDescriptionBox(phaseDetails.name, departmentDetails.name, positionDetails.name, positionDetails.description);			
+			break;
+		}
 	}
 }
 
@@ -363,6 +448,7 @@ function closePhase() {
 		activePhase.moveToOrigin();
 	}
 
+	currentLocation 		= undefined;
 	activePhase 			= undefined;
 	activeDepartmentNode 	= undefined;
 	activeJobPositionNode 	= undefined;
@@ -381,6 +467,8 @@ function closePhase() {
  * @return void
  */
 function phaseClick(phase) {
+	$('#click-for-details').css('display', 'none ');	
+
     // There is an active phase and it is not in the center
 	if ( !activePhase && phase.location == 'origin') {
     	// No phase loaded. Load selected phase
@@ -394,6 +482,7 @@ function phaseClick(phase) {
 		// Remove old nodes            
 		activeDepartmentNode  = undefined;
 		activeJobPositionNode = undefined;
+		currentLocation = 'phase';
 
         nodeSystem.removeNodeGroup( departmentNodeGroup );
         nodeSystem.removeNodeGroup( jobpositionNodeGroup );
@@ -464,6 +553,7 @@ function openPhase(phase) {
  	// Put phase on front
 	activePhase.toFront();
 
+	currentLocation = 'phase';
 	activeNode = activePhase.node;
 	activeNode.highlight();
 	activePhase.useBorder(true);
@@ -480,8 +570,11 @@ function openPhase(phase) {
  * @return void
  */
 function DepartmentNodeClick(node) {
+	$('#click-for-details').css('display', 'none');	
+
 	// don't process the same node twice!
 	if( activeNode == node ) return;
+	currentLocation = 'department';
 	activeNode = node;
 	activeDepartmentNode = node;
 	activePhase.useBorder(false);
@@ -536,8 +629,11 @@ function DepartmentNodeClick(node) {
  * @return void
  */
 function JobPositionNodeClick(node) {
+	$('#click-for-details').css('display', 'none');	
+
 	// don't process the same node twice!
 	if( activeNode == null ) return;
+	currentLocation = 'job';
 	activeNode.unHighlight(); // unhighlight department node
 	activeNode = node;
 	activeJobPositionNode = node;

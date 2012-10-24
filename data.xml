@@ -1,0 +1,266 @@
+<?xml version="1.0"?>
+<lifeOfMeter>
+  <phases>
+    <phase order="1" name="Design Specs">
+      <description>The life cycle of a meter begins with hiring employees, setting up contracts with meter vendors, creating a business strategy related to maintaining and improving the power delivery to our customers, and designing an infrastructure that meets our business objectives.</description>
+      <departments>
+        <department name="Human Resources">
+          <description>The Human Resources department is responsible for the recruitment and orientation of new employees and ensures the company is in compliance with employment and labor laws.  HR assists employees with benefits, supports their wellness interests, facilitate union/labor relations, and negotiates terms and conditions of employment. HR works with supervisors and employees on training, development and reassignment of employees and is involved with each employee related to the life cycle of a meter.</description>
+          <positions/>
+        </department>
+        <department name="Legal">
+          <description>The contract administrator assists in vendor contract formation, execution, logging, filing and tracking of contract obligations.  This includes tracking extensions, assignments and amendments, close outs and terminations and associated documentary requirements such as insurance certificates and lien waivers.</description>
+          <positions/>
+        </department>
+        <department name="Strategy">
+          <description>Bangor Hydro's business objective is to advance our corporate mission, which is to make electricity more acceptable, more available, and more affordable to more people in more situations than the day before, resulting in greater value for our shareholders.  Programs like the PowerSmart Heating Pilot Project, which was approved in the 125th Maine Legislature, represents a big step forward in fulfilling every aspect of our mission.  As people experience the value of using electricity to operate efficient heat pumps, more people will want to use electricity to heat their homes and businesses.  Sending more electricity through our network of meters is ultimately what will make electricity more affordable to more of our customers.</description>
+          <positions/>
+        </department>
+        <department name="Power System Tech">
+          <description>Power System Tech department works with our advanced metering infrastructure (AMI) provider (ACLARA) to determine which meter manufacturers support our version of AMI module technology. Then a review of consumption needs is performed for energy measurement such as straight KWH, or KWH and KW demand or any type of Time of Use. </description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+    <phase order="2" name="Purchase Approval &amp; Order">
+      <description>On an annual basis our meter purchase needs are assessed and a budget is created to be approved.  Meter purchases are placed throughout the year as needed.</description>
+      <departments>
+        <department name="Transmission &amp; Distribution Planning">
+          <description>T&amp;D Planning works with Power System Tech to establish both short term and long term forward looking expectations for meter requirements.  Lead times, inventory, failure rates, economic outlook, historic trending, special metering requirements or projects, etc are all considered in developing our overal capital budget and capital plan.  Meter purchases have varied significantly over the last 10 years from $225,000 to over $1 million in 2012.</description>
+          <positions/>
+        </department>
+        <department name="Power System Tech">
+          <description>Once the appropriate number of meters to purchase for the year is determined, a request for quote is sent to the meter manufacturers.  The quote is used to develop the estimate and purchase requisition that requires executive approval.  The normal delivery time for modules is 16-20 weeks and meters 8-14 weeks,  but it could take as long as 6 months to receive a meter order.</description>
+          <positions/>
+        </department>
+        <department name="Purchasing">
+          <description>Once the purchase requisition is approved the purchasing department creates the purchase order and submits it to the vendor electronically.</description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+    <phase order="3" name="Receive Meters">
+      <description>Upon arrival of purchases,  meters are inspected and all pertinent information is recorded and relayed to the necessary departments.</description>
+      <departments>
+        <department name="Power System Tech">
+          <description>The meters/modules are delivered to Bangor Hydro at the Graham Station facility in Veazie. The delivery is unloaded by Power System Tech shop personnel and checked for damage.  The invoice is received in the financial information system. A data file is required with each shipment that includes the meter number, module number, form, wire, phase, voltage and register configuration of each meter. Power System Techs examine the load file for accuracy and notifies Business Support Services to load the file into a supplemental database in the customer information system.  </description>
+          <positions/>
+        </department>
+        <department name="Accounting / Rates">
+          <description></description>
+          <positions>
+            <position name="Payroll">
+              <description>On a weekly basis, payroll processes labor hours associated with meter installs, removals, exchanges, connects, disconnects, new services, service upgrades, meter mix-ups, collar issues, meter floating and any tenant/landlord notices left at the time of the premise visit.</description>
+            </position>
+            <position name="Accounts Payable">
+              <description>Accounts Payable provides payment of current invoices in a timely and accurate fashion.  Invoices come to A/P via regular mail, e-mails from suppliers, or employees who receive invoices in the field.  The purchase order, items ordered and item received must match the invoice for processing.  All invoices are paid when they are due.  Any invoice that does not show a purchase order number or needs further approval is sent to Power System Tech.</description>
+            </position>
+            <position name="Plant">
+              <description>On a quarterly basis the plant and project accountant analyzes all meter purchases charged and records all of the newly added meters in the fixed asset system during the month end closing process.  The book value of the meters (the cost of the meters) is entered in the asset section on our balance sheet and depreciated.  Depreciation is an accounting method whereby we expense the cost of an asset over its useful life (typically x number of years for a meter).  The meter assets we track on our financial books are included in our electric rate filings with the Maine Public Utilities Commission and Federal Energy Regulatory Commission.  It is very important that we have an accurate accounting of all our meter assets.</description>
+            </position>
+            <position name="Tax">
+              <description>The tax department determines the economic impact and overall profitability to the Company in terms of income and property and sales taxes associated with the initial meter installation until retirement.  Costs incurred are depreciated over the life of the meter and result in tax deductions for the Company reducing income tax burden.  In addition, the tax department is responsible for reporting to applicable towns and cities the value of the tangible personal property located in their jurisdiction and subject to personal property taxes.</description>
+            </position>
+            <position name="Rates">
+              <description>Meter reads measure consumption which is used to create customer bills.  When customers pay their bill it generates our revenue. The billed revenue in theory matches our revenue requirements based on our expenses and investments.  Our distribution rates are designed such that our revenue needs divided by metered consumption equals  the cost of energy per Kwh.  These rates are approved by the Maine Public Utilities Commission.</description>
+            </position>
+            <position name="General Ledger Accountant">
+              <description>The General Ledger accountant closes accounts payable, accounts receivable and payroll to the general ledger at each month end.</description>
+            </position>
+          </positions>
+        </department>
+        <department name="Business Support Services">
+          <description>Meter numbers are uploaded into the customer information system when received.  This process is managed by IT and the Business Support Services team with exceptions being handled by Business Support Services and the Customer Service Center billing team.  The business support services team provides the customer information system support including solving complex problems within the the customer information system, setting up rates, and handling customer enrollments to various Electric Suppliers.  This team impacts the meter through rates associated with a customer's meter.   
+The Business Support Services team is also responsible for load settlement.  Load settlement uses profiles built on meter data to determine the share of power used by each supplier.  In the near future we will settle on actual usage based on hourly meter reads.</description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+    <phase order="4" name="Delivery of Meters to Outlying Divisions">
+      <description>Meters are delivered to divisions on an as needed basis.</description>
+      <departments>
+        <department name="Fleet">
+          <description>Fleet provides all vehicles, the annual maintenance and unplanned repairs of those vehicles for all field operations involved with Bangor Hydro's meter infrastructure.&#xA0; This includes everything from light duty trucks used by planners and meter readers, service trucks/vans used by power system technicians and meter technicians, bucket trucks used by line operations, and the cargo truck used by our stockroom.</description>
+          <positions/>
+        </department>
+        <department name="Stockroom">
+          <description>Stock clerks are responsible for picking meters up from Graham station and delivering them to the outlying divisions.&#xA0; The stockroom stores meters and manages an inventory of all required tooling for meter related work, employee safety equipment and other necessary materials/supplies for meter installs and exchanges.</description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+    <phase order="5" name="Meter Installs &amp; Exchanges">
+      <description>Meters are installed, removed or exchanged daily and multiple departments work together to streamline the process from the customer call to the completion of the service order in the field.</description>
+      <departments>
+        <department name="Engineering">
+          <description>Engineering is involved with the development and maintenance of ongoing updates for installation standards of a meter.   These standards are used to ensure each customer installation is constructed in a safe manner. Engineering also designs substation AMR equipment used to read our meters at customer premises. For large customer interfaces Engineering works with the planning department to develop a solution that will provide adequate service for the load.</description>
+          <positions/>
+        </department>
+        <department name="Key Accounts">
+          <description>The Key Account Analyst coordinates projects involving Key Account (&gt;1 million kWh per year) customers who are establishing new services or expanding existing ones. This includes analysis of Load Information to determine probable peak demands and rate classes, which influence meter placement (primary or secondary metered), compliance with BHE Terms and conditions, MPUC rules and regulations, and sizing of current transformers and potential transformers.</description>
+          <positions/>
+        </department>
+        <department name="Customer Service">
+          <description>Customer Service speaks with Bangor Hydro customers regarding various requests such as setup of a new service, a move-in, move-out, service upgrade, float a meter, remove/install a meter or a meter test.  A customer may call in under other circumstances as well including billing inquiries, disconnection for non-payment, reconnection, a possible meter mix up or if diversion is suspected.  The appropriate service order is set up and forwarded to the customer coordinators.</description>
+          <positions/>
+        </department>
+        <department name="Customer Coordinators">
+          <description>Customer Coordinators are responsible for coordinating activities between Construction Planners and Customers to ensure all customer expectations and company requirements are met. For new construction an appropriate meter for the character of service will need to be set. If a customer's service entrance is changed, the metering may also need to change.  Once all necessary paperwork is completed, the service order is forwarded to the planners.  When the meter has been set and the changes have been completed in the field, the paperwork is returned to the Customer Coordinator for processing in CIS.</description>
+          <positions/>
+        </department>
+        <department name="Planners">
+          <description>The T&amp;D Construction Planner will receive a New Service request from the Customer Coordinator.  They call the Customer/Electrician to set up an appointment to meet on site and determine the location of the meter.  The service order is then  sent to Central Dispatch for scheduling with the electrician or sent directly to the appropriate line department.  Planners also handle requests to upgrade or move existing services.</description>
+          <positions/>
+        </department>
+        <department name="Power System Tech">
+          <description>Power system technicians perform all meter installations and exchanges on transformer rated services. Services exceeding 400 amps of load are defined as transformer rated and require a current transformer and sometimes a potential or voltage transformer to reduce the high current to something the meter can handle. Power System Tech personnel work in conjunction with Meter Tech as part of ongoing cross training efforts. They also perform a large percentage of the three phase socket meter (self-contained) work or support the Division Meter/Line Personnel when they are doing this work.</description>
+          <positions/>
+        </department>
+        <department name="Line/Division Meter">
+          <description>Line and meter personnel perform both planned and unplanned work in the field.  Over time assets age and become inadequate to sustain reliability and customer demand grows, at times exceeding the capacity of our infrastructure.  Our line crews and division meter personnel build new lines, install new equipment and replace and/or upgrade assets such as poles and meters to sustain reliabilty and adequately meet customer needs.  In addition, system disruptions due to weather or equipment failure results in unplanned work for all field personnel.</description>
+          <positions/>
+        </department>
+        <department name="Central Dispatch">
+          <description>Central Dispatch communicates daily with the Meter and Line crews dispatching for meter installs, removals, exchanges, connects, disconnects, new services, service upgrades, meter mix-ups, collar issues, meter floating and any tenant/landlord notices left at the time of the premise visit.  Requests are called in from the field crews to create various service orders. Using the meter number, Central Dispatch has the ability to research information such as directions for field crews using CIS and GIS. The meter is also used to ping when predicting and dispatching during power outages.</description>
+          <positions/>
+        </department>
+        <department name="System Operations">
+          <description>During non-business hours System Operations Dispatches Meter or Line personnel for meter connects, installs, exchanges, etc.  Likewise System Operations uses meter numbers for outage pinging, locating customers in Power On and providing directions for field crews.</description>
+          <positions/>
+        </department>
+        <department name="Transmission &amp; Distribution Planning">
+          <description>T&amp;D Planning utilizes meter data for load flow analysis for capital planning and ongoing operations/project support.  Meter serial numbers in GIS (Geographical Information System) can be exported with information indicating where associated transformers and line sections are connected.&#xA0; This geographically referenced information is linked to each customer's monthly usage data from CIS.&#xA0; From this, T&amp;D Planning can create a load file which can then be imported into load flow simulation software.&#xA0; A circuit modeling and analysis can then be performed by allocating load to each area of the circuit based on the meter usage data.</description>
+          <positions/>
+        </department>
+        <department name="Administrators">
+          <description>Administrative Assistants process time cards for various employees who each have a part in the Life of the Meter. Itron (Handheld Meter  Routes) and Daily Open Service Order reports are generated and data is complied on an Excel Spreadsheet for the Manager of Line and Meter Operations to review.</description>
+          <positions/>
+        </department>
+        <department name="Fleet">
+          <description>Fleet provides all vehicles, the annual maintenance and unplanned repairs of those vehicles for all field operations involved with Bangor Hydro's meter infrastructure.&#xA0; This includes everything from light duty trucks used by planners and meter readers, service trucks/vans used by power system technicians and meter technicians, bucket trucks used by line operations, and the cargo truck used by our stockroom.</description>
+          <positions/>
+        </department>
+        <department name="Safety">
+          <description>Safety provides training and requires Meter Installers to analyze risks associated with each meter installation and to place protective barriers such as rubber gloves, safety glasses and fire retardant (FR) clothing between the installer and his/her work.  FR clothing protects workers from the hazards of an electrical arc flash.  The potential for an electrical arc flash exists only if the current carrying conductors are energized and mechanical failures, short circuits, or human error cause their electricity to take an unintended path.  This path could be from the energized conductor to the metal meter box or between conductors within the meter box.  FR clothing consists of Arc rated face shields, long sleeve FR shirt and long FR pants, all of which are rated for our application.</description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+    <phase order="6" name="Maintenance &amp; Testing">
+      <description>Meter reading and other processes involved in the AMI infrastructure must be monitored and maintained for accuracy.  Monitoring and maintaining such processes involves various departments across the company.</description>
+      <departments>
+        <department name="Accounting">
+          <description></description>
+          <positions>
+            <position name="Financial Accountant">
+              <description>Rates are established for the various rate classes, large, medium and small commercial/residential.  These rates are applied to the customer's consumption (rate x KWH) in the customer information system and billed on a monthly basis.  This revenue is uploaded to our financial information system from the customer information system.  Accounting uses revenue reports produced by the customer information system to verify the total revenue that was uploaded to the general ledger. </description>
+            </position>
+            <position name="Account Receivable">
+              <description>Meter tampering creates unexpected replacement or repairing of meters.  If the vandal has been identified, accounting creates an accounts receivable invoice as he or she is responsible for the cost of the meter maintenance.  A Meter Inspection Fee is also charged to the individual's account if the responsible party is a customer.</description>
+            </position>
+          </positions>
+        </department>
+        <department name="Key Accounts">
+          <description>The Key Account Analyst handles high bill complaints and metering problems involving Key Account customers. Sometimes these involve problems with the meter and sometimes problems with meter data as entered into Banner, etc.
+The Key Account Analyst also consults with the Customer Service Center on similar problems from non-Key Account demand billed customers.</description>
+          <positions/>
+        </department>
+        <department name="Customer Service">
+          <description>Customer Service representatives set up meter test service orders for Meter personnel.  The Customer Service Billing Department processes meter exchanges, configuration changes for rates and meter removals in the customer information system. This group also processes any monetary and/or consumption adjustments around meter reading and bills.</description>
+          <positions/>
+        </department>
+        <department name="Information Technology / Business Support Services">
+          <description>Business Support Services manages the Revenue Protection Program which dispatches field crews to investigate services for meter diversion or tampering of meters.  Together, IT  and the Business Support Services team are responsible for the development and maintenance of software, upgrades and computer systems at both Bangor Hydro and Maine Public Service.  Various systems impact the life of a meter.</description>
+          <positions>
+            <position name="Customer Information System">
+              <description>Meter reads flow into the CIS from various metering technologies.  This information is used for billing and customer service purposes.  Customer service reps also use the customer information system to create various service orders.  IT ensures the customer information system is working properly for billing metered services. They provide assistance with reporting and updating data in the customer information sytem.</description>
+            </position>
+            <position name="Geographical Information System">
+              <description>The GIS stores locations for all customer premises and BHE assets, including meters.  The Business Support Services team works with Central Dispatch and IT to ensure accurate data.  PowerOn has the electrical connectivity information that aids in power restoration and is used for outage management.  It can &#x93;ping&#x94; meters to determine if a customer has power, determine where a fault is located and validate whether or not power has been restored to a premise.</description>
+            </position>
+            <position name="Two Way Automated Communication System (TWACS)">
+              <description>TWACS is a fixed network utility communications system.  TWACS is a two way system that Bangor Hydro uses to send and receive meter read information over power and telephone lines.  Turtle is a one way system at MPS that sends meter information over the power lines.  The meter read data from these systems is sent to our CIS.  TWACS also supports PowerOn with the meter ping function and gives us the ability to remotely connect and disconnect power for meters equipped with collars.</description>
+            </position>
+            <position name="Itron &amp; Meter Data Management">
+              <description>At Bangor Hydro the Itron MDM stores, validates and estimates meter readings.  The MDM also powers our Power Smart web portal which allows customers to view hourly usage.</description>
+            </position>
+          </positions>
+        </department>
+        <department name="Line/Division Meter">
+          <description>Meter readers visit customer premises daily to read, set, exchange and evaluate meters. Meter personnel also test meters on site or exchange and return them to Power System Tech for testing.  Line crews also exchange meters for testing.</description>
+          <positions/>
+        </department>
+        <department name="Power System Tech">
+          <description>All transformer rated meters are required to be tested on a periodic basis by the MPUC.  Meter Technicians performs over 1000 of these tests annually.  Tests are often performed at the customer's premise while the meter is in service. All meters removed from the field are tested in the shop. If results of the test indicate the meter is fit for reuse it is adjusted to within 0.2% accuracy, re-set to zero and boxed up. On average 1,500 to 2,000 meters are tested annually in the shop.  In addition, Power System Technicians perform an annual maintenance test procedure on all AMI transformers and their associated communication equipment located in the distribution substations.</description>
+          <positions/>
+        </department>
+        <department name="Fleet">
+          <description>Fleet provides all vehicles, the annual maintenance and unplanned repairs of those vehicles for all field operations involved with Bangor Hydro's meter infrastructure.&#xA0; This includes everything from light duty trucks used by planners and meter readers, service trucks/vans used by power system technicians and meter technicians, bucket trucks used by line operations, and the cargo truck used by our stockroom.</description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+    <phase order="7" name="AMI Trouble and Outages">
+      <description>Various issues arise including meter reading issues, issues with equipment such as unrepsonsive collars and issues with the computer systems which read, relay, and store all meter information.  Individuals and/or departments respond to any problems or issues in their area of responsibility.  In addition, people across the company all work together to restore power during outages.</description>
+      <departments>
+        <department name="Customer Service">
+          <description>Customer service works with TNS to trouble shoot issues with collared meters.  For non-collared meters or in cases when a collared meter is not responding, the CSR creates a service order to dispatch field personnel to the premise.  If a customer is calling to report an outage, the CSR will ping the meter to help determine if the outage is the result of an internal issue at the premise or an external issue related to BHE's service.  The billing department also reviews and corrects any manual and AMR meter readings that do not meet the predetermined parameters before posting the charges to the customer account.</description>
+          <positions/>
+        </department>
+        <department name="Fleet">
+          <description>Fleet provides all vehicles, the annual maintenance and unplanned repairs of those vehicles for all field operations involved with Bangor Hydro's meter infrastructure.&#xA0; This includes everything from light duty trucks used by planners and meter readers, service trucks/vans used by power system technicians and meter technicians, bucket trucks used by line operations, and the cargo truck used by our stockroom.</description>
+          <positions/>
+        </department>
+        <department name="Business Support Services">
+          <description></description>
+          <positions>
+            <position name="TWACS Network Server">
+              <description>The Business Support Services team is responsible for the administration of the Meter Reading Technologies at Bangor Hydro.  These systems consist of TWACS/AMI, MV90 and MVRS.  TWACS/AMI reads the meters over the power lines.  The team is responsible for making sure we get the readings from the field and correct any issues with the system in conjunction with IT.  MV90 reads some of largest customers over phone lines.  MVRS are the handheld units used for manual meter reading.</description>
+            </position>
+          </positions>
+        </department>
+        <department name="Line/Division Meter">
+          <description>Service orders are created for unresponsive meters or meter that are only reading periodically to be checked by the Meter Department.  Meter or Line Departments are dispatched when reports of trouble are made involving remotely connecting or disconnecting meters using collars.  The Line Department may need to be involved if there is a blown cut out at the location prohibiting the meter from responding.</description>
+          <positions/>
+        </department>
+        <department name="Power System Tech">
+          <description>The Power System Tech group responds to all AMI trouble calls in substations.  This could be trouble with communications via frame relay or the actual communications equipment in the substation. Power System Tech works with the TNS operators to assist in troubleshooting the problem, making repairs and responding to service orders. This may involve exchanging the meter or working with a Line crew to check and clean primary and or secondary connections.</description>
+          <positions/>
+        </department>
+        <department name="Communications">
+          <description>When a power outage is reported, meters are pinged to predict the number of outages in that area.  When the number reaches more than 500, a text and e-mail is sent out from the CSC alerting the "outage group" that there is an outage event.  When outages exceed 1,000 or  the outage is a high-impact area, such as downtown Bangor, or the outage is expected to last more than six hours, the communications department will send a media alert.  This notifies media, the MPUC, emergency management agencies, employees and customers of the outage as well as an estimated restoration time.   In addition, the new live outage map and mobile outage site receive this information, giving customers the most up-to-date information regarding power outages.  </description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+    <phase order="8" name="Retirement">
+      <description>At the end of their useful life meters are taken out of service and either recycled for re-use or properly disposed of.</description>
+      <departments>
+        <department name="Fleet">
+          <description>Fleet provides all vehicles, the annual maintenance and unplanned repairs of those vehicles for all field operations involved with Bangor Hydro's meter infrastructure.&#xA0; This includes everything from light duty trucks used by planners and meter readers, service trucks/vans used by power system technicians and meter technicians, bucket trucks used by line operations, and the cargo truck used by our stockroom.</description>
+          <positions/>
+        </department>
+        <department name="Line/Division Meter">
+          <description>Meter and line personnel are dispatched to customer premises for meter removals according to service orders created by customer service.  Meters may be removed for tampering reasons, per customer request when no longer in use or when a meter remains inactive more than 999 days.</description>
+          <positions/>
+        </department>
+        <department name="Environmental">
+          <description>Environmental coordinates with Meter Department/Stockroom/Power System Tech to make waste determinations (i.e. are there any hazardous/universal waste components such as lithium batteries or mercury switches).  Environmental then assists in the decision making process to determine proper disposal.  Often the best route for disposal is through the vendor&#x92;s &#x93;take back program&#x94; which, ultimately leads to the recycling of the meter and/or its components.  In the event that the meter is not recycled through the vendor, Environmental assists with determining other disposal options such as recycling through metals vendors or disposal through BHE&#x92;s Universal Waste Program.</description>
+          <positions/>
+        </department>
+        <department name="Accounting">
+          <description>When a meter is taken out of service it must be removed from the fixed asset system and balance sheet.  The plant accountant receives a list of meters taken out of service each quarter and removes all said meters from the fixed asset system and thus the balance sheet.  In addition, he/she also records any costs related to removing the meter as well as any salvage value</description>
+          <positions>
+            <position name="Plant">
+              <description>When a meter is taken out of service it must be removed from the fixed asset system and balance sheet.  The plant accountant receives a list of meters taken out of service each quarter and removes all said meters from the fixed asset system and thus the balance sheet.  In addition, he/she also records any costs related to removing the meter as well as any salvage value.</description>
+            </position>
+          </positions>
+        </department>
+        <department name="Power System Tech">
+          <description>All BHE meters are tracked from the time of purchase until retirement.  Every meter that is removed from the field comes to the meter lab, at which time it is determined if it is fit for re-use. The meters that fail this test are &#x93;retired&#x94; from service. The meter number and final reading are recorded and the meters are boxed and shipped for recycling. The recycling company issues a 'certifcate of destruction'.  A data file is sent to Plant Accounting so they can remove the meters from BHE plant.</description>
+          <positions/>
+        </department>
+      </departments>
+    </phase>
+  </phases>
+</lifeOfMeter>
