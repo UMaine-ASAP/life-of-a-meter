@@ -81,10 +81,10 @@ function wordwrap( str, width, brk, cut ) {
 
 		//Make all nodes the same size
 		if( this.size != 0) {
-			this.size = 67;
+			this.size = 55;
 		}
 
-		text = wordwrap(text, 16);
+		text = wordwrap(text, 10);
 
 		this.contents = text; //the text contents of the node, so that you don't have to go node.text.attrs.blahblahblah.text
 		this.defaultAnimationDuration = animation_speed; //default animation duration in ms
@@ -381,7 +381,7 @@ function wordwrap( str, width, brk, cut ) {
 			var lastIReset = 0;
 			var currentHeight = 0;
 			var currentXOffset = 0;
-			var nodeSize = 66;
+			var nodeSize = 55;
 			var totalNodeHeight = 50;
 			var nodeOffsetOnNewColumn = 0;
 			var nodeYOffset = 0;
