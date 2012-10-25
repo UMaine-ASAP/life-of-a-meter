@@ -166,14 +166,14 @@ $(document).ready(function(){
 	// Set default phases and positions
 	var phaseData = [	
 	 	 	/*** Image transparencies ***/
-			{ src: 'transparent-with-border.png',  popout_img: '1_design_specs_v2.jpg', 				popout_image_aspect: 733/1.2 / 274, id: 1,  x: -103.5,    y: -74, width: 229,  height: 200 },
-			{ src: 'transparent-with-border.png',  popout_img: '2_purchase_approval_and_order.jpg',	popout_image_aspect: 390/420, id: 2,  x: 124,  y: -74, width: 296,  height: 200 },
-			{ src: 'transparent-with-border.png',  popout_img: '3_receive_meters.jpg', 				popout_image_aspect: 2048/1536, id: 3,  x: 462,  y: -74, width: 432,  height: 200 },
-			{ src: 'transparent-with-border.png',  popout_img: '4_delivery_to_outlying_divisions.jpg', 	popout_image_aspect: 1600/1200, id: 4,  x: 377,  y: 130, width: 456, height: 180 },
-			{ src: 'transparent-with-border.png',  popout_img: '5_meter_install_and_exchange.jpg', 	popout_image_aspect: 2304/3072, id: 5,  x: -100.5,    y: 130, width: 393, height: 200 },
-			{ src: 'transparent-with-border.png',  popout_img: '6_maintenance_and_testing.jpg', 		popout_image_aspect: 1600/1200, id: 6,  x: -20,  y: 340, width: 345, height: 254 },
-	 	 	{ src: 'transparent-with-border.png',  popout_img: '7_ami_trouble.jpg', 				popout_image_aspect: 267/404, id: 7,  x: 490,  y: 320, width: 264, height: 198 },
-	 	 	{ src: 'transparent-with-border.png',  popout_img: '8_retire.jpg', 					popout_image_aspect: 1600/1200, id: 8,  x: 766,  y: 400, width: 123, height: 145 }
+			{ src: 'transparent.png',  popout_img: '1_design_specs_v2.jpg', 				popout_image_aspect: 733/1.2 / 274, id: 1,  x: -103.5,    y: -74, width: 229,  height: 200 },
+			{ src: 'transparent.png',  popout_img: '2_purchase_approval_and_order.jpg',	popout_image_aspect: 390/420, id: 2,  x: 124,  y: -74, width: 296,  height: 200 },
+			{ src: 'transparent.png',  popout_img: '3_receive_meters.jpg', 				popout_image_aspect: 2048/1536, id: 3,  x: 462,  y: -74, width: 432,  height: 200 },
+			{ src: 'transparent.png',  popout_img: '4_delivery_to_outlying_divisions.jpg', 	popout_image_aspect: 1600/1200, id: 4,  x: 377,  y: 130, width: 456, height: 180 },
+			{ src: 'transparent.png',  popout_img: '5_meter_install_and_exchange.jpg', 	popout_image_aspect: 2304/3072, id: 5,  x: -100.5,    y: 130, width: 393, height: 200 },
+			{ src: 'transparent.png',  popout_img: '6_maintenance_and_testing.jpg', 		popout_image_aspect: 1600/1200, id: 6,  x: -20,  y: 340, width: 345, height: 254 },
+	 	 	{ src: 'transparent.png',  popout_img: '7_ami_trouble.jpg', 				popout_image_aspect: 267/404, id: 7,  x: 490,  y: 320, width: 264, height: 198 },
+	 	 	{ src: 'transparent.png',  popout_img: '8_retire.jpg', 					popout_image_aspect: 1600/1200, id: 8,  x: 766,  y: 400, width: 123, height: 145 }
 		];
 
 	allPhases = [];
