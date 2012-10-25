@@ -37,6 +37,7 @@ img {
 	padding: 2px;
 	pointer-events: none;
 	display: none;
+	white-space: nowrap;
 }
 
 /** Description Box */
@@ -83,8 +84,9 @@ img {
 /* headers */
 #description-phaseName 
 {
-	margin-top: 16px;
+	margin-top: -10px;
 	margin-bottom: 4px;	
+	font-size: 26px;
 }
 
 #description-departmentName
