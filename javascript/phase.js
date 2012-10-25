@@ -46,6 +46,8 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     this.clickFunction = clickFunction;
     this.hoverFunction = hoverFunction;
 
+    this.usingBorder = false;
+
     // store reference for use in image function calls
     var myself = this; 
 
@@ -84,6 +86,8 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     };
 
     this.useBorder = function(isUsingBorder) {
+        this.usingBorder = isUsingBorder;
+
         if( isUsingBorder ) {
             this.border.attr('stroke-width', 5);
         } else {

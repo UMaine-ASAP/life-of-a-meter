@@ -282,17 +282,36 @@ function processPhaseHover(phase, isEnteringHover)
 
 	if( activeDepartmentNode == undefined)
 	{
-		phase.useBorder(true);
+		if(isEnteringHover) {
+			phase.useBorder(true);
+
+			var phaseData    = data_getPhase(activePhase.id);
+			var phaseDetails = data_getDetails(phaseData);
+
+			setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);	
+
+			$('#click-for-details').css('display', 'none');
+			activeNode.unHighlight();
+			currentHoveredNode.unHighlight();
+		}
 	}
+
 	if( activeDepartmentNode != undefined)
 	{
 		if(isEnteringHover)
 		{
+			var phaseData    = data_getPhase(activePhase.id);
+			var phaseDetails = data_getDetails(phaseData);
+
+			setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);
+			$('#click-for-details').css('display', 'none');
 			activeNode.unHighlight();
+			currentHoveredNode.unHighlight();
+
 			phase.useBorder(true);			
 		} else {
-			activeNode.highlight();
-			phase.useBorder(false);			
+			// activeNode.highlight();
+			// phase.useBorder(false);			
 
 		}
 	}	
@@ -307,16 +326,57 @@ function processPhaseHover(phase, isEnteringHover)
  */
 function processNodeHover(node, isEnteringHover)
 {
+	if(isEnteringHover && activePhase.usingBorder)
+	{
+		activePhase.useBorder(false);
+	}
 	// Only process new nodes
 	if(/*currentHoveredNode !== undefined && node == currentHoveredNode ||*/ node == activeNode)
 	{
+		switch(currentLocation)
+		{
+			case 'phase':
+				var phaseData    = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);			
+			break;
+			case 'department':
+				var department 	  = data_getDepartment(activePhase.id, activeDepartmentNode.contents);
+				var departmentDetails = data_getDetails(department);
+
+				var phaseData 	 = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
+
+			break;
+			case 'job':
+				var phaseData 	 = data_getPhase(activePhase.id);
+				var phaseDetails = data_getDetails(phaseData);
+
+				var department 	  = data_getDepartment(activePhase.id, activeJobPositionNode.contents);
+				var departmentDetails = data_getDetails(department);
+
+				var position 	 	  = data_getJobPosition(activePhase.id, activeDepartmentNode.contents, node.contents);
+				var positionDetails   = data_getDetails(position);
+
+				setDescriptionBox(phaseDetails.name, departmentDetails.name, positionDetails.name, positionDetails.description);			
+			break;
+		}
+		if(currentHoveredNode != undefined) {
+			currentHoveredNode.unHighlight();
+		}
+		$('#click-for-details').css('display', 'none');
+		node.highlight();
+		currentHoveredNode = node;
 		return;
 	}
 
-	if(currentHoveredNode == activeNode)
-	{
-		currentHoveredNode = undefined;
-	}
+	// if(currentHoveredNode == activeNode)
+	// {
+	// 	currentHoveredNode = undefined;
+	// }
 
 	// Entering hover state
 	if(isEnteringHover)
@@ -380,43 +440,43 @@ function processNodeHover(node, isEnteringHover)
 
 	} else {
 		// hover ended
-		$('#click-for-details').css('display', 'none');		
-		node.unHighlight();
-		if(activeDepartmentNode == undefined)
-			activePhase.useBorder(true);
-		activeNode.highlight();
-		// Load description from primary node
-		switch(currentLocation)
-		{
-			case 'phase':
-				var phaseData    = data_getPhase(activePhase.id);
-				var phaseDetails = data_getDetails(phaseData);
+		// $('#click-for-details').css('display', 'none');		
+		// node.unHighlight();
+		// if(activeDepartmentNode == undefined)
+		// 	activePhase.useBorder(true);
+		// activeNode.highlight();
+		// // Load description from primary node
+		// switch(currentLocation)
+		// {
+		// 	case 'phase':
+		// 		var phaseData    = data_getPhase(activePhase.id);
+		// 		var phaseDetails = data_getDetails(phaseData);
 
-				setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);			
-			break;
-			case 'department':
-				var department 	  = data_getDepartment(activePhase.id, activeDepartmentNode.contents);
-				var departmentDetails = data_getDetails(department);
+		// 		setDescriptionBox(phaseDetails.name, '', '', phaseDetails.description);			
+		// 	break;
+		// 	case 'department':
+		// 		var department 	  = data_getDepartment(activePhase.id, activeDepartmentNode.contents);
+		// 		var departmentDetails = data_getDetails(department);
 
-				var phaseData 	 = data_getPhase(activePhase.id);
-				var phaseDetails = data_getDetails(phaseData);
+		// 		var phaseData 	 = data_getPhase(activePhase.id);
+		// 		var phaseDetails = data_getDetails(phaseData);
 
-				setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
+		// 		setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
 
-			break;
-			case 'job':
-				var phaseData 	 = data_getPhase(activePhase.id);
-				var phaseDetails = data_getDetails(phaseData);
+		// 	break;
+		// 	case 'job':
+		// 		var phaseData 	 = data_getPhase(activePhase.id);
+		// 		var phaseDetails = data_getDetails(phaseData);
 
-				var department 	  = data_getDepartment(activePhase.id, activeJobPositionNode.contents);
-				var departmentDetails = data_getDetails(department);
+		// 		var department 	  = data_getDepartment(activePhase.id, activeJobPositionNode.contents);
+		// 		var departmentDetails = data_getDetails(department);
 
-				var position 	 	  = data_getJobPosition(activePhase.id, activeDepartmentNode.contents, node.contents);
-				var positionDetails   = data_getDetails(position);
+		// 		var position 	 	  = data_getJobPosition(activePhase.id, activeDepartmentNode.contents, node.contents);
+		// 		var positionDetails   = data_getDetails(position);
 
-				setDescriptionBox(phaseDetails.name, departmentDetails.name, positionDetails.name, positionDetails.description);			
-			break;
-		}
+		// 		setDescriptionBox(phaseDetails.name, departmentDetails.name, positionDetails.name, positionDetails.description);			
+		// 	break;
+		// }
 	}
 }
 
