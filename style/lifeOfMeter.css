@@ -6,7 +6,7 @@ html, body {
 
 body {
 	width: 1000px;
-	height: 773px;
+	height: 626px;
 	font-size: 16px;
 	position: relative;
 	margin: 0 auto;
@@ -15,7 +15,7 @@ body {
 #container {
 	background-color: #333;
 	width: 1000px;
-	height: 773px;
+	height: 626px;
 	position: relative;
 	margin: 0 auto;
 }
