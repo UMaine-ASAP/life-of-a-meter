@@ -292,7 +292,10 @@ function processPhaseHover(phase, isEnteringHover)
 
 			$('#click-for-details').css('display', 'none');
 			activeNode.unHighlight();
-			currentHoveredNode.unHighlight();
+			if(currentHoveredNode !== undefined) 
+			{
+				currentHoveredNode.unHighlight();
+			}
 		}
 	}
 
@@ -381,13 +384,11 @@ function processNodeHover(node, isEnteringHover)
 	// Entering hover state
 	if(isEnteringHover)
 	{
-		$('#click-for-details').css('left', node.x - 60);
-		$('#click-for-details').css('top', node.y - 55);		
-		$('#click-for-details').css('display', 'block');
 		//activePhase.useBorder(false);		
 		//if( activeNode.isHighlighted ) {
 			//activeNode.unHighlight();
 		//}
+		$('#click-for-details').css('display', 'none');		
 		activeNode.unHighlight();
 		// Un-highlight old node
 		if(currentHoveredNode != undefined) {
@@ -409,6 +410,15 @@ function processNodeHover(node, isEnteringHover)
 				var phaseDetails = data_getDetails(phaseData);
 
 				setDescriptionBox( phaseDetails.name, departmentDetails.name, '', departmentDetails.description);
+
+				// Only display "click circle for details" if there are more nodes deeper down!
+				if( data_getJobPositionsCount(activePhase.id, node.contents) )
+				{
+					$('#click-for-details').css('left', node.x - 68);
+					$('#click-for-details').css('top', node.y - 55);		
+					$('#click-for-details').css('display', 'block');
+				}
+
 			break;
 			case 'department':
 				// Hovered nodes are jobs
@@ -757,6 +767,11 @@ function data_getJobPositions(phaseID, department) {
 	var department = data_getDepartment(phaseID, department);
 	return department.find('position');	
 }
+
+function data_getJobPositionsCount(PhaseID, department) {
+	return data_getJobPositions(PhaseID, department).length;		
+}
+
 
 function data_getJobPosition(phaseID, department, position) {
 	department = cleanName(department);
