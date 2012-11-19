@@ -35,6 +35,7 @@ if( isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
 			<input name='username'/>
 			<label>Password</label>
 			<input type='password' name='password'/>
+			<br>
 			<input type='submit' value='login'/>
 		</form>
 	</section>

@@ -189,8 +189,8 @@ if ($currentLevel == 'phases') {
 	<script src='../javascript/external_libraries/jquery.js'></script>
 	<script src='../style/bootstrap/js/bootstrap.min.js'></script>
 
-	<link rel=StyleSheet href='../style/bootstrap/css/bootstrap.css' type='text/css'>
-
+<!--	<link rel=StyleSheet href='../style/bootstrap/css/bootstrap.css' type='text/css'>
+-->
 	<script src='jquery-ui-1.9.1.custom/js/jquery-ui-1.9.1.custom.min.js'></script>
 	<link rel=StyleSheet href='jquery-ui-1.9.1.custom/css/custom-theme/jquery-ui-1.9.1.custom.min.css'>
 
@@ -279,10 +279,10 @@ if ($currentLevel == 'phases') {
 			<td class='title'><?php echo $node['title']; ?></td>
 			<td class='description'><?php echo $node['description']; ?></td>
 			<td class='singleLine'><?php if($node['subNodeCount'] != -1 ): ?> <a href='?level=<?php echo $nextLevel;?>&parentId=<?php echo $node['id'];?>'>View <?php echo $nextLevel; echo " (" . $node['subNodeCount'] . ")"; ?></a> <?php endif; ?></td>
-			<td><span class='btn edit-node'><i class='icon-pencil'></i></span></td>
+			<td><span class='edit-node'><img class='icon-pencil' src='images/edit.png'/></span></td>
 			<td class='singleLine'>
 				<?php if($currentLevel != 'phases'): ?>
-				<span class='btn btn-danger delete-node'><i class='icon-trash'></i></span> 
+				<span class='delete-node'><img class='icon-trash' src='images/trash.png'/></span> 
 				<?php endif; ?>
 			</td>
 
