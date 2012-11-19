@@ -26,11 +26,15 @@ if( isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
 	<script src='jquery-ui-1.9.1.custom/js/jquery-ui-1.9.1.custom.min.js'></script>
 	<link rel=StyleSheet href='jquery-ui-1.9.1.custom/css/custom-theme/jquery-ui-1.9.1.custom.min.css'>
 	<link rel=StyleSheet href='admin-style.css'>
+	<script>
+		document.createElement("header");  
+		document.createElement("section");  
+	</script>
 </head>
 <body>
 	<header>
 	</header>	
-	<section class='container'>
+	<div class='container'>
 		<form method='post'>
 			<label>Username</label>
 			<input name='username'/>
@@ -39,7 +43,7 @@ if( isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn']) {
 			<br>
 			<input type='submit' value='login'/>
 		</form>
-	</section>
+	</div>
 
 </body>
 </html>

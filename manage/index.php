@@ -198,7 +198,6 @@ if ($currentLevel == 'phases') {
 	<script>
 		document.createElement("header");  
 		document.createElement("section");  
-		//document.createElement("header");  
 	</script>
 </head>
 <body>
@@ -207,7 +206,7 @@ if ($currentLevel == 'phases') {
 			<a href='logout.php' class='right'>logout</a>
 		</div>
 	</header>	
-	<section class='container'>
+	<div class='container'>
 
 	<ul class="breadcrumb">
 		<?php for($index=0; $index<count($breadcrumbs); $index++) {
@@ -278,8 +277,8 @@ if ($currentLevel == 'phases') {
 			<th></th>
 			<th></th>
 		</thead>
-		<?php foreach($nodes as &$node) { ?>
-		<tr id='node-<?php echo $node['id']; ?>'>
+		<?php foreach($nodes as $key=>&$node) { ?>
+		<tr id='node-<?php echo $node['id']; ?>' class='<?php echo ($key%2==0)?'even':'odd';?>'>
 			<td><?php echo $node['id']; ?></td>
 			<td class='title'><?php echo $node['title']; ?></td>
 			<td class='description'><?php echo $node['description']; ?></td>
@@ -294,7 +293,7 @@ if ($currentLevel == 'phases') {
 		</tr>
 		<?php } ?>
 	</table>
-	</section>
+	</div>
 	<script>
 
 	$(document).ready( function() {
