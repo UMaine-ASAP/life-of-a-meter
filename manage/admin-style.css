@@ -141,13 +141,16 @@ filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 #add-new-button {
 	float: right;
 }
+
+
 #node-information {
-	border: 2px solid #333;
+	border: 2px solid #888;
 	border-collapse: collapse;
 	border-spacing: 0;
 	border-spacing: 2px;
 	width: 100%;
 }
+
 
 #node-information th {
 	padding: 8px;
