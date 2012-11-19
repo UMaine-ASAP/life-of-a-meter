@@ -33,5 +33,24 @@
 		</div>
 		<div id='click-for-details'>Click Circle for Details</div>
 	</div>
+	<script>
+	$(document).ready( function() {
+		function recenterApp() {
+			if( $('body').height() < 626) {
+				$('#loam-app').css('top', '0');
+				$('#loam-app').css('margin-top', '0');
+			} else {
+				$('#loam-app').css('top', '50%');
+				$('#loam-app').css('margin-top', '-326px');
+			}
+		};
+		recenterApp();
+
+		$(window).resize(function() {
+			recenterApp();
+		});
+
+	});
+	</script>
 </body>
 </html>
