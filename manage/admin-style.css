@@ -1,0 +1,54 @@
+body {
+	background-color: #9DBF8E;
+}
+
+.right { float: right;}
+header {
+	background-color: #497358;
+	border: 1px solid #33523E;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	height: 40px;
+	padding-top: 4px;
+}
+header a {
+	color: #9DBF8E;
+	font-size: 20px;
+}
+.container {
+	padding: 10px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	border-radius: 10px;
+	width: 1024px;
+	background-color: white;
+	/*background-color: #EFEFEF;*/
+}
+.singleLine {
+	white-space: nowrap;
+}
+
+#add-new-button {
+	float: right;
+}
+#node-information {
+	border: 2px solid #333;
+}
+
+.table-striped tbody tr:nth-child(odd) td, .table-striped tbody tr:nth-child(odd) th {
+	background-color: whitesmoke;
+}
+
+input.title {
+	width: 400px;
+}
+
+textarea.description {
+	width: 400px;
+	height: 200px;
+}
+
+#change-phase-select {
+	margin-top: 4px;
+}

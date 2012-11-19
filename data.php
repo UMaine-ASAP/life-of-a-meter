@@ -1,9 +1,5 @@
 <?php
-$user = 'root';
-$pass = '';
-$host = 'localhost';
-$dbname = 'loam';
-
+require_once "variables.php";
 require_once "manage/database.php";
 
 function xmlspecialchars($text)
@@ -16,7 +12,7 @@ function xmlspecialchars($text)
         array("&amp;", "&lt;", "&gt;", "&quot;", "&apos;"), $text);
 }
 
-$database = new Database($user, $pass, $host, $dbname);
+$database = new Database($USER, $PASS, $HOST, $DBNAME);
 $database->connect();
 
 /*$xmlResult = '<?xml version="1.0"?> <!DOCTYPE some_name [ <!ENTITY nbsp "&#160;"> ]> ';*/
