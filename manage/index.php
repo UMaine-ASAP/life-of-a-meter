@@ -195,6 +195,11 @@ if ($currentLevel == 'phases') {
 	<link rel=StyleSheet href='jquery-ui-1.9.1.custom/css/custom-theme/jquery-ui-1.9.1.custom.min.css'>
 
 	<link rel=StyleSheet href='admin-style.css'>
+	<script>
+		document.createElement("header");  
+		document.createElement("section");  
+		//document.createElement("header");  
+	</script>
 </head>
 <body>
 	<header>
