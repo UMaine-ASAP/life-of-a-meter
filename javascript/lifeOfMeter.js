@@ -74,8 +74,8 @@ var animation_speed = 0;
 /*****************************************/
 
 function getScreenDimensions() {
-	var width  = parseInt( $('body').css('width') );
-	var height = parseInt( $('body').css('height') );
+	var width  = parseInt( $('#loam-app').css('width') );
+	var height = parseInt( $('#loam-app').css('height') );
 
 	return {'width': width, 'height': height};	
 }

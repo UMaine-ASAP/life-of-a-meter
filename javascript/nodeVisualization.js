@@ -361,8 +361,8 @@ function wordwrap( str, width, brk, cut ) {
 			this.nodeGroups.push([]);
 
 
-			var screenWidth  = parseInt( $('body').css('width') );
-			var screenHeight = parseInt( $('body').css('height') );
+			var screenWidth  = parseInt( $('#loam-app').css('width') );
+			var screenHeight = parseInt( $('#loam-app').css('height') );
 
 			// Load default attributes
 			switch(layoutType) {

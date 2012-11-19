@@ -5,11 +5,8 @@ html, body {
 }
 
 body {
-	width: 1000px;
-	height: 626px;
-	font-size: 16px;
+	height: 100%;
 	position: relative;
-	margin: 0 auto;
 }
 
 #container {
@@ -106,3 +103,14 @@ img {
 	padding-left: 2em;
 }
 
+
+#loam-app
+{
+	width: 1000px;
+	height: 626px;
+	font-size: 16px;
+	position: relative;
+	margin: 0 auto;
+	top: 50%;
+	margin-top: -323px;
+}

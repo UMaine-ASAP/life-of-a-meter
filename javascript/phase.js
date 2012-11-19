@@ -20,8 +20,8 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     this.node  = nodeSystem.createNode(0, 0, 0, '');
 
     // Used for movement back to origin
-    var centerX = parseInt($('body').css('width'))  / 2 - 300*altImageAspectRatio/2;
-    var centerY = parseInt($('body').css('height'))  / 2 - 300/2;
+    var centerX = parseInt($('#loam-app').css('width'))  / 2 - 300*altImageAspectRatio/2;
+    var centerY = parseInt($('#loam-app').css('height'))  / 2 - 300/2;
 
 	this.originalX = centerX;
 	this.originalY = centerY;
@@ -141,8 +141,8 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     };
 
 	this.moveToCenter = function(callback) {
-		var destX = parseInt($('body').css('width'))  / 2 - this.width/2;
-		var destY = parseInt($('body').css('height')) / 2 - this.height/2;
+		var destX = parseInt($('#loam-app').css('width'))  / 2 - this.width/2;
+		var destY = parseInt($('#loam-app').css('height')) / 2 - this.height/2;
 
         this.location = 'center';
         this.showImage();
@@ -156,8 +156,8 @@ function Phase(id, src, x, y, width, height, selectedImage, altImageAspectRatio,
     };
 
     this.moveToLeft = function(callback) {
-        var destX = parseInt($('body').css('width'))  / 2 - this.width/2 - 200 - this.width/2; // center - 200 - width/2
-        var destY = parseInt($('body').css('height')) / 2 - this.height/2;
+        var destX = parseInt($('#loam-app').css('width'))  / 2 - this.width - 70; // center - 200 - width/2
+        var destY = parseInt($('#loam-app').css('height')) / 2 - this.height/2;
 
         this.location = 'left';
 
